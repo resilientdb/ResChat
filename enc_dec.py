@@ -5,7 +5,7 @@ from Crypto.Protocol.KDF import PBKDF2
 
 def PBKDF2_encrypt(mac: str) -> bytes:
     """Use PBKDF2 to encrypt MAC address"""
-    return PBKDF2(mac, bytes(16), dkLen=32, count=1000000)  # AES-256 requires 32 bytes key
+    return PBKDF2(mac, bytes(16), dkLen=32, count=1000000)
 
 def aes_encrypt(data: str, key: bytes) -> tuple:
     """Encrypts a string using AES encryption."""

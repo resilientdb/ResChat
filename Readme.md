@@ -1,4 +1,4 @@
-- User A and B will have their own public key, the key is generated base on their MAC address with SHA-256 encryption
+- User A and B will have their own public key, the key is generated base on their MAC address with PBKDF2 encryption
 - When user A want to send a message to B, A will first input user B's public key
 - When user A confirm the invitation, system will generate a shared key base on both user A and B's public key
 - When user A send a message to B, this message will first be encrypted by ASE and push this transaction onto the chain
