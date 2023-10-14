@@ -1,21 +1,26 @@
 # Decentralized chat system based on ResilientDB
 ## Project description
 ### Overview
-The Decentralized Chat System is an innovative communication platform designed to offer a secure, 
-privacy-centric chat experience without reliance on a centralized server. 
-At the core of this system lies the decentralization, offering resistance against single points of failure, 
-censorship, and data breaches.
+In today's life, when we try to send a message on most chat software,
+the message will first be sent to the central server, 
+and then forwarded to the target user by the central server. 
+The disadvantage of this is that all data will be captured and stored by the central server, 
+which greatly increases the risk of data leakage and leakage of private information. 
+Now, we will create a decentralized chat system based on the ResilientDB blockchain. 
+This decentralized chat system does not store any personal information, 
+and only the sender and recipient can encrypt and decrypt the message during the transmission of the message.
 
 ### Key Features
-1. **Decentralized Architecture:** Our system avoids the need for a central server. All messages are transmitted on a peer-to-peer basis, ensuring data integrity and privacy.
+1. **Decentralized Architecture:** Our system avoids the need for a central server. 
+All messages are transmitted through ResilientDB blockchain.
 
-2. **Security:** Leveraging advanced encryption techniques, we ensure that message content is secured during transmission. Only the recipient of the message can decrypt and read it.
+2. **Security:** By using the asymmetric encryption algorithm (gpg), 
+we can ensure that information cannot be easily cracked during blockchain transmission. 
+Only the sender and recipient of the message can use their keys to encrypt and decrypt
 
-3. **Privacy-first Approach:** User data is never stored on any central server. Chat histories remain only on the devices of the participants.
+3. **Privacy-first Approach:** User data is never stored on any central server. No chat history will be stored.
 
-4. **Censorship-resistant:** Due to its decentralized nature, it's challenging to censor or block this system.
-
-5. **Open-source:** To ensure utmost transparency and security, our system is fully open-source, allowing community participation and review.
+4. **Open-source:** To ensure utmost transparency and security, our system is fully open-source, allowing community participation and review.
 
 ### Potential Use Cases
 <!-- TODO -->
