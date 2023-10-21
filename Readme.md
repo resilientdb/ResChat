@@ -45,3 +45,17 @@ Only the sender and recipient of the message can use their keys to encrypt and d
     1. User can send images(if not finished in last milestone)
     2. User can use group chat(OPTIONAL)
     3. GUI finished
+
+## Process
+1. Command Line: bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set [RECEIVER'S PUBLIC KEY] "[MESSAGE TYPE] [MESSAGE TYPE EXTENSION] [MESSAGE]"
+2. Message Type:
+   1. FRIEND: This means this message is a friend request; MESSAGE TYPE EXTENSION: None; MESSAGE: Sender's public key
+   2. REFRIEND: This means this message is a reply of friend request; MESSAGE TYPE EXTENSION: YES/NO; MESSAGE: Sender's public key(if YES). Null (if NO)
+   3. TEXT: This means this message is a pure text message; MESSAGE TYPE EXTENSION: None; MESSAGE: text string
+   4. FILE: This means this message is an file; MESSAGE TYPE EXTENSION: file extension(if ends with .jpg, then this part will be JPG; .pdf -> PDF); MESSAGE: Binary string of this file.
+3. After two users added each other as friend, they will save other user's public key on their local machine.
+4. All MESSAGE will encrypt by sender's public key
+5. Each user will keep reading from the chain by: bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config get [RECEIVER'S PUBLIC KEY]
+6. When They successfully get the message, this message will firstly be stored in local machine, then decrypt this message by receiver's private key and corresponding message type.
+7. After successfully receive the message, receiver will: bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set [RECEIVER'S PUBLIC KEY] null
+8. After sender send the message, sender will keep reading the chain too, as soon as sender got the null value, sender will knwo this message has already read by receiver
