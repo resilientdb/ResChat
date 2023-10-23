@@ -35,16 +35,16 @@ Only the sender and recipient of the message can use their keys to encrypt and d
    2. Decide which language to use(Python or C++)
    3. Understand SDK API
 2. **Nov, 3:**
-   1. Finish the basic chatting system(User can send and receive messages)
+   1. Finish the detail process of this project
+   2. Start working on backend code
 3. **Nov, 17**
    1. Basic GUI finished
-   2. Improve fault tolerance on the chatting system
-   3. User can send images(OPTIONAL)
-   4. User can use group chat(OPTIONAL)
+   2. Backend coding finished
+   3. Improve fault tolerance on the chatting system
+
 4. **Dec, 8**
-    1. User can send images(if not finished in last milestone)
-    2. User can use group chat(OPTIONAL)
-    3. GUI finished
+   1. GUI finished
+   2. Finish README.md file
 
 ## Process
 1. Command Line: bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set {RECEIVER'S PUBLIC KEY} "{MESSAGE TYPE} {TIMESTAMP} {MESSAGE TYPE EXTENSION} {MESSAGE}"
