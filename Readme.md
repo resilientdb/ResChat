@@ -68,10 +68,11 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
 
 - User Offline Scenarios:
   - Assume A wants to send a message to B, but B is offline. This message will be placed in the send queue and wait
-  - Assume there are already some messages in the queue, and B has not come online, and A is also going offline. At this time, A will set a special message. This message contains the entire send queue (the send queue contains the command line instructions already written)
+  - Assume there are already some messages in the queue, and B has not come online, and A is also going offline. At this time, A will set a special message. This message contains the entire send queue
   - All online clients will try to read a common key. When another client (C) reads A's queue information, it will set this information as null (already read)
   - Afterward, C will continue to try sending messages to B. If B is online and starts to receive messages, then C will pop the messages that B already received from queue
   - When C is ready to go offline, it will repeat the above steps
+
 
 - Threads:
   - Thread #1: This thread will continuously use its own public key to read the chain
@@ -82,8 +83,30 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
   - Thread #6: Read acknowledgement of public information (user offline scenarios)
 
 - Queues:
-  - Send queue: This queue will store commandline instructions to send message
+  - Send queue: This queue will store encrypted message that user want to send. Also contain corresponding receiver public key, message type etc. 
   - Receive queue: This queue will store messages get from the chain
 
+- Local files:
+  - Database#1: This database will store all friends that this client has been added(public keys)
+  - Database#2: This database will store chat history between each user
+  - {USERNAME}.pub: This file contain your public key
+  - {USERNAME}.pri: This file contain your private key
+
+- Client:
+  - Check public key and private exist, if not, create new public and private key
+  - Send messages:
+    - Load friend list from Database#1, then promote user to select which receiver this user want to chat with.
+    - After user select certain receiver, load corresponding chat history from Database#2
+  - Friend Request:
+    - User can send friend request and set a nickname for him/her
+    - While waiting for REFRIEND message, user can use other operations
+    - When user receives REFRIEND message, user will see a message pop up about XXX just accepted your friend request, or, XXX rejected your friend request.
+  - Close Client:
+    - When user want to shut down the client
+    - Program will check the send queue and receive queue
+    - If both queues are empty, shut down
+    - If send queue is not empty, construct a message with this queue and put this message on the chain
+    - Wait about 5 second, use get command to check if this message (queue) still on the chain (has not been overwritten by other users)
+    - If receive queue is not empty, wait until all messages have been stored, then shut down
 
 
