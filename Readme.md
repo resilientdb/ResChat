@@ -66,7 +66,7 @@ Only the sender and recipient of the message can use their keys to encrypt and d
 
 ## Process New
 - Command Line:
-bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set {RECEIVER'S PUBLIC KEY} "{MESSAGE TYPE} {TIMESTAMP} {MESSAGE TYPE EXTENSION} {MESSAGE}"
+bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config {set/get} {RECEIVER'S PUBLIC KEY} "{MESSAGE TYPE} {TIMESTAMP} {MESSAGE TYPE EXTENSION} {MESSAGE}"
 
 - MESSAGE TYPE:
   - FRIEND: Friend request, MESSAGE TYPE EXTENTION: none, MESSAGE: Public key of the user sending the friend request
@@ -88,7 +88,8 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
   - Assume A wants to send a message to B, but B is offline. This message will be placed in the send queue and wait
   - Assume there are already some messages in the queue, and B has not come online, and A is also going offline. At this time, A will set a special message. This message contains the entire send queue (the send queue contains the command line instructions already written)
   - All online clients will try to read a common key. When another client (C) reads A's queue information, it will set this information as null (already read)
-  - Afterward, C will continue to try sending messages to B. When C is ready to go offline, it will repeat the above steps
+  - Afterward, C will continue to try sending messages to B. If B is online and starts to receive messages, then C will pop the messages that B already received from queue
+  - When C is ready to go offline, it will repeat the above steps
 
 - Threads:
   - Thread #1: This thread will continuously use its own public key to read the chain
@@ -96,4 +97,11 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
   - Thread #3: When sending a message, the sender will activate this thread to check whether the receiver has successfully received the message
   - Thread #4: Send messages
   - Thread #5: Read public information (user offline scenarios)
+  - Thread #6: Read acknowledgement of public information (user offline scenarios)
+
+- Queues:
+  - Send queue: This queue will store commandline instructions to send message
+  - Receive queue: This queue will store messages get from the chain
+
+
 
