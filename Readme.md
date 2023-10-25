@@ -59,3 +59,41 @@ Only the sender and recipient of the message can use their keys to encrypt and d
 6. When They successfully get the message, this message will firstly be stored in local machine, then decrypt this message by receiver's private key and corresponding message type.
 7. After successfully receive the message, receiver will: bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set {RECEIVER'S PUBLIC KEY} null
 8. After sender send the message, sender will keep reading the chain too, as soon as sender got the null value, sender will know this message has already read by receiver
+9. Thread:
+   1. Thread#1: Keep reading the chain to get message that send to this person
+   2. Thread#2: Internal operations such like, store message in local machin, decrypt etc.
+   3. Thread#3: Send message
+
+## Process New
+- Command Line:
+bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config set {RECEIVER'S PUBLIC KEY} "{MESSAGE TYPE} {TIMESTAMP} {MESSAGE TYPE EXTENSION} {MESSAGE}"
+
+- MESSAGE TYPE:
+  - FRIEND: Friend request, MESSAGE TYPE EXTENTION: none, MESSAGE: Public key of the user sending the friend request
+  - REFRIEND: Reply to a friend request, MESSAGE TYPE EXTENSION: Yes/No, MESSAGE: Public key of the user sending this message (Yes if accepting the request)
+  - TEXT: Plain text message, MESSAGE TYPE EXTENSION: none, MESSAGE: String
+  - FILE: File, MESSAGE TYPE EXTENSION: Filename with extension, MESSAGE: File converted to a binary string
+  - TIMESTAMP: Timestamp when this message is sent
+
+- Steps:
+  - When user A wants to send a message to user B, A will first send a friend request to B
+  - When B receives this friend request, B will store A's public key in the local database and send its own public key to B (if B chooses to accept the friend request)
+  - Now both A and B have each other's public keys stored locally
+  - When A sends a message to B, this message will be encrypted using B's public key
+  - B and A will continuously use their own public keys to read the chain. When B reads a message sent to itself, it will store this message in the local database and then decrypt it using its own private key
+  - When B receives a message, it will set this message as null
+  - After A sends out a message, it will continuously monitor this message. If the value becomes null, it means B has successfully read the message
+
+- User Offline Scenarios:
+  - Assume A wants to send a message to B, but B is offline. This message will be placed in the send queue and wait
+  - Assume there are already some messages in the queue, and B has not come online, and A is also going offline. At this time, A will set a special message. This message contains the entire send queue (the send queue contains the command line instructions already written)
+  - All online clients will try to read a common key. When another client (C) reads A's queue information, it will set this information as null (already read)
+  - Afterward, C will continue to try sending messages to B. When C is ready to go offline, it will repeat the above steps
+
+- Threads:
+  - Thread #1: This thread will continuously use its own public key to read the chain
+  - Thread #2: When a message is received, put it in the queue, then store it locally from the queue and decrypt it
+  - Thread #3: When sending a message, the sender will activate this thread to check whether the receiver has successfully received the message
+  - Thread #4: Send messages
+  - Thread #5: Read public information (user offline scenarios)
+
