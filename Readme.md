@@ -71,8 +71,7 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
   - Assume there are already some messages in the queue, and B has not come online, and A is also going offline. At this time, A will set a special message. This message contains the entire send queue
   - All online clients will try to read a common key. When another client (C) reads A's queue information, it will set this information as null (already read)
   - Afterward, C will continue to try sending messages to B. If B is online and starts to receive messages, then C will pop the messages that B already received from queue
-  - When C is ready to go offline, it will repeat the above steps
-
+  - When C is ready to go offline, and the queue is still not empty. It will repeat the above steps
 
 - Threads:
   - Thread #1: This thread will continuously use its own public key to read the chain
