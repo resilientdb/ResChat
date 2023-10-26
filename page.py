@@ -1,5 +1,5 @@
 import numpy as np
-
+import datetime
 
 class Page:
     def __init__(self, page_name: str):
@@ -18,7 +18,7 @@ class Page:
             return False
 
     # Add one message into the page
-    def add_message(self, pub_key: str, msg_type: str, t_stamp: str, msg_type_ext: str, message: str):
+    def add_message(self, pub_key: str, msg_type: str, t_stamp: datetime.datetime, msg_type_ext: str, message: str):
         if self.is_full():
             print("The page is full. Cannot add more messages.")
             return
@@ -46,5 +46,10 @@ class Page:
             pub_key, msg_type, t_stamp, msg_type_ext, message = message_string.split(' ')
             new_page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message)
         return new_page
+
+    # Sort the page base on timestamp
+    def sort_by_time(self):
+        sorted_indices = np.argsort(self.msg[:self.message_count, 2])
+        self.msg[:self.message_count] = self.msg[sorted_indices]
 
 

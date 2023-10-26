@@ -108,4 +108,23 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
     - Wait about 5 second, use get command to check if this message (queue) still on the chain (has not been overwritten by other users)
     - If receive queue is not empty, wait until all messages have been stored, then shut down
 
+## Process
+- Command Line:
+bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/client.config {set/get} {RECEIVER'S PUBLIC KEY} "{MESSAGE TYPE} {TIMESTAMP} {MESSAGE TYPE EXTENSION} {MESSAGE}"
+- MESSAGE TYPE:
+  - FRIEND: Friend request, MESSAGE TYPE EXTENTION: none, MESSAGE: Public key of the user sending the friend request
+  - REFRIEND: Reply to a friend request, MESSAGE TYPE EXTENSION: Yes/No, MESSAGE: Public key of the user sending this message (Yes if accepting the request)
+  - TEXT: Plain text message, MESSAGE TYPE EXTENSION: none, MESSAGE: String
+  - FILE: File, MESSAGE TYPE EXTENSION: Filename with extension, MESSAGE: File converted to a binary string
+  - TIMESTAMP: Timestamp when this message is sent
+- MESSAGE:
+  - Messages are stored in a class called Page
+  - Each Page contains 20 chat histories
+  - Sender and receiver will obtain some shared Pages
+  - When it reaches to 20 messages, sender of the 21th message will create a new page
+  - When user want to send message, sender will first get current page from the chain, sort the page based on timestamp. Then, write the message this user want to send, and set this page on the chain
+  - When user want to read message, receiver will get current page from the chain, and read the page
+    - If the current page is full, receiver will automatically try to get next page({PAGE_NAME}{PAGE_NUM + 1}). If there is nothing on next page, it will be all set, if there is a next page, receiver will update local page number(plus one)
+  - System default will contain two pages at the same time, user can load previous pages(chatting history)
+  - In this way, sender and receiver's chat history will all on the chain. Also, it can handle when receiver is offline.
 
