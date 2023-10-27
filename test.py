@@ -2,6 +2,7 @@ import numpy as np
 from page import Page  # 导入Page类
 from chain_operation import send_message, get_message
 import datetime
+from file_operations import *
 
 # 创建Page类的实例
 my_page = Page("Page1")
@@ -21,5 +22,12 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # send_message(my_page)
 # tmp = get_message("Page1")
 # print(tmp)
-my_page.sort_by_time()
-print(my_page.to_string())
+
+
+# path1 = "/Users/sunjiazhi/Desktop/aaa.pdf"
+# path2 = "/Users/sunjiazhi/Desktop/tmp.pdf"
+# tmp = read_file(path1)
+# print(len(tmp))
+# # write_file(path2, tmp)
+
+
