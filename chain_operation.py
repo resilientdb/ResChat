@@ -91,6 +91,7 @@ def get_friend_request(pub_key) -> None or str:
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     stripped_string = parse_get_stdout(result.stdout)
+    """TODO: Check this stripped_string, if it got anything return it, if not, return None"""
     return stripped_string
 
 
