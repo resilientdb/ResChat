@@ -1,6 +1,6 @@
 import numpy as np
 from page import Page  # 导入Page类
-from chain_operation import send_message, get_message
+from chain_operation import *
 import datetime
 from file_operations import *
 
@@ -29,5 +29,6 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # tmp = read_file(path1)
 # print(len(tmp))
 # # write_file(path2, tmp)
-
+tmp = get_friend_request("asdpiv")
+print(f"AAA{tmp}AAA")
 
