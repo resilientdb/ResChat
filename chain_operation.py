@@ -66,30 +66,12 @@ def send_friend_request(receiver_pub: str, sender_pub: str) -> bool:
 
 
 # This function is to set up and send REFRIEND type of message
-def re_friend_request(receiver_pub: str, answer: bool, sender_pub: str = None):
-    if answer:
-        msg_string = "REFRIEND YES" + " " + sender_pub
-        command = [
-            command_path,
-            config_path,
-            "set",
-            receiver_pub,
-            msg_string
-        ]
-        time.sleep(random.randint(2, 5))
-        result = subprocess.run(command, capture_output=True, text=True)
-        if result.stdout == "client set ret = 0":
-            print("You have successfully add this user as friend.")
-            return True
-        else:
-            return False
-    else:
-        print("You have rejected this friend request")
-        return True
+def re_friend_request():
+    """TODO: construct REFRIEND message and send it to receiver"""
 
 
 # This function will read the chain by user's public key to check is there any friend request send to this user
-def get_friend_request(pub_key) -> None or str:
+def get_friend_request(pub_key: str) -> None or str:
     command = [
         command_path,
         config_path,
@@ -98,11 +80,7 @@ def get_friend_request(pub_key) -> None or str:
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     stripped_string = parse_get_stdout(result.stdout)
-    if stripped_string == '\n':
-        return None
-    else:
-        return stripped_string
-
+    return stripped_string
 
 
 
