@@ -23,11 +23,7 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # tmp = get_message("Page1")
 # print(tmp)
 
-
-path1 = "/Users/sunjiazhi/Desktop/aaa.png"
-path2 = "/Users/sunjiazhi/Desktop/tmp.png"
-tmp = read_file(path1)
-print(len(tmp))
-write_file(path2, tmp)
+tmp = get_friend_request("ajsbncoin")
+print(tmp)
 
 

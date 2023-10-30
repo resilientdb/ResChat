@@ -34,7 +34,8 @@ def parse_get_stdout(output):
 
 
 # This function will get a page from the chain
-def get_page(page_name: str):
+def get_page(page_name: str, page_num: str):
+    pg = page_name + " " + page_num
     command = [
         command_path,
         config_path,
@@ -42,8 +43,6 @@ def get_page(page_name: str):
         page_name
     ]
     result = subprocess.run(command, capture_output=True, text=True)
-
-
     return parse_get_stdout(result.stdout)
 
 

@@ -65,4 +65,19 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
     - If the current page is full, receiver will automatically try to get next page({PAGE_NAME}{PAGE_NUM + 1}). If there is nothing on next page, it will be all set, if there is a next page, receiver will update local page number(plus one)
   - System default will contain two pages at the same time, user can load previous pages(chatting history)
   - In this way, sender and receiver's chat history will all on the chain. Also, it can handle when receiver is offline.
+- FRIEND and REFRIEND:
+  - FRIEND message means this message is a friend request
+  - REFRIEND message means this message is a reply to friend request
+  - Command line: {set/get} {RECEIVER'S PUBLIC KEY} "{FRIEND/REFRIEND} {YES/NO} {SENDER'S PUBLIC KEY}"
+  - Ex.
+    - If A want to add B as friend, A will first send a message by: `set {B's public key} "FRIEND {A's public key}"`
+    - At the same time, B will keep reading the chain by: `get {B's public key}`
+    - After B got the message, B will reply by: `set {A's public key} "REFRIEND YES {B's public key}"`
+    - After B accept the friend request, A nad B's public key will be stored on both users' machine and create corresponding page name base on these two user's public key
+- Threads:
+  - Thread#1: Keep reading the page names that are stored in database from the chain and update corresponding chat history
+    - Ex. If I open the chatting block with user A, this thread will keep reading the chain for the page belong to me and user A
+  - Thread#2: Keep reading the friend request from the chain
+  - Thread#3: Send message thread
+    - Ex. If I want to send a message to user A, this thread will first get the current page from the chain sort it, and write the message into it, then set the page back onto the chain.
 
