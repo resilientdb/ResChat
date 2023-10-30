@@ -3,8 +3,10 @@ from page import Page
 import os
 
 """TODO: These should be changed when everything works on local"""
-command_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/bazel-bin/service/tools/kv/api_tools/kv_service_tools') # Path under Ubuntu environment
-config_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/service/tools/config/interface/service.config') # Path under Ubuntu environment
+# Path under Ubuntu environment
+command_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/bazel-bin/service/tools/kv/api_tools/kv_service_tools')
+# Path under Ubuntu environment
+config_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/service/tools/config/interface/service.config')
 
 
 # This function will run commandline instruction to set a value, key = page name, value = message
@@ -25,9 +27,11 @@ def send_page(page: Page):
     else:
         return False
 
+
 def parse_get_stdout(output):
     stripped_output = output[len('client get value = '):]
     return stripped_output
+
 
 # This function will get a page from the chain
 def get_page(page_name: str):

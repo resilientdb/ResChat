@@ -1,6 +1,7 @@
 import numpy as np
 import datetime
 
+
 class Page:
     def __init__(self, page_name: str):
         # Each page contains 20 messages
