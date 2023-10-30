@@ -1,7 +1,8 @@
+import random
 import subprocess
 from page import Page
 import os
-
+import time
 """TODO: These should be changed when everything works on local"""
 # Path under Ubuntu environment
 command_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/bazel-bin/service/tools/kv/api_tools/kv_service_tools')
@@ -57,6 +58,7 @@ def send_friend_request(receiver_pub: str, sender_pub: str) -> bool:
         msg_string
     ]
     result = subprocess.run(command, capture_output=True, text=True)
+    time.sleep(random.randint(2, 5))
     if result.stdout == "client set ret = 0":
         return True
     else:
@@ -64,7 +66,7 @@ def send_friend_request(receiver_pub: str, sender_pub: str) -> bool:
 
 
 # This function is to set up and send REFRIEND type of message
-def re_friend_request(receiver_pub: str, sender_pub: str, answer: bool):
+def re_friend_request(receiver_pub: str, answer: bool, sender_pub: str = None):
     if answer:
         msg_string = "REFRIEND YES" + " " + sender_pub
         command = [
@@ -74,6 +76,7 @@ def re_friend_request(receiver_pub: str, sender_pub: str, answer: bool):
             receiver_pub,
             msg_string
         ]
+        time.sleep(random.randint(2, 5))
         result = subprocess.run(command, capture_output=True, text=True)
         if result.stdout == "client set ret = 0":
             print("You have successfully add this user as friend.")
@@ -85,6 +88,7 @@ def re_friend_request(receiver_pub: str, sender_pub: str, answer: bool):
         return True
 
 
+# This function will read the chain by user's public key to check is there any friend request send to this user
 def get_friend_request(pub_key) -> None or str:
     command = [
         command_path,
@@ -94,8 +98,10 @@ def get_friend_request(pub_key) -> None or str:
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     stripped_string = parse_get_stdout(result.stdout)
-    """TODO: Check this stripped_string, if it got anything return it, if not, return None"""
-    return stripped_string
+    if stripped_string == '\n':
+        return None
+    else:
+        return stripped_string
 
 
 
