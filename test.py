@@ -23,8 +23,5 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # tmp = get_message("Page1")
 # print(tmp)
 
-tmp = get_friend_request("ajsbncoin")
-if tmp == '\n':
-    print("true")
 
 
