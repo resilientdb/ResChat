@@ -3,19 +3,15 @@ import datetime
 
 
 class Page:
-    def __init__(self, page_name: str):
+    def __init__(self):
         # Each page contains 20 messages
-        self.pageName = page_name
         # [[Receiver's public key, message type, timestamp, message type extension, message], ... ]
         self.msg = np.empty((20, 5), dtype=object)
         self.message_count = 0
 
     # Check if this page is full
     def is_full(self):
-        if self.message_count >= 20:
-            return True
-        else:
-            return False
+        return self.message_count >= 20
 
     # Add one message into the page
     def add_message(self, pub_key: str, msg_type: str, t_stamp: datetime.datetime, msg_type_ext: str, message: str):
@@ -35,24 +31,17 @@ class Page:
             page_string += message_string + "\n"
         return page_string
 
-    # Convert the string back to page for chain operation
-
-    def from_string(cls, page_string: str):
-
-        lines = page_string.split('\n')
-        page_name = lines[0]
-        messages = lines[0:-1]
-        new_page = cls(page_name)
-        for message_string in messages:
-            print(message_string)
-            pub_key, msg_type, day, sec, msg_type_ext, message = message_string.split(' ')
-            t_stamp = day + " " + sec
-            new_page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message)
-        return new_page
-
     # Sort the page base on timestamp
     def sort_by_time(self):
         sorted_indices = np.argsort(self.msg[:self.message_count, 2])
         self.msg[:self.message_count] = self.msg[sorted_indices]
 
-
+    @classmethod
+    def from_string(cls, page_string: str):
+        page = cls()
+        messages = page_string.strip().split("\n")
+        for message in messages:
+            pub_key, msg_type, t_stamp_day, t_stamp_sec, msg_type_ext, message = message.split(" ")
+            t_stamp = datetime.datetime.strptime(t_stamp_day + " " + t_stamp_sec, '%Y-%m-%d %H:%M:%S.%f')
+            page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message)
+        return page
