@@ -5,7 +5,6 @@ import datetime
 class Page:
     def __init__(self, page_name: str):
         # Each page contains 20 messages
-        """TODO: Find a proper page name that contains some shared things between two users"""
         self.pageName = page_name
         # [[Receiver's public key, message type, timestamp, message type extension, message], ... ]
         self.msg = np.empty((20, 5), dtype=object)
