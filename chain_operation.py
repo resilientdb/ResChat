@@ -41,46 +41,10 @@ def get_page(page_name: str, page_num: str):
         command_path,
         config_path,
         "get",
-        page_name
+        pg
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     return parse_get_stdout(result.stdout)
-
-
-# This function is to send a friend request
-def send_friend_request(receiver_pub: str, sender_pub: str) -> bool:
-    msg_string = "FRIEND " + sender_pub
-    command = [
-        command_path,
-        config_path,
-        "set",
-        receiver_pub,
-        msg_string
-    ]
-    result = subprocess.run(command, capture_output=True, text=True)
-    time.sleep(random.randint(2, 5))
-    if result.stdout == "client set ret = 0":
-        return True
-    else:
-        return False
-
-
-# This function is to set up and send REFRIEND type of message
-def re_friend_request():
-    """TODO: construct REFRIEND message and send it to receiver"""
-
-
-# This function will read the chain by user's public key to check is there any friend request send to this user
-def get_friend_request(pub_key: str) -> None or str:
-    command = [
-        command_path,
-        config_path,
-        "get",
-        pub_key
-    ]
-    result = subprocess.run(command, capture_output=True, text=True)
-    stripped_string = parse_get_stdout(result.stdout)
-    return stripped_string
 
 
 

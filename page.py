@@ -36,14 +36,17 @@ class Page:
         return page_string
 
     # Convert the string back to page for chain operation
-    @classmethod
+
     def from_string(cls, page_string: str):
+
         lines = page_string.split('\n')
         page_name = lines[0]
         messages = lines[0:-1]
         new_page = cls(page_name)
         for message_string in messages:
-            pub_key, msg_type, t_stamp, msg_type_ext, message = message_string.split(' ')
+            print(message_string)
+            pub_key, msg_type, day, sec, msg_type_ext, message = message_string.split(' ')
+            t_stamp = day + " " + sec
             new_page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message)
         return new_page
 
