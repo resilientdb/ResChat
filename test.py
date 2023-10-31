@@ -11,10 +11,10 @@ my_page.add_message("pub_key1", "msg_type1", datetime.datetime(2023, 11, 1, 1, 1
 my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 1, 1, 1, 1, 1, 100), "msg_type_ext2", "message2")
 my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1, 1, 12), "msg_type_ext2", "message2")
 
-page_string = my_page.to_string()
-print("Original Page:")
-print(page_string)
-newpage = Page.from_string(page_string)
+# page_string = my_page.to_string()
+# print("Original Page:")
+# print(page_string)
+# newpage = Page.from_string(page_string)
 
 
 
@@ -27,13 +27,15 @@ newpage = Page.from_string(page_string)
 
 
 # create_keys("kny", "123456")
-# message = b"Hello, World!"
+# message = "Hello, World!"
+# message = message.encode()
+# print(f"Original message: {message}")
 # private_key = load_private_key("123456")
 # public_key = load_public_key()
 # encrypted_message = encrypt_message(message, public_key)
 # print("Encrypted Message:", encrypted_message)
 #
-# # 解密消息
 # decrypted_message = decrypt_message(encrypted_message, private_key)
 # print("Decrypted Message:", decrypted_message.decode('ascii'))
+
 
