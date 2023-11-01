@@ -1,5 +1,10 @@
 import json
 
+"""""
+db saves all the friends and their information(public key, nick name, current page) saved in python 
+dictionary
+"""""
+
 
 def add_friend(public_key, nick_name):
     with open("local_friends_list.json", 'rw') as file:

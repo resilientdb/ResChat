@@ -1,5 +1,8 @@
 import numpy as np
 import datetime
+"""""
+Page is the structure we are going to use transfer and save messages
+"""""
 
 
 class Page:

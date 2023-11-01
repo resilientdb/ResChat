@@ -1,5 +1,10 @@
 import os
 
+"""""
+We don't need to worry about this part for right now,
+we can add this later after the basic functions are done
+"""""
+
 
 # Read file into a string
 def read_file(path: str) -> (str or None):

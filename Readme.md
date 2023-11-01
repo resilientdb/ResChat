@@ -72,3 +72,14 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
   - Thread#3: Send message thread
     - Ex. If I want to send a message to user A, this thread will first get the current page from the chain sort it, and write the message into it, then set the page back onto the chain.
 
+- Command Line Menu:
+  - Check if the public key and private key exist
+    - If existed, continue
+    - If not, ask user to input the information and create public and private keys
+  - Main Menu:
+    1. Add Friend
+    2. Chat With Friend
+    3. Quit
+       1. Ask user to input friend information
+       2. Show all the friend list
+  
