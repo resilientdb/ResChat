@@ -37,5 +37,9 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 #
 # decrypted_message = decrypt_message(encrypted_message, private_key)
 # print("Decrypted Message:", decrypted_message.decode('ascii'))
-
+# print(f"Before send: {my_page.to_string()}")
+print(my_page.to_string())
+check = send_page(my_page, "test")
+# page_string = get_page("test", '')
+# print(type(page_string))
 
