@@ -5,7 +5,8 @@ import os
 # Working directory where the bazel workspace is located
 working_directory = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb')
 # Config path relative to the working_directory
-config_path = "$PWD/config_out/client.config"
+config_path = "/home/ubuntu/Desktop/ECS189f_Project/resilientdb/scripts/deploy/config_out/client.config"
+
 
 def send_page(page: Page, page_name: str):
     page_string = page.to_string()
@@ -23,9 +24,11 @@ def send_page(page: Page, page_name: str):
         print("Unexpected output:", result.stdout)
         return False
 
+
 def parse_get_stdout(output):
     stripped_output = output[len('client get value = '):]
     return stripped_output
+
 
 def get_page(page_name: str, page_num: str):
     pg = page_name + " " + page_num
@@ -38,3 +41,4 @@ def get_page(page_name: str, page_num: str):
         print("Error executing command:", result.stderr)
         return ""
     return parse_get_stdout(result.stdout)
+
