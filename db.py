@@ -23,7 +23,7 @@ def get_friend(nick_name):
         if nick_name in dic:
             return dic[nick_name]
         else:
-            print(f"{nick_name} is not your friend yet")
+            return False
 
 
 def get_all_friends():

@@ -80,6 +80,8 @@ bazel-bin/service/tools/kv/api_tools/kv_service_tools scripts/deploy/config_out/
     1. Add Friend
     2. Chat With Friend
     3. Quit
-       1. Ask user to input friend information
-       2. Show all the friend list
+       1.
+          1. Ask user to input friend information
+          2. Show all the friend list
+s
   

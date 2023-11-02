@@ -3,7 +3,8 @@ import subprocess
 from page import Page
 import os
 import time
-"""TODO: These should be changed when everything works on local"""
+"""TODO: These should be changed when everything works on local
+(https://github.com/resilientdb/resilientdb/tree/master/scripts/deploy)"""
 # Path under Ubuntu environment
 command_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/bazel-bin/service/tools/kv/api_tools/kv_service_tools')
 # Path under Ubuntu environment
@@ -11,9 +12,8 @@ config_path = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb/service/
 
 
 # This function will run commandline instruction to set a value, key = page name, value = message
-def send_page(page: Page):
+def send_page(page: Page, page_name: str):
     page_string = page.to_string()
-    page_name = page.pageName
     command = [
         command_path,
         config_path,
