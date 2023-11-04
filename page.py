@@ -7,6 +7,8 @@ Page is the structure we are going to use transfer and save messages
 
 class Page:
     def __init__(self):
+        """TODO: numpy array should be (20, 6) the extra one is to save another version of
+            message that encrypted by another user's public key"""
         # Each page contains 20 messages
         """
         [Receiver's public key,
