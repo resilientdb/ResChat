@@ -4,6 +4,7 @@ from chain_operation import *
 import datetime
 from file_operations import *
 from encryption import *
+from db import *
 
 # 创建Page类的实例
 my_page = Page()
@@ -43,7 +44,8 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # print(check)
 # page_string = get_page("test", '')
 # print(type(page_string))
-
+pubKey = load_public_key()
+add_friend(pubKey, "kny")
 
 
 

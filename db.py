@@ -7,7 +7,7 @@ dictionary
 
 
 def add_friend(public_key, nick_name: str):
-    with open("local_friends_list.json", 'rw') as file:
+    with open("local_friends_list.json", 'w+') as file:
         dic = json.load(file)
         if nick_name in dic:
             print(f"{nick_name} is already your friend")
@@ -18,7 +18,7 @@ def add_friend(public_key, nick_name: str):
 
 
 def get_friend(nick_name: str) -> dict or bool:
-    with open("local_friends_list.json", 'rw') as file:
+    with open("local_friends_list.json", 'w+') as file:
         dic = json.load(file)
         if nick_name in dic:
             return dic[nick_name]
@@ -27,7 +27,7 @@ def get_friend(nick_name: str) -> dict or bool:
 
 
 def update_page_num(nick_name: str):
-    with open("local_friends_list.json", 'rw') as file:
+    with open("local_friends_list.json", 'w+') as file:
         dic = json.load(file)
         if nick_name in dic:
             nick_name_info = dic[nick_name]
@@ -35,6 +35,7 @@ def update_page_num(nick_name: str):
             return True
         else:
             return False
+
 
 def get_all_friends():
     with open("local_friends_list.json", 'rw') as file:
