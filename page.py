@@ -8,8 +8,15 @@ Page is the structure we are going to use transfer and save messages
 class Page:
     def __init__(self):
         # Each page contains 20 messages
-        # [[Receiver's public key, message type, timestamp, message type extension, message], ... ]
-        self.msg = np.empty((20, 5), dtype=object)
+        """
+        [Receiver's public key,
+        message type,
+        timestamp,
+        message type extension,
+        message1(encrypted by sender's pub key),
+        message2(encrypted by receiver's pub key)], ... ]
+        """
+        self.msg = np.empty((20, 6), dtype=object)
         self.message_count = 0
 
     # Check if this page is full
@@ -17,12 +24,12 @@ class Page:
         return self.message_count >= 20
 
     # Add one message into the page
-    def add_message(self, pub_key: str, msg_type: str, t_stamp: datetime.datetime, msg_type_ext: str, message: str):
+    def add_message(self, pub_key: str, msg_type: str, t_stamp: datetime.datetime, msg_type_ext: str, message1: str, message2: str):
         if self.is_full():
             print("The page is full. Cannot add more messages.")
             return
         else:
-            self.msg[self.message_count] = [pub_key, msg_type, t_stamp, msg_type_ext, message]
+            self.msg[self.message_count] = [pub_key, msg_type, t_stamp, msg_type_ext, message1, message2]
             self.message_count += 1
 
     # Convert page to string for chain operation
@@ -44,7 +51,7 @@ class Page:
         page = cls()
         messages = page_string.strip().split("\n")
         for message in messages:
-            pub_key, msg_type, t_stamp_day, t_stamp_sec, msg_type_ext, message = message.split(" ")
+            pub_key, msg_type, t_stamp_day, t_stamp_sec, msg_type_ext, message1, message2 = message.split(" ")
             t_stamp = datetime.datetime.strptime(t_stamp_day + " " + t_stamp_sec, '%Y-%m-%d %H:%M:%S.%f')
-            page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message)
+            page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message1, message2)
         return page

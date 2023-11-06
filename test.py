@@ -7,9 +7,9 @@ from encryption import *
 
 # 创建Page类的实例
 my_page = Page()
-my_page.add_message("pub_key1", "msg_type1", datetime.datetime(2023, 11, 1, 1, 1, 1, 23), "msg_type_ext1", "message1")
-my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 1, 1, 1, 1, 1, 100), "msg_type_ext2", "message2")
-my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1, 1, 12), "msg_type_ext2", "message2")
+my_page.add_message("pub_key1", "msg_type1", datetime.datetime(2023, 11, 1, 1, 1, 1, 23), "msg_type_ext1", "message1", "message2")
+my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 1, 1, 1, 1, 1, 100), "msg_type_ext2", "message1", "message2")
+my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1, 1, 12), "msg_type_ext2", "message1", "message2")
 
 # page_string = my_page.to_string()
 # print("Original Page:")
@@ -38,8 +38,13 @@ my_page.add_message("pub_key2", "msg_type2", datetime.datetime(2023, 11, 1, 1, 1
 # decrypted_message = decrypt_message(encrypted_message, private_key)
 # print("Decrypted Message:", decrypted_message.decode('ascii'))
 # print(f"Before send: {my_page.to_string()}")
-print(my_page.to_string())
-check = send_page(my_page, "test")
+# print(my_page.to_string())
+# check = send_page(my_page, "test")
+# print(check)
 # page_string = get_page("test", '')
 # print(type(page_string))
+
+
+
+
 
