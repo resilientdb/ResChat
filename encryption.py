@@ -51,3 +51,13 @@ def load_private_key(password=None):
     except Exception as e:
         print("Error loading private key:", str(e))
         return None
+
+
+def public_key_to_string(pub_key):
+    # 将公钥转换为字符串
+    return pub_key.exportKey(format='PEM').decode('utf-8')
+
+
+def string_to_public_key(pub_key_string):
+    # 将字符串转换回公钥
+    return RSA.importKey(pub_key_string.encode('utf-8'))
