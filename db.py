@@ -1,9 +1,11 @@
 import json
 import os
 from encryption import *
+import Crypto.PublicKey.RSA as RSA
 
 
-def add_friend(public_key, nick_name: str):
+# Add one friend with his public key and a nickname that defined by user
+def add_friend(public_key: RSA.RsaKey, nick_name: str):
     file_name = "local_friends_list.json"
     dic = {}
     try:
@@ -22,6 +24,7 @@ def add_friend(public_key, nick_name: str):
             json.dump(dic, file)
 
 
+# Use nickname to return this user's public key and current page
 def get_friend(nick_name: str) -> dict or bool:
     file_name = "local_friends_list.json"
     if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
@@ -34,6 +37,7 @@ def get_friend(nick_name: str) -> dict or bool:
     return False
 
 
+# Increase certain user's page number by 1
 def update_page_num(nick_name: str):
     file_name = "local_friends_list.json"
     dic = {}
@@ -49,6 +53,7 @@ def update_page_num(nick_name: str):
         return False
 
 
+# Return all nicknames in the database
 def get_all_friends():
     file_name = "local_friends_list.json"
     if os.path.exists(file_name) and os.path.getsize(file_name) > 0:

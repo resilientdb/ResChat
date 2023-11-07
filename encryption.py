@@ -5,6 +5,7 @@ from Crypto.Cipher import PKCS1_OAEP
 import binascii
 
 
+# User username and password to create public key and private key
 def create_keys(username, password):
     key = RSA.generate(2048)
 
@@ -20,12 +21,14 @@ def create_keys(username, password):
     return private_key, public_key
 
 
+# Use public key to encrypt message
 def encrypt_message(message, public_key):
     cipher = PKCS1_OAEP.new(public_key)
     encrypted_message = cipher.encrypt(message)
     return binascii.hexlify(encrypted_message).decode('ascii')
 
 
+# Use private key to decrypt message
 def decrypt_message(encrypted_message, private_key):
     encrypted_message = binascii.unhexlify(encrypted_message)
     cipher = PKCS1_OAEP.new(private_key)
@@ -33,6 +36,7 @@ def decrypt_message(encrypted_message, private_key):
     return decrypted_message
 
 
+# Load user public key from local
 def load_public_key():
     try:
         with open("public_key.pem", "rb") as f:
@@ -43,6 +47,7 @@ def load_public_key():
         return None
 
 
+# Load user private key from local
 def load_private_key(password=None):
     try:
         with open("private_key.pem", "rb") as f:
@@ -53,11 +58,11 @@ def load_private_key(password=None):
         return None
 
 
+# Convert Crypto.PublicKey.RSA.RsaKey type to string
 def public_key_to_string(pub_key):
-    # 将公钥转换为字符串
     return pub_key.exportKey(format='PEM').decode('utf-8')
 
 
+# Convert string to Crypto.PublicKey.RSA.RsaKey type
 def string_to_public_key(pub_key_string):
-    # 将字符串转换回公钥
     return RSA.importKey(pub_key_string.encode('utf-8'))
