@@ -14,22 +14,22 @@ if os.path.exists("private_key.pem") and os.path.exists("public_key.pem"):
     myPrivateKey = load_private_key(psw)
 
 else:
-    usrName = input("Please input your user name: ")
+    usrName = input("Please input your user name:\n")
     psw = input("Please input your password")
     myPrivateKey, myPublicKey = create_keys(usrName, psw)
 
 
 while True:
-    userInputMainMenu = input("1. Send Message \n 2. Add Friend \n 3. Quit")
+    userInputMainMenu = input("1. Send Message \n 2. Add Friend \n 3. Quit\n")
 
     # When user want to send message
     if userInputMainMenu == "1":
-        usrInputNickname = input(f"Here are all of your friend, please pick one th chat with: {get_all_friends()}")
+        usrInputNickname = input(f"Here are all of your friend, please pick one th chat with: {get_all_friends()}\n")
         friendInfo = get_friend(usrInputNickname)
         pubKey = friendInfo["public_key"]
         currentPage = friendInfo["current_page"]
         while True:
-            userInputSecondMenu = input("1. Send Message \n 2. Update \n 3. Previous Menu")
+            userInputSecondMenu = input("1. Send Message \n 2. Update \n 3. Previous Menu\n")
             if userInputSecondMenu == "1":
                 msg = input("")
                 send_message(msg, usrInputNickname)
@@ -43,8 +43,8 @@ while True:
 
     # Add Friend
     elif userInputMainMenu == "2":
-        usrInputNickname = input("Please input the nick name")
-        usrInputPubKey = input("Please input the public key")
+        usrInputNickname = input("Please input the nick name: ")
+        usrInputPubKey = input("Please input the public key: ")
         add_friend(usrInputPubKey, usrInputNickname)
 
     # Quit
