@@ -8,12 +8,13 @@ working_directory = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb')
 config_path = "/home/ubuntu/Desktop/ECS189f_Project/resilientdb/scripts/deploy/config_out/client.config"
 
 
-def send_page(page: Page, page_name: str):
+def send_page(page: Page, page_name: str, page_num: str):
     page_string = page.to_string()
     command = [
         "bazel", "run", "//service/tools/kv/api_tools:kv_service_tools", "--",
-        config_path, "set", page_name, page_string
+        config_path, "set", page_name + " " + page_num, page_string
     ]
+
     result = subprocess.run(command, capture_output=True, text=True, cwd=working_directory)
     if result.returncode != 0:
         print("Error executing command:", result.stderr)
@@ -23,6 +24,14 @@ def send_page(page: Page, page_name: str):
     else:
         print("Unexpected output:", result.stdout)
         return False
+
+
+def set_none(page_name: str, page_num: str):
+    command = [
+        "bazel", "run", "//service/tools/kv/api_tools:kv_service_tools", "--",
+        config_path, "set", page_name + " " + page_num, ""
+    ]
+    subprocess.run(command, capture_output=True, text=True, cwd=working_directory)
 
 
 def parse_get_stdout(output):

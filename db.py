@@ -5,7 +5,7 @@ import Crypto.PublicKey.RSA as RSA
 
 
 # Add one friend with his public key and a nickname that defined by user
-def add_friend(public_key: RSA.RsaKey, nick_name: str):
+def add_friend(public_key: str, nick_name: str):
     file_name = "local_friends_list.json"
     dic = {}
     try:
@@ -19,7 +19,7 @@ def add_friend(public_key: RSA.RsaKey, nick_name: str):
         print(f"{nick_name} is already your friend")
         return None
     else:
-        dic[nick_name] = {"public_key": public_key_to_string(public_key), "current_page": 1}
+        dic[nick_name] = {"public_key": public_key, "current_page": 1}
         with open(file_name, 'w') as file:
             json.dump(dic, file)
 

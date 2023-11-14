@@ -48,7 +48,7 @@ def load_public_key():
 
 
 # Load user private key from local
-def load_private_key(password=None):
+def load_private_key(password: str):
     try:
         with open("private_key.pem", "rb") as f:
             private_key = RSA.import_key(f.read(), passphrase=password)
