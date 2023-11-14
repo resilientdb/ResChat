@@ -32,11 +32,12 @@ while True:
             userInputSecondMenu = input("1. Send Message \n 2. Update \n 3. Previous Menu")
             if userInputSecondMenu == "1":
                 msg = input("")
-                send_message(usrInputNickname, msg)
-            elif userInputMainMenu == "2":
-                print(get_update(usrInputNickname, "None"))
+                send_message(msg, usrInputNickname)
+            elif userInputSecondMenu == "2":
+                print("CHECK")
+                print(get_update(usrInputNickname, psw))
 
-            elif userInputMainMenu == "3":
+            elif userInputSecondMenu == "3":
                 break
 
 

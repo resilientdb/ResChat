@@ -169,11 +169,11 @@ def get_update(nickname: str, password: str):
 
     return decrypted_chat_history
 
+
 # This is a helper function to test the system. It cleans the RSDB
 def clean(nickname: str):
     # Get receiver information
     receiver_info = get_friend(nickname)
-
 
     # Get sender public key
     sender_pub_key = load_public_key()
