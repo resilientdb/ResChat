@@ -28,11 +28,12 @@ from message import *
 # if get_update("kny") is None:
 #     print("NONE")
 add_friend("-----BEGIN PUBLIC KEY-----" + "\n" +
-           "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw9RejkTXIjGWqPMsOPCO" + "\n" +
-           "CivX0aMbYIA5Ii15kDfexTxoMiadnXugjGr9N0POdULTnwvObLnSHgevSLmebqp3" + "\n" +
-           "dfgconhBrtD7GK+DFAnTCGvLVYCz+9IMU+H6BxuHjvRqDcIqGgIEKV7pv8pCrnp3" + "\n" +
-           "iNFq0C+eKcLu51//jeEYYFDaUZ01bTQzQMobx8zTNZuCd2McBYs82uCJu6HNX/HG" + "\n" +
-           "OO2U8RIE/kEA+BNBSB4/81WCTRSiSR74b1sLIoqOTfIL5hSkwvN50OkOfnIPtjby" + "\n" +
-           "w7o5mtNJNv6raktThcP2eFBBBWdLLRT97H6EvLxPu2ELJLIv24cGxis8gkjuyf4W" + "\n" +
-           "QQIDAQAB" + "\n" +
+           "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmZwykmd8pWnFYLSuoTxq" + "\n" +
+           "ZvE2q+WENHcb/HIqhjpquKdJNwCoPV+dSXXTKiVmT806LzN8EJK6DM4b0oYsQ5fU" + "\n" +
+           "OABA4i/kjQtkE2Z1ykc1XEeRbIIXlTDPyJ79iqvHUVQYFnz5lZdNhCpBb4dZqNNO" + "\n" +
+           "dFAA1+Kimtab0lxOIpD2hW/CNzG+Mx1LESSiVvMb9Hl1dVmm0ayvZYJ/GieaV4Pg" + "\n" +
+           "BkpbwawtA1y1bIsUldTvzKIvR4qMfh1N4DLlUJvPhI7IbxNf6xRTtYua147G6wWS" + "\n" +
+           "ia6LQx5vGBUPau5IqbAmTXVlw65rexK2UqusMsDrdHBOEttfsV1b1toYsE259e2z" + "\n" +
+           "FQIDAQAB" + "\n" +
            "-----END PUBLIC KEY-----", "test")
+clean("test")

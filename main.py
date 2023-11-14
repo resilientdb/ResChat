@@ -34,7 +34,7 @@ while True:
                 msg = input("")
                 send_message(msg, usrInputNickname)
             elif userInputSecondMenu == "2":
-                print("CHECK")
+
                 print(get_update(usrInputNickname, psw))
 
             elif userInputSecondMenu == "3":
