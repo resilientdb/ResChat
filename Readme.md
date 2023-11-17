@@ -117,7 +117,7 @@ By encrypting message with both sender and receiver's public key, sender and rec
 
 
 
-## [Command Line Menu](main.py)
+## [Command Line Menu](command_line_menu.py)
 1. Start up client:
    1. Check if public_key.pem and private_key.pem exist
         - If Yes: Continue
