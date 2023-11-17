@@ -3,6 +3,7 @@ import os
 from encryption import *
 import Crypto.PublicKey.RSA as RSA
 
+# {nickname: {public_key: "...", current_page: ".."}}
 
 # Add one friend with his public key and a nickname that defined by user
 def add_friend(public_key: str, nick_name: str):

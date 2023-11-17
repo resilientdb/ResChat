@@ -37,7 +37,6 @@ def send_message(message: str, nickname: str):
                         key=lambda x: [ord(c) for c in x]))
 
     # Get current page from the chain
-
     page_string = get_page(page_name, str(current_page))
     # Check the page exist or not
     if page_string != "\n":
