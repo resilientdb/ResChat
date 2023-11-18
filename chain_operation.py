@@ -2,7 +2,7 @@ import subprocess
 from page import Page
 import os
 
-# Working directory where the bazel workspace is located
+# Working directory where the bazel workspace is located !
 working_directory = os.path.expanduser('~/Desktop/ECS189f_Project/resilientdb')
 # Config path relative to the working_directory
 config_path = "/home/ubuntu/Desktop/ECS189f_Project/resilientdb/scripts/deploy/config_out/client.config"
