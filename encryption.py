@@ -37,7 +37,7 @@ def decrypt_message(encrypted_message, private_key):
 
 
 # Load user public key from local
-def load_public_key():
+def load_public_key(path=None):
     try:
         with open("public_key.pem", "rb") as f:
             public_key = RSA.import_key(f.read())
