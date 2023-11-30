@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
-
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import JsonResponse
 import os
 
@@ -72,19 +72,26 @@ def index(request):
 
 
 def add_friend(request):
+    global public_key
     friends = request.session.get('friend_list', [])
     if request.method == "GET":
         return render(request, "addfriend.html",{'friends': friends})
     # upload_file is the file which stored the friend's public key.
+    print("nnff")
     upload_file = request.FILES.get('key')
     nickname = request.POST.get('nickname')
     ### still not sure, need to ask the backend leader. binary?
-    with open (upload_file ,"r") as f:
-        public_key = f.read()
-    print(public_key)
+    if upload_file:
+        # Process the uploaded file
+        if isinstance(upload_file, InMemoryUploadedFile):
+            # If it's an InMemoryUploadedFile, you can read its content directly
+            public_key = upload_file.read().decode('utf-8')
     print(nickname)
-    public_key = encryption.public_key_to_string(public_key)
+    print(public_key)
     add_flag = db.add_friend(public_key, nickname)
+    if add_flag is not None:
+        friends = db.get_all_friends()
+    print(friends)
     return render(request, "addfriend.html", {'friends': friends, 'add_flag': add_flag})
 
 

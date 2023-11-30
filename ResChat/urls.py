@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.checking_user),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
+    path('register/', views.register, name= 'register'),
     path('loading/', views.loading_keys, name='loading'),
     path('index/', views.index, name='index'),
     path('addfriend/', views.add_friend, name='addfriend'),

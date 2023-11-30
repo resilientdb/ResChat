@@ -33,28 +33,31 @@
                 <!-- Add and Quit buttons fixed at the bottom using Bootstrap classes -->
                 <div class="bg-light">
                     <!--<a href="#" class="btn btn-primary btn-block" id="addFriendBtn">Add</a>-->
-                    <button id="addFriendButton" class="btn btn-primary btn-block">Add</button>
+                    <button id="addFriendButton" form="add_form" type="submit" class="btn btn-primary btn-block">Add</button>
                     <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
                 </div>
             </div>
             <div class="col-sm-8 message-area">
                 <div class="container mt-5">
-                    <div class="row mt-4 p-5">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="keyInput">please Upload your friend's public Key</label>
-                                <input type="file" id="fileInput" accept=".pem" name= "key" placeholder="upload file">
+                    <form method="post" id="add_form" action="/addfriend/" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mt-4 p-5">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="keyInput">please Upload your friend's public Key</label>
+                                    <input type="file" id="fileInput" accept=".pem" name= "key" placeholder="upload file">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-4 p-5">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nicknameInput">please enter your friend's Nickname</label>
-                                <input type="text" class="form-control" id="nicknameInput" name="nickname" placeholder="Enter Nickname">
+                        <div class="row mt-4 p-5">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nicknameInput">please enter your friend's Nickname</label>
+                                    <input type="text" class="form-control" id="nicknameInput" name="nickname" placeholder="Enter Nickname">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -62,10 +65,10 @@
             // JavaScript and jQuery code goes here
             $(document).ready(function () {
                 var add_flag = "{{ add_flag }}";
-                var fileInput = $("#fileInput")[0];
-                var nickname = $("#nicknameInput").val();
                 // Handle the click event of the upload button
                 $("#addFriendButton").click(function () {
+                    var fileInput = $("#fileInput")[0];
+                    var nickname = $("#nicknameInput").val();
                     // Check if a file is selected(test)
                     if (fileInput.files.length > 0) {
                         // Access the selected file
@@ -76,7 +79,7 @@
                     }
                     // test
                     console.log("**Nickname: " + nickname);
-                    if (add_flag) {
+                    if (!add_flag) {
                     // Friend already exists, show a pop-up message
                     alert(nickname + ' is already your friend.');
                     } else {
