@@ -28,4 +28,4 @@ urlpatterns = [
     path('addfriend/', views.add_friend, name='addfriend'),
     # path('chatting/', views.chatting_page, name='chatting'),
     path('<str:username>', views.chatting_page, name='chat'),
-
+]
