@@ -28,6 +28,7 @@ print(type(load_public_key()))
 # print(update[0][0])
 # if get_update("kny") is None:
 #     print("NONE")
+
 # add_friend("-----BEGIN PUBLIC KEY-----" + "\n" +
 #            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmZwykmd8pWnFYLSuoTxq" + "\n" +
 #            "ZvE2q+WENHcb/HIqhjpquKdJNwCoPV+dSXXTKiVmT806LzN8EJK6DM4b0oYsQ5fU" + "\n" +
@@ -40,3 +41,4 @@ print(type(load_public_key()))
 # clean("test")
 
 print(type(encrypt_message(b"test", load_public_key())))
+print(get_friend('kny'))

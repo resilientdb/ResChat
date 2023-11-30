@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ResChat{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="back-container">
+    <div class="container-fluid front-container">
+        <div class="back-top"></div>
+        <div class="back-main"></div>
+    </div>
+    <div class="container front-container1">
+        <div class="row">
+            <div class="col-sm-4 contacts">
+                <div class="contact-table-scroll">
+                    <table class="table table-hover">
+                        <tbody>
+                            {% for friend in friends %}
+                            <tr>
+                                <td><img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+                                </td>
+                                <td><a href="{% url 'chat' username=friend %}">{{friend}}</a></td>
+                            </tr>
+                            {% endfor %}
+                            <!-- end -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Add and Quit buttons fixed at the bottom using Bootstrap classes -->
+                <div class="bg-light">
+                    <!--<a href="#" class="btn btn-primary btn-block" id="addFriendBtn">Add</a>-->
+                    <button id="addFriendButton" class="btn btn-primary btn-block">Add</button>
+                    <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
+                </div>
+            </div>
+            <div class="col-sm-8 message-area">
+                <div class="container mt-5">
+                    <div class="row mt-4 p-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="keyInput">please Upload your friend's public Key</label>
+                                <input type="file" id="fileInput" accept=".pem" name= "key" placeholder="upload file">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 p-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nicknameInput">please enter your friend's Nickname</label>
+                                <input type="text" class="form-control" id="nicknameInput" name="nickname" placeholder="Enter Nickname">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            // JavaScript and jQuery code goes here
+            $(document).ready(function () {
+                var add_flag = "{{ add_flag }}";
+                var fileInput = $("#fileInput")[0];
+                var nickname = $("#nicknameInput").val();
+                // Handle the click event of the upload button
+                $("#addFriendButton").click(function () {
+                    // Check if a file is selected(test)
+                    if (fileInput.files.length > 0) {
+                        // Access the selected file
+                        var selectedFile = fileInput.files[0]
+                        console.log("Selected File Name: " + selectedFile.name);
+                    } else {
+                        console.log("No file selected.");
+                    }
+                    // test
+                    console.log("**Nickname: " + nickname);
+                    if (add_flag) {
+                    // Friend already exists, show a pop-up message
+                    alert(nickname + ' is already your friend.');
+                    } else {
+                        alert('Friend added successfully.');
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>
+
+{% endblock %}

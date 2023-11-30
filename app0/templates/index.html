@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ResChat{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="back-container">
+    <div class="container-fluid front-container">
+        <div class="back-top"></div>
+        <div class="back-main"></div>
+    </div>
+    <div class="container front-container1">
+        <div class="row">
+            <div class="col-sm-4 contacts">
+                <div class="contact-table-scroll">
+                    <table class="table table-hover">
+                        <tbody>
+                            {% for friend in friends %}
+                            <tr>
+                                <td><img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+                                </td>
+                                <td><a href="{% url 'chat' username=friend %}">{{friend}}</a></td>
+                            </tr>
+                            {% endfor %}
+                            <!-- end -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Add Friend and Quit buttons fixed at the bottom using Bootstrap classes -->
+                <div class="bg-light">
+                    <a href={% url 'addfriend' %} class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
+                    <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
