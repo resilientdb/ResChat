@@ -11,9 +11,8 @@ import db
 
 
 def checking_user(request):
-    if os.path.exists("/home/ubuntu/Desktop/ECS189f_Project/private_key.pem") and os.path.exists(
-            "/home/ubuntu/Desktop/ECS189f_Project"
-            "/public_key.pem"):
+    # change this depending on your path
+    if os.path.exists("\OneDrive\Documents\ECS189f_Project\private_key.pem") and os.path.exists("\OneDrive\Documents\ECS189f_Project\public_key.pem"):
         redirect_url = 'login'
 
     else:

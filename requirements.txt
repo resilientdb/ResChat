@@ -1,0 +1,6 @@
+asgiref==3.7.2
+channels==4.0.0
+Django==4.2.7
+pathlib==1.0.1
+sqlparse==0.4.4
+tzdata==2023.3

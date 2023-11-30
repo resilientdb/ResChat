@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "channels",
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'app0.apps.App0Config',
     'user_auth.apps.UserAuthConfig',
     'messaging.apps.MessagingConfig',
-    'crispy_forms',
-    'crispy_bootstrap5',
 ]
+
+#     'crispy_forms',
+#    'crispy_bootstrap5',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
