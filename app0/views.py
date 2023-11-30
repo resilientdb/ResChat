@@ -1,8 +1,10 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
+
+from django.http import JsonResponse
 import os
 
-from encryption import load_public_key, load_private_key, create_keys
+import encryption
 import db
 
 # Create your views here.
@@ -30,7 +32,7 @@ def login(request):
     request.session['user_name'] = user_name
 
     user_pwd = request.POST.get("pwd")
-    private_key = load_private_key(user_pwd)
+    private_key = encryption.load_private_key(user_pwd)
     # if the password is correct(not none):
     if private_key:
         return redirect("loading")
@@ -45,7 +47,7 @@ def register(request):
     print(user_name, user_psw)
     with open(f"user_info.txt", "w") as f:
         f.write(user_name)
-    public_key, private_key = create_keys(user_name, user_psw)
+    public_key, private_key = encryption.create_keys(user_name, user_psw)
     return redirect("login")
 
 
@@ -68,6 +70,23 @@ def index(request):
     friends = request.session.get('friend_list', [])
     #print(friends)
     return render(request, "index.html", {'friends': friends})
+
+
+def add_friend(request):
+    friends = request.session.get('friend_list', [])
+    if request.method == "GET":
+        return render(request, "addfriend.html",{'friends': friends})
+    # upload_file is the file which stored the friend's public key.
+    upload_file = request.FILES.get('key')
+    nickname = request.POST.get('nickname')
+    ### still not sure, need to ask the backend leader. binary?
+    with open (upload_file ,"r") as f:
+        public_key = f.read()
+    print(public_key)
+    print(nickname)
+    public_key = encryption.public_key_to_string(public_key)
+    add_flag = db.add_friend(public_key, nickname)
+    return render(request, "addfriend.html", {'friends': friends, 'add_flag': add_flag})
 
 
 def chatting_page(request, username):

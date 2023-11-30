@@ -31,30 +31,11 @@
                     </table>
                 </div>
                 <!-- Add Friend and Quit buttons fixed at the bottom using Bootstrap classes -->
-                <div class="bg-light"> <!-- Optional: Add background color and padding for the button container -->
-                    <a href="#" class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
+                <div class="bg-light">
+                    <a href={% url 'addfriend' %} class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
                     <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
-                </div>
-                <a href="#" class="btn btn-primary btn-block mt-3 ml-2" data-toggle="collapse" data-target="#addFriendForm">Add</a>
-            </div>
-        </div>
-    </div>
-    <!-- Collapse area for "Add Friend" form -->
-    <div class="collapse mt-3" id="addFriendForm">
-        <!-- Upload button for public key -->
-        <button class="btn btn-secondary" id="uploadKeyBtn">Upload Public Key</button>
-    </div>
-    <script src="{% static 'js/add.js' %}"></script>
-    <!-- Right area initially hidden -->
-    <div class="col-sm-4" id="addFriendArea" style="display: none;">
-        <!-- Button for uploading the user's public key -->
-        <button class="btn btn-primary" id="uploadPublicKeyBtn">Upload Public Key</button>
 
-        <!-- Input field for entering the friend's name -->
-        <div class="input-group mt-2">
-            <input type="text" class="form-control" id="friendNameInput" placeholder="Enter Friend's Name">
-            <div class="input-group-append">
-                <button class="btn btn-success" id="addFriendSubmitBtn">Add</button>
+                </div>
             </div>
         </div>
     </div>
