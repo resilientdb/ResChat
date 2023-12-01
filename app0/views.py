@@ -6,13 +6,14 @@ import os
 
 import encryption
 import db
+import message
 
 # Create your views here.
 
 
 def checking_user(request):
     # change this depending on your path
-    if os.path.exists("\OneDrive\Documents\ECS189f_Project\private_key.pem") and os.path.exists("\OneDrive\Documents\ECS189f_Project\public_key.pem"):
+    if os.path.exists("/home/ubuntu/Desktop/ECS189f_Project/private_key.pem") and os.path.exists("/home/ubuntu/Desktop/ECS189f_Project/public_key.pem"):
         redirect_url = 'login'
 
     else:
@@ -34,6 +35,7 @@ def login(request):
     private_key = encryption.load_private_key(user_pwd)
     # if the password is correct(not none):
     if private_key:
+        request.session['user_pwd'] = user_pwd
         return redirect("loading")
     return render(request, "login.html", {"error_msg": "password is incorrect"})
 
@@ -77,7 +79,6 @@ def add_friend(request):
     if request.method == "GET":
         return render(request, "addfriend.html",{'friends': friends})
     # upload_file is the file which stored the friend's public key.
-    print("nnff")
     upload_file = request.FILES.get('key')
     nickname = request.POST.get('nickname')
     ### still not sure, need to ask the backend leader. binary?
@@ -91,16 +92,25 @@ def add_friend(request):
     add_flag = db.add_friend(public_key, nickname)
     if add_flag is not None:
         friends = db.get_all_friends()
+        request.session['friend_list'] = friends
     print(friends)
     return render(request, "addfriend.html", {'friends': friends, 'add_flag': add_flag})
 
 
 def chatting_page(request, username):
     user_name = request.session.get("user_name")
+    user_pwd = request.session.get("user_pwd")
     friend_name = username
     friends = request.session.get('friend_list', [])
-    print(friends)
-    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend':friend_name})
+
+    # get message from server and sent it to the resiliantdb
+    if request.method == "POST":
+        input_msg = request.POST.get("message")
+        print("message##:", input_msg)
+        if message is not None:
+            message.send_message(input_msg, friend_name)
+    message.get_update(friend_name, user_pwd)
+    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name})
 
 '''
 def chatting_page(request):

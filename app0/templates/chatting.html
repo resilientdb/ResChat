@@ -81,7 +81,7 @@
                 </div>
                 <!-- add friend & quit button -->
                 <div class="bg-light">
-                    <a href="#" class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
+                    <a href="{% url 'addfriend' %}" class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
                     <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                             </tr>
                             {% endif %}
                             {% endfor %}
-                        </tbody>
+                        </tbod  y>
                     </table>
                 </div>
                 <div class="row message-box p-3">
@@ -143,8 +143,10 @@
                                 d="M13 4a2 2 0 0 0 2 2V4h-2zM3 4a2 2 0 0 1-2 2V4h2zm10 8a2 2 0 0 1 2-2v2h-2zM3 12a2 2 0 0 0-2-2v2h2zm7-4a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
                         </svg>
                     </div>
+                    <form method="post" action="/{{ friend }}/">
+                        {% csrf_token %}
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="message_input" placeholder="Write message...">
+                        <input type="text" class="form-control" id="message_input" name="message" placeholder="Write message...">
 
                     </div>
                     <div class="col-sm-2 mt-1">
@@ -152,17 +154,11 @@
                             <button class="btn btn-success" id="chat-message-submit">Submit</button>
                         </div>
                     </div>
-
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-{{friend|json_script:"json-username"}}
-{{user|json_script:"json-message-username"}}
-{% endblock %}
-
-{% block javascript %}
-<script src="{% static 'js/chat.js' %}"></script>
 {% endblock %}

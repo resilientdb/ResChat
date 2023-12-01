@@ -19,13 +19,4 @@ from app0.consumers import PersonalChatConsumer
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ResChat.settings')
 
-django_asgi_app = get_asgi_application()
-# config for my app0 app
-application = ProtocolTypeRouter({
-    "http": django_asgi_app,  # HTTP requests are handled by Django
-    'websocket': AuthMiddlewareStack(
-        URLRouter([
-            path('ws/<str:friend_nickname>/', PersonalChatConsumer.as_asgi()) # suffix of websocket path( not normal django request).
-        ])
-    )
-})
+application = get_asgi_application()
