@@ -90,6 +90,7 @@ def add_friend(request):
     print(nickname)
     print(public_key)
     add_flag = db.add_friend(public_key, nickname)
+    # refresh the friend list so the new friend can show in the web page.
     if add_flag is not None:
         friends = db.get_all_friends()
         request.session['friend_list'] = friends
@@ -109,8 +110,9 @@ def chatting_page(request, username):
         print("message##:", input_msg)
         if message is not None:
             message.send_message(input_msg, friend_name)
-    message.get_update(friend_name, user_pwd)
-    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name})
+    history = message.get_update(friend_name, user_pwd)
+    print(history)
+    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history})
 
 '''
 def chatting_page(request):

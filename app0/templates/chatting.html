@@ -89,16 +89,16 @@
                 <div class="message-table-scroll">
                     <table class="table">
                         <tbody id='chat-body'>
-                            {% for message in messages %}
-                            {% if message.sender == user %}
+                            {% for message in chat_history %}
+                            {% if message.0 == "sent" %}
                             <tr>
                                 <td>
                                     <p class="bg-success p-2 mt-2 mr-5 shadow-sm text-white float-right rounded">
-                                        {{message.message}}
+                                        {{message.2}}
                                     </p>
                                 </td>
                                 <td>
-                                    <p><small class="p-1 shadow-sm">{{message.timestamp|time:'H:i'}}</small>
+                                    <p><small class="p-1 shadow-sm">{{message.1|time:'H:i'}}</small>
                                     </p>
                                 </td>
                             </tr>
@@ -106,17 +106,17 @@
                             <tr>
                                 <td>
                                     <p class="bg-primary p-2 mt-2 mr-5 shadow-sm text-white float-left rounded">
-                                        {{message.message}}
+                                        {{message.2}}
                                     </p>
                                 </td>
                                 <td>
-                                    <p><small class="p-1 shadow-sm">{{message.timestamp|time:'H:i'}}</small>
+                                    <p><small class="p-1 shadow-sm">{{message.1|time:'H:i'}}</small>
                                     </p>
                                 </td>
                             </tr>
                             {% endif %}
                             {% endfor %}
-                        </tbod  y>
+                        </tbody>
                     </table>
                 </div>
                 <div class="row message-box p-3">
@@ -161,4 +161,9 @@
     </div>
 
 </div>
+    {{friend|json_script:"json-receiver"}}
+{% endblock %}
+{% block javascript %}
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script src="{% static 'js/polling.js' %}"></script>
 {% endblock %}
