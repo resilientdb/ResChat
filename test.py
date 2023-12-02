@@ -40,5 +40,6 @@ print(type(load_public_key()))
 #            "-----END PUBLIC KEY-----", "test")
 # clean("test")
 
-print(type(encrypt_message(b"test", load_public_key())))
-print(get_friend('kny'))
+#print(type(encrypt_message(b"test", load_public_key())))
+#print(get_friend('kny'))
+clean("kate")

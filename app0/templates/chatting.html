@@ -161,9 +161,14 @@
     </div>
 
 </div>
-    {{friend|json_script:"json-receiver"}}
 {% endblock %}
+
 {% block javascript %}
-    <script src="{% static 'js/chat.js' %}"></script>
     <script src="{% static 'js/polling.js' %}"></script>
+    <script>
+        // Refresh the page every 5 seconds (5000 milliseconds)
+        setInterval(function() {
+            location.reload();
+        }, 2000);
+    </script>
 {% endblock %}

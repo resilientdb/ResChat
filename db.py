@@ -18,7 +18,7 @@ def add_friend(public_key: str, nick_name: str):
 
     if nick_name in dic:
         print(f"{nick_name} is already your friend")
-        return None
+        return False
     else:
         dic[nick_name] = {"public_key": public_key, "current_page": 1}
         with open(file_name, 'w') as file:

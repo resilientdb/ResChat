@@ -91,7 +91,7 @@ def add_friend(request):
     print(public_key)
     add_flag = db.add_friend(public_key, nickname)
     # refresh the friend list so the new friend can show in the web page.
-    if add_flag is not None:
+    if add_flag is not False:
         friends = db.get_all_friends()
         request.session['friend_list'] = friends
     print(friends)

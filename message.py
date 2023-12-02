@@ -159,11 +159,11 @@ def get_update(nickname: str, password: str):
         if msg[0] == public_key_to_string(sender_pub_key):
             tmp.append("received")
             tmp.append(msg[2])
-            tmp.append(decrypt_message(msg[5], sender_pri_key))
+            tmp.append(decrypt_message(msg[5], sender_pri_key).decode())
         elif msg[0] == public_key_to_string(receiver_pub_key):
             tmp.append("sent")
             tmp.append(msg[2])
-            tmp.append(decrypt_message(msg[4], sender_pri_key))
+            tmp.append(decrypt_message(msg[4], sender_pri_key).decode())
         decrypted_chat_history.append(tmp)
 
     return decrypted_chat_history
