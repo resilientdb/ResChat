@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app0.apps.App0Config',
-    'user_auth.apps.UserAuthConfig',
-    'messaging.apps.MessagingConfig',
 ]
 
 #     'crispy_forms',
