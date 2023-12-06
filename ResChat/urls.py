@@ -25,9 +25,14 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name= 'register'),
+    path('aboutResChat/', views.aboutResChat, name='aboutResChat'),
+    path('profile/', views.profile, name='profile'),
+
+
     path('loading/', views.loading_keys, name='loading'),
     path('index/', views.index, name='index'),
     path('addfriend/', views.add_friend, name='addfriend'),
     # path('chatting/', views.chatting_page, name='chatting'),
     path('<str:username>/', views.chatting_page, name='chat'),
+
 ]

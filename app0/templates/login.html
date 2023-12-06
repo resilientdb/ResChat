@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center vh-100 custom-background">
+<div cllsass="d-flex justify-content-center align-items-center vh-100 custom-background">
     <div class="text-center flex-column p-4 bg-white rounded">
         <h3>login</h3>
         <form method="post" action="/login/">
@@ -28,4 +28,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block navbar %}
+    {% include 'navbar.html' %}
 {% endblock %}

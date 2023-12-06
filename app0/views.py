@@ -65,7 +65,6 @@ def loading_keys(request):
     # redirect_url = 'chatting'
     # return render(request, "loading.html", {'redirect_url': redirect_url})
 
-
 def index(request):
     # Retrieve the friend list from the session
     friends = request.session.get('friend_list', [])
@@ -121,6 +120,12 @@ def chatting_page(request):
     return render(request, "chatting.html", {'friends_names': friend_list})
 
     # return render(request, "chatting.html")
-
 '''
 
+
+
+def aboutResChat(request):
+    return render(request, 'aboutResChat.html')
+
+def profile(request):
+    return render(request, 'profile.html')
