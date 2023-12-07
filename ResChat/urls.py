@@ -32,7 +32,7 @@ urlpatterns = [
     path('loading/', views.loading_keys, name='loading'),
     path('index/', views.index, name='index'),
     path('addfriend/', views.add_friend, name='addfriend'),
-    # path('chatting/', views.chatting_page, name='chatting'),
-    path('<str:username>/', views.chatting_page, name='chat'),
+    path('chat/<str:username>/', views.chatting_page, name='chat'),
+    path('trigger/<str:username>/', views.trigger_func, name='trigger'),
 
 ]
