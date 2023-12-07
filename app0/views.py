@@ -98,31 +98,35 @@ def add_friend(request):
 
 
 def chatting_page(request, username):
+    print("cf:", username)
     user_name = request.session.get("user_name")
     user_pwd = request.session.get("user_pwd")
     friend_name = username
     friends = request.session.get('friend_list', [])
-
+    request.session["friend_name"] = username
+    ####
     # get message from server and sent it to the resiliantdb
     if request.method == "POST":
         input_msg = request.POST.get("message")
         print("message##:", input_msg)
-        if message is not None:
+        if input_msg is not None:
             message.send_message(input_msg, friend_name)
     history = message.get_update(friend_name, user_pwd)
-    print(history)
-    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history})
-
-'''
-def chatting_page(request):
-    # Retrieve the friend list from the session
-    friend_list = request.session.get('friend_list', [])
-    return render(request, "chatting.html", {'friends_names': friend_list})
-
-    # return render(request, "chatting.html")
-'''
+    print("history: ", len(history))
+    print("history length: ", len(history))
+    request.session["his_len"] = len(history)
+    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history, "history_length": len(history)})
 
 
+def trigger_func(request, username):
+    try:
+        user_pwd = request.session.get("user_pwd")
+        friend_name= request.session.get("friend_name")
+        history=message.get_update(friend_name, user_pwd)
+        return JsonResponse({'history': history})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+        
 
 def aboutResChat(request):
     return render(request, 'aboutResChat.html')
