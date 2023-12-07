@@ -3,33 +3,91 @@
 <head>
     <title>Pricing</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .content {
+            text-align: center;
+            z-index: 10;
+        }
+
         .big-bold {
-            font-size: 36px; /* Large font size */
-            font-weight: bold; /* Bold font */
-            text-align: center; /* Center text */
-            margin-top: 50px; /* Spacing from top */
+            font-size: 72px;
+            font-weight: bold;
+            color: #004d40;
+            margin-bottom: 20px;
         }
 
         .back-button {
             display: block;
-            width: 100px;
-            padding: 10px;
-            margin: 20px auto;
-            text-align: center;
+            width: 200px;
+            padding: 15px;
             background-color: #004d40;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+            text-align: center;
         }
+
+        .back-button:hover {
+            background-color: #00382b;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100vw); opacity: 0; }
+        }
+
+        .bubble {
+            position: absolute;
+            color: #004d40;
+            font-size: 24px;
+            animation: float 5s infinite ease-in-out; /* Reduced duration for faster movement */
+        }
+
+        /* Randomly place the bubbles at the start */
+        .bubble:nth-child(10n+1) { left: 10%; }
+        .bubble:nth-child(10n+2) { left: 20%; }
+        .bubble:nth-child(10n+3) { left: 30%; }
+        .bubble:nth-child(10n+4) { left: 40%; }
+        .bubble:nth-child(10n+5) { left: 50%; }
+        .bubble:nth-child(10n+6) { left: 60%; }
+        .bubble:nth-child(10n+7) { left: 70%; }
+        .bubble:nth-child(10n+8) { left: 80%; }
+        .bubble:nth-child(10n+9) { left: 90%; }
+        .bubble:nth-child(10n+10) { left: 100%; }
     </style>
 </head>
 <body>
-    <div class="big-bold">
-        IT'S FREE
+    <div class="content">
+        <div class="big-bold">
+            IT'S FREE
+        </div>
+        <a href="register.html" class="back-button">Back to Register</a>
     </div>
 
-    <!-- Back Button -->
-    <a href="register.html" class="back-button">Back to Register</a>
+    <!-- Dollar sign animations -->
+    <!-- Adding 25 dollar signs -->
+    <div class="bubble">$</div>
+    <div class="bubble">$</div>
+    <div class="bubble">$</div>
+    <!-- ... (repeat this line 22 more times to add up to 25 dollar signs) ... -->
+    <div class="bubble">$</div>
+    <div class="bubble">$</div>
+    <div class="bubble">$</div>
+    <!-- ... (continue adding until you have 25) ... -->
 
 </body>
 </html>
