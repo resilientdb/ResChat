@@ -1,32 +1,129 @@
 {% extends 'base.html' %}
+
 {% block title %}Register{% endblock %}
 
 {% block css %}
-    <style>
-        body .custom-background {
-            background-color: #59b4a9;
-        }
-    </style>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+    }
+
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .circle {
+        border-radius: 50%;
+        position: absolute;
+        animation: move 15s linear infinite; /* Faster animation */
+        opacity: 0.6;
+    }
+
+    @keyframes move {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15vh); }
+    }
+
+    /* More circles with various sizes and positions */
+    .circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
+    .circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
+    .circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
+    .circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
+    .circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
+    .circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
+    .circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
+    .circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
+
+    .register-container {
+        position: relative;
+        z-index: 1;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 50px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        width: 400px;
+        max-width: 100%;
+        margin: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .register-title {
+        font-size: 32px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        background-color: #f9f9f9;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background-color: #008080;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #006666;
+    }
+
+    .form-text {
+        font-size: 14px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center vh-100 custom-background">
-    <div class="text-center flex-column p-4 bg-white rounded">
-        <h3>please register</h3>
-        <form method="post" action="/register/" class="mb-4">
-            {% csrf_token %}
-            <div class="form-group mb-3">
-                <label for="exampleInputEmail1">Username</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" name="name">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
-            </div>
-            <div class="form-group mb-3">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="psw">
-            </div>
-            <button type="submit" class="btn btn-primary" value="submit">Submit</button>
-        </form>
-    </div>
+<div class="background">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+    <div class="circle circle4"></div>
+    <div class="circle circle5"></div>
+    <div class="circle circle6"></div>
+    <div class="circle circle7"></div>
+    <div class="circle circle8"></div>
 </div>
 
+<div class="register-container">
+    <h3 class="register-title">Please Register</h3>
+    <form method="post" action="/register/" class="mb-4">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" name="name">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
+        </div>
+        <div class="form-group mb-3">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="psw">
+        </div>
+        <button type="submit" class="btn btn-primary" value="submit">Submit</button>
+    </form>
+</div>
 {% endblock %}
