@@ -77,6 +77,50 @@
 
                             <!-- end -->
                         </tbody>
+                        {{ friend|json_script:"json_friend" }}
+                        {{ history_length|json_script:"json_history" }}
+                        <script>
+                            friend = JSON.parse(document.getElementById("json_friend").textContent)
+                            his_len = JSON.parse(document.getElementById("json_history").textContent)
+                            function fetchUpdates() {
+                                $.ajax({
+                                    url: "/trigger/"+friend+"/",
+                                    method: "GET",
+                                    dataType: "json",
+                                    success: function(data) {
+                                        // Handle the response data (update your UI with the new data)
+                                        //console.log("Data type:", typeof data);
+                                        console.log("Received updates:", data.history.length);
+                                        console.log('old_history:', his_len)
+
+                                        if (data.history.length > his_len && data.history[data.history.length - 1][0] === "received") {
+                                            console.log("hi,this is if ")
+                                            message = data.history[data.history.length - 1]
+                                            if (message[0] === "sent") {
+                                                document.querySelector('#chat-body').innerHTML += `<tr>
+                                                               <td>
+                                                               <p class="bg-success p-2 mt-2 mr-5 shadow-sm text-white float-right rounded">${message[2]}</p>
+                                                               </td>
+                                                           </tr>`
+                                            } else {
+                                                document.querySelector('#chat-body').innerHTML += `<tr>
+                                                               <td>
+                                                               <p class="bg-primary p-2 mt-2 mr-5 shadow-sm text-white float-left rounded">${message[2]}</p>
+                                                               </td>
+                                                           </tr>`
+                                            }
+                                            his_len +=1
+                                        }
+                                    },
+                                    error: function(error) {
+                                        console.error("Error fetching updates:", error);
+                                    }
+                                });
+                            }
+                            fetchUpdates()
+                            // Set up an interval to fetch updates every 5 seconds
+                            setInterval(fetchUpdates, 2000);
+                        </script>
                     </table>
                 </div>
                 <!-- add friend & quit button -->
@@ -161,14 +205,4 @@
     </div>
 
 </div>
-{% endblock %}
-
-{% block javascript %}
-    <script src="{% static 'js/polling.js' %}"></script>
-    <script>
-        // Refresh the page every 5 seconds (5000 milliseconds)
-        setInterval(function() {
-            location.reload();
-        }, 2000);
-    </script>
 {% endblock %}
