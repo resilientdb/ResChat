@@ -42,4 +42,4 @@ print(type(load_public_key()))
 
 #print(type(encrypt_message(b"test", load_public_key())))
 #print(get_friend('kny'))
-clean("kate")
+clean("kv_2")

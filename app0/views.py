@@ -115,7 +115,7 @@ def chatting_page(request, username):
     print("history: ", len(history))
     print("history length: ", len(history))
     request.session["his_len"] = len(history)
-    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history, "history_length": 0})
+    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history, "history_length": len(history)})
 
 
 
