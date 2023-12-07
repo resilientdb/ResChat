@@ -1,19 +1,58 @@
 {% extends 'base.html' %}
 
-
 {% block navbar %}
+<style>
+    .reschat-logo {
+        position: relative;
+        width: 25px;
+        height: 25px;
+        font-size: 8px;
+        color: #004d40;
+        display: inline-block;
+        font-weight: bold;
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    .reschat-logo span {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        text-align: center;
+        line-height: 8px;
+        transform-origin: 12.5px 12.5px;
+    }
+
+    .reschat-logo .r { transform: rotate(0deg) translate(12.5px) rotate(0deg); }
+    .reschat-logo .e { transform: rotate(51.4deg) translate(12.5px) rotate(-51.4deg); }
+    .reschat-logo .s { transform: rotate(102.8deg) translate(12.5px) rotate(-102.8deg); }
+    .reschat-logo .c { transform: rotate(154.2deg) translate(12.5px) rotate(-154.2deg); }
+    .reschat-logo .h { transform: rotate(205.6deg) translate(12.5px) rotate(-205.6deg); }
+    .reschat-logo .a { transform: rotate(257deg) translate(12.5px) rotate(-257deg); }
+    .reschat-logo .t { transform: rotate(308.4deg) translate(12.5px) rotate(-308.4deg); }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <div class="navbar-brand">
+        <div class="reschat-logo">
+            <span class="r">R</span>
+            <span class="e">E</span>
+            <span class="s">S</span>
+            <span class="c">C</span>
+            <span class="h">H</span>
+            <span class="a">A</span>
+            <span class="t">T</span>
+        </div>
+    </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="#">Features</a>
-        <a class="nav-item nav-link" href="#">Pricing</a>
-        <a class="nav-item nav-link disabled" href="#">Disabled</a>
-      </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="features.html">Features</a>
+            <a class="nav-item nav-link" href="#">Pricing</a>
+        </div>
     </div>
 </nav>
 
