@@ -112,15 +112,10 @@ def chatting_page(request, username):
         if input_msg is not None:
             message.send_message(input_msg, friend_name)
     history = message.get_update(friend_name, user_pwd)
-    if history is None:
-        return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history, "history_length": 0})
-    else:
-        print("history: ", len(history))
-        print("history length: ", len(history))
-        request.session["his_len"] = len(history)
-        return render(request, 'chatting.html',
-                      context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history,
-                               "history_length": len(history)})
+    print("history: ", len(history))
+    print("history length: ", len(history))
+    request.session["his_len"] = len(history)
+    return render(request, 'chatting.html', context={'user': user_name, 'friends': friends, 'friend': friend_name, 'chat_history': history, "history_length": 0})
 
 
 

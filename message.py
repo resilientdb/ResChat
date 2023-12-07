@@ -123,7 +123,7 @@ def get_update(nickname: str, password: str):
 
     # Check current page and old page are empty or not
     if current_page_string == "\n" and old_page_string == "\n":
-        return None
+        return ""
     elif old_page_string != "\n" and current_page_string != "\n":
         old_page = Page().from_string(old_page_string)
         current_page = Page().from_string(current_page_string)
