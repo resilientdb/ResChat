@@ -44,6 +44,12 @@ def features_view(request):
     # We can customize this view function as needed
     return render(request, 'features.html')
 
+# Defined a new view for the "pricing.html" page
+def pricing_view(request):
+    # We can customize this view function as needed
+    return render(request, 'pricing.html')
+
+
 
 def register(request):
     if request.method == 'GET':
