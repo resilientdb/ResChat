@@ -52,7 +52,7 @@ background-color: #008080;
     height: 500px;
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 30px;
+    padding: 10px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     margin: 10%; /* Adjust the margin for padding */
@@ -92,6 +92,13 @@ text-align: center;
     height: 40px; /* Adjust the height as needed */
     border-radius: 50%;
     margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.chat-top {
+    background-color: #008080;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
 }
 </style>
 {% endblock %}
@@ -174,7 +181,7 @@ text-align: center;
                 <a href="{% url 'login' %}" class="btn btn-danger" id="quitBtn">Quit</a>
             </div>
         </div>
-        <div class="col-sm-8 message-area d-flex align-items-center justify-content-center">
+        <div class="message-area">
             <div class="chat-history">
                 <table class="table">
                     <tbody id='chat-body'>
@@ -283,8 +290,8 @@ text-align: center;
 
                 </div>
                 <div class="col-sm-2 mt-1">
-                    <div class="control">
-                        <button class="btn btn-success" id="chat-message-submit">Submit</button>
+                    <div class="control d-flex flex-column">
+                        <button class="btn btn-primary" id="chat-message-submit">Send</button>
                     </div>
                 </div>
                 </form>
