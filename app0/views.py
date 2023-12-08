@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import JsonResponse
+from django.contrib.auth import logout
 import os
 
 import encryption
@@ -145,3 +146,8 @@ def aboutResChat(request):
 
 def profile(request):
     return render(request, 'profile.html')
+
+
+def quit(request):
+    logout(request)
+    redirect('login')

@@ -1,61 +1,68 @@
-.back-top {
-  background-color: #009688;
-  height: 15vh;
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
 }
 
-.back-main {
-  background-color: #d9dbd5;
-  height: 85vh;
-}
-
-.back-container {
-  position: relative;
-}
-
-.front-container {
-  position: absolute;
+.background {
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
 }
-.front-container1 {
+
+.circle {
+  border-radius: 50%;
   position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
+  animation: move 15s linear infinite;
+  opacity: 0.6;
 }
 
-.chat-top {
-  background-color: #ededed;
-  min-height: 50px;
+@keyframes move {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15vh); }
 }
 
-.profile-image {
-  margin-top: 7px;
-  height: 30px;
-  width: 30px;
+.btn-primary {
+  background-color: #008080;
 }
+
+.circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
+.circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
+.circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
+.circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
+.circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
+.circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
+.circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
+.circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
+
 
 .contacts {
-  background-color: #ffffff;
-  min-height: 600px;
+  height: 500px;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 30%;
+  margin-left: 10%; /* Adjust the left margin as needed */
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.contact-table-scroll {
-  overflow-y: scroll;
-  height: 600px;
-}
 
-.message-area {
-  background-color: #e4e1de;
-  min-height: 600px;
-}
-
-.message-table-scroll {
-  overflow-y: scroll;
-  height: 550px;
-}
-
-.message-box {
-  background-color: #f0f0f0;
+.friends-list-title {
+  font-size: 32px;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }

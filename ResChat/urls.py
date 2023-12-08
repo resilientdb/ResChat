@@ -36,5 +36,5 @@ urlpatterns = [
     path('addfriend/', views.add_friend, name='addfriend'),
     path('chat/<str:username>/', views.chatting_page, name='chat'),
     path('trigger/<str:username>/', views.trigger_func, name='trigger'),
-
+    path('quit/', views.quit, name='quit'),
 ]
