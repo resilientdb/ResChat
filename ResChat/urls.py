@@ -24,7 +24,7 @@ urlpatterns = [
     path('', views.checking_user),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
-    path('features.html', views.features_view, name='features'),
+    path('login/features.html/', views.features_view, name='features'),
     path('register/', views.register, name='register'),
     path('aboutResChat/', views.aboutResChat, name='aboutResChat'),
     path('profile/', views.profile, name='profile'),
