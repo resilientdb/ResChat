@@ -105,7 +105,7 @@ text-align: center;
     <div class="container front-container1">
         <div class="row chat-top">
             <div class="col-sm-4 border-right border-secondary">
-                <img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+                <img src="{% static 'assets/dp.png' %}" class="friend-profile-picture">
                 <span class="ml-2">{{user}}</span>
                 <span class="float-right mt-2">
                     <div class="notification">
@@ -127,7 +127,7 @@ text-align: center;
 
             </div>
             <div class="col-sm-8">
-                <img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+                <img src="{% static 'assets/dp.png' %}" class="friend-profile-picture">
                 <span class="ml-2">{{friend}}</span>
                 {% if user.userprofilemodel.online_status %}
                 <small id="{{user.username}}_small">Online</small>
