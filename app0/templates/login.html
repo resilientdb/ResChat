@@ -41,7 +41,6 @@
     .circle6 { width: 210px; height: 210px; background-color: #808080; right: 50%; bottom: 10%; animation-duration: 24s; }
 
     .login-container {
-        position: relative;
         z-index: 1;
         background-color: rgba(255, 255, 255, 0.95);
         padding: 50px;
@@ -50,10 +49,6 @@
         width: 400px;
         max-width: 100%;
         margin: auto;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
 
     .login-title {
         font-size: 32px;
@@ -108,17 +103,25 @@
     <div class="circle circle6"></div>
 </div>
 
-<div class="login-container">
-    <h3 class="login-title">Login</h3>
-    <form method="post" action="/login/">
-        {% csrf_token %}
-        <div>
-            <input type="password" class="form-control" id="exampleInputPassword1" name="pwd" placeholder="Enter your password">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div class="login-container text-center">
+                <h3 class="login-title">Login</h3>
+                <form method="post" action="/login/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="exampleInputPassword1" name="pwd" placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="error-message">{{ error_msg }}</div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <div class="error-message">{{ error_msg }}</div>
+    </div>
 </div>
+
+
 {% endblock %}
 
 {% block navbar %}
