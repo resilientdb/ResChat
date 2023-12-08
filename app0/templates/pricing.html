@@ -25,6 +25,12 @@
             font-weight: bold;
             color: #004d40;
             margin-bottom: 20px;
+            animation: morph 5s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .back-button {
@@ -45,16 +51,16 @@
         }
 
         @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(100vw); opacity: 0; }
+            0% { transform: scale(0.5) translateX(0) translateY(0); opacity: 1; }
+            50% { transform: scale(2) rotate(360deg); opacity: 1; }
+            100% { transform: scale(0.5) translateX(100vw) translateY(-100vh) rotate(720deg); opacity: 0; }
         }
 
         .bubble {
             position: absolute;
             color: #004d40;
             font-size: 24px;
-            animation: float 5s infinite ease-in-out; /* Reduced duration for faster movement */
+            animation: float 10s infinite ease-in-out;
         }
 
         /* Randomly place the bubbles at the start */
@@ -75,7 +81,7 @@
         <div class="big-bold">
             IT'S FREE
         </div>
-        <a href="{% url 'login' %}">Back to Login</a> <!-- Link back to the main page using Django's url template tag -->
+        <a href="{% url 'login' %}" class="back-button">Back to Login</a>
     </div>
 
     <!-- Dollar sign animations -->
