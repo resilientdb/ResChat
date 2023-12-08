@@ -4,38 +4,113 @@
 {% block title %}ResChat{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+    }
+
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .circle {
+        border-radius: 50%;
+        position: absolute;
+        animation: move 15s linear infinite;
+        opacity: 0.6;
+    }
+
+    @keyframes move {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15vh); }
+    }
+
+    .btn-primary {
+        background-color: #008080;
+    }
+
+    .circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
+    .circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
+    .circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
+    .circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
+    .circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
+    .circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
+    .circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
+    .circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
+
+
+    .contacts {
+        height: 500px;
+        z-index: 1;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        width: 30%;
+        margin-left: 10%; /* Adjust the left margin as needed */
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+
+    .friends-list-title {
+        font-size: 32px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="back-container">
-    <div class="container-fluid front-container">
-        <div class="back-top"></div>
-        <div class="back-main"></div>
-    </div>
-    <div class="container front-container1">
-        <div class="row">
-            <div class="col-sm-4 contacts">
-                <div class="contact-table-scroll">
-                    <table class="table table-hover">
-                        <tbody>
-                            {% for friend in friends %}
-                            <tr>
-                                <td><img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
-                                </td>
-                                <td><a href="{% url 'chat' username=friend %}">{{friend}}</a></td>
-                            </tr>
-                            {% endfor %}
-                            <!-- end -->
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Add Friend and Quit buttons fixed at the bottom using Bootstrap classes -->
-                <div class="bg-light flex-column">
-                    <a href="{% url 'addfriend' %}" class="btn btn-primary btn-block" id="addFriendBtn">Add Friend</a>
-                    <a href="#" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
 
+<div class="background">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+    <div class="circle circle4"></div>
+    <div class="circle circle5"></div>
+    <div class="circle circle6"></div>
+    <div class="circle circle7"></div>
+    <div class="circle circle8"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with scrollable friends list -->
+        <div class="col-sm-4 contacts">
+            <div class="contact-container">
+                <h3 class="friends-list-title">Friends List</h3>
+                <div class="contact-table-scroll">
+                    <div class="list-group">
+                        {% for friend in friends %}
+                        <a href="{% url 'chat' username=friend %}" class="list-group-item list-group-item-action">
+                            <img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+                            {{ friend }}
+                        </a>
+                        {% endfor %}
+                    </div>
                 </div>
+
+            </div>
+            <div class="d-flex flex-column">
+                <a href="{% url 'addfriend' %}" class="btn btn-primary mb-2" id="addFriendBtn">Add Friend</a>
+                <a href="#" class="btn btn-danger" id="quitBtn">Quit</a>
             </div>
         </div>
     </div>
