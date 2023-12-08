@@ -4,92 +4,192 @@
 {% block title %}ResChat{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<style>
+    body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    }
+    
+    .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    }
+    
+    .circle {
+    border-radius: 50%;
+    position: absolute;
+    animation: move 15s linear infinite;
+    opacity: 0.6;
+    }
+    
+    @keyframes move {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15vh); }
+    }
+    
+    .btn-primary {
+    background-color: #008080;
+    }
+    
+    .circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
+    .circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
+    .circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
+    .circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
+    .circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
+    .circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
+    .circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
+    .circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
+    
+    
+    .contacts, .message-area {
+        height: 500px;
+        z-index: 1;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        margin: 10%; /* Adjust the margin for padding */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        top: 50%;
+        overflow-y: auto;
+        max-height: 100%;
+      }
+    
+    .contacts {
+        flex: 1;
+        margin-right: 3%;
+    }
+    
+    .message-area {
+        flex: 2;
+        margin-left: 3%;
+    }
+    
+    .friends-list-title {
+    font-size: 30px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    }
+    
+    .list-group-item {
+        display: flex;
+        align-items: center;
+    }
+    
+    .friend-profile-picture {
+        width: 40px; /* Adjust the width as needed */
+        height: 40px; /* Adjust the height as needed */
+        border-radius: 50%;
+        margin-right: 10px; /* Adjust the margin as needed */
+    }
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="back-container">
-    <div class="container-fluid front-container">
-        <div class="back-top"></div>
-        <div class="back-main"></div>
-    </div>
-    <div class="container front-container1">
-        <div class="row">
-            <div class="col-sm-4 contacts">
+<div class="background">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+    <div class="circle circle4"></div>
+    <div class="circle circle5"></div>
+    <div class="circle circle6"></div>
+    <div class="circle circle7"></div>
+    <div class="circle circle8"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with scrollable friends list -->
+        <div class="col-sm-4 contacts">
+            <div class="contact-container">
+                <h3 class="friends-list-title">Friend List</h3>
                 <div class="contact-table-scroll">
-                    <table class="table table-hover">
-                        <tbody>
-                            {% for friend in friends %}
-                            <tr>
-                                <td><img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
-                                </td>
-                                <td><a href="{% url 'chat' username=friend %}">{{friend}}</a></td>
-                            </tr>
-                            {% endfor %}
-                            <!-- end -->
-                        </tbody>
-                    </table>
+                    <div class="list-group">
+                        {% for friend in friends %}
+                        <a href="{% url 'chat' username=friend %}" class="list-group-item list-group-item-action">
+                            <img src="{% static 'assets/dp.png' %}" class="friend-profile-picture">
+                            {{ friend }}
+                        </a>
+                        {% endfor %}
+                    </div>
                 </div>
-                <!-- Add and Quit buttons fixed at the bottom using Bootstrap classes -->
-                <div class="bg-light">
-                    <!--<a href="#" class="btn btn-primary btn-block" id="addFriendBtn">Add</a>-->
-                    <button id="addFriendButton" form="add_form" type="submit" class="btn btn-primary btn-block">Add</button>
-                    <a href="{% url 'login' %}" class="btn btn-danger btn-block mt-2" id="quitBtn">Quit</a>
-                </div>
+
             </div>
-            <div class="col-sm-8 message-area">
-                <div class="container mt-5">
-                    <form method="post" id="add_form" action="/addfriend/" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row mt-4 p-5">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="keyInput">please Upload your friend's public Key</label>
-                                    <input type="file" id="fileInput" accept=".pem" name= "key" placeholder="upload file">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-4 p-5">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nicknameInput">please enter your friend's Nickname</label>
-                                    <input type="text" class="form-control" id="nicknameInput" name="nickname" placeholder="Enter Nickname">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div class="d-flex flex-column">
+                <a href="{% url 'addfriend' %}" class="btn btn-primary mb-2" id="addFriendBtn">Add Friend</a>
+                <a href="{% url 'login' %}" class="btn btn-danger" id="quitBtn">Quit</a>
             </div>
         </div>
-        <script>
-            // handle the
-            $(document).ready(function () {
-                var add_flag = "{{ add_flag }}";
-                console.log(add_flag)
-                // Handle the click event of the upload button
-                $("#addFriendButton").click(function () {
-                    var fileInput = $("#fileInput")[0];
-                    var nickname = $("#nicknameInput").val();
-                    // Check if a file is selected(test)
-                    if (fileInput.files.length > 0) {
-                        // Access the selected file
-                        var selectedFile = fileInput.files[0]
-                        console.log("Selected File Name: " + selectedFile.name);
-                    } else {
-                        console.log("No file selected.");
-                    }
-                    // test
-                    console.log("**Nickname: " + nickname);
-                    if (add_flag === false) {
-                    // Friend already exists, show a pop-up message
-                    alert(nickname + ' is already your friend.');
-                    } else {
-                        alert('Friend added successfully.');
-                    }
-                });
-            });
-        </script>
+        <div class="col-sm-8 message-area d-flex align-items-center justify-content-center">
+            <div class="message-container text-center">
+                <form method="post" id="add_form" action="/addfriend/" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mt-2 p-4">
+                        <div class="form-group">
+                            <div class="mb-3 form-group">
+                                <label for="keyInput" class="form-label">Please Upload your friend's Public Key</label>
+                                <input class="form-control" type="file" id="fileInput" accept=".pem" name= "key" placeholder="upload file">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 p-4">
+                        <div>
+                            <div class="form-group">
+                                <label for="nicknameInput">Please enter your friend's Nickname</label>
+                                <input type="text" class="form-control" id="nicknameInput" name="nickname" placeholder="Enter Nickname">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+    <script>
+        // handle the
+        $(document).ready(function () {
+            var add_flag = "{{ add_flag }}";
+            console.log(add_flag)
+            // Handle the click event of the upload button
+            $("#addFriendButton").click(function () {
+                var fileInput = $("#fileInput")[0];
+                var nickname = $("#nicknameInput").val();
+                // Check if a file is selected(test)
+                if (fileInput.files.length > 0) {
+                    // Access the selected file
+                    var selectedFile = fileInput.files[0]
+                    console.log("Selected File Name: " + selectedFile.name);
+                } else {
+                    console.log("No file selected.");
+                }
+                // test
+                console.log("**Nickname: " + nickname);
+                if (add_flag === false) {
+                // Friend already exists, show a pop-up message
+                alert(nickname + ' is already your friend.');
+                } else {
+                    alert('Friend added successfully.');
+                }
+            });
+        });
+    </script>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        
 </div>
 
 {% endblock %}

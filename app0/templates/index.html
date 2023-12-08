@@ -5,75 +5,93 @@
 
 {% block css %}
 <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        font-family: 'Arial', sans-serif;
-        overflow: hidden;
-    }
+body, html {
+height: 100%;
+margin: 0;
+font-family: 'Arial', sans-serif;
+overflow: hidden;
+}
 
-    .background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        overflow: hidden;
-    }
+.background {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+overflow: hidden;
+}
 
-    .circle {
-        border-radius: 50%;
-        position: absolute;
-        animation: move 15s linear infinite;
-        opacity: 0.6;
-    }
+.circle {
+border-radius: 50%;
+position: absolute;
+animation: move 15s linear infinite;
+opacity: 0.6;
+}
 
-    @keyframes move {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15vh); }
-    }
+@keyframes move {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-15vh); }
+}
 
-    .btn-primary {
-        background-color: #008080;
-    }
+.btn-primary {
+background-color: #008080;
+}
 
-    .circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
-    .circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
-    .circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
-    .circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
-    .circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
-    .circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
-    .circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
-    .circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
+.circle1 { width: 100px; height: 100px; background-color: #008080; left: 10%; top: 20%; }
+.circle2 { width: 120px; height: 120px; background-color: #808080; right: 12%; top: 30%; }
+.circle3 { width: 140px; height: 140px; background-color: #008080; left: 20%; bottom: 25%; }
+.circle4 { width: 160px; height: 160px; background-color: #808080; right: 28%; bottom: 15%; }
+.circle5 { width: 180px; height: 180px; background-color: #008080; left: 40%; top: 10%; }
+.circle6 { width: 150px; height: 150px; background-color: #808080; right: 50%; bottom: 20%; }
+.circle7 { width: 130px; height: 130px; background-color: #008080; left: 60%; top: 30%; }
+.circle8 { width: 110px; height: 110px; background-color: #808080; right: 65%; bottom: 25%; }
 
 
-    .contacts {
-        height: 500px;
-        z-index: 1;
-        background-color: rgba(255, 255, 255, 0.95);
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        width: 30%;
-        margin-left: 10%; /* Adjust the left margin as needed */
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    
+.contacts, .message-area {
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin: 10%; /* Adjust the margin for padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    top: 50%;
+    overflow-y: auto;
+    max-height: 100%;
+  }
 
-    .friends-list-title {
-        font-size: 32px;
-        color: #333;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
+.contacts {
+    flex: 1;
+    margin-right: 3%;
+}
+
+.message-area {
+    flex: 2;
+    margin-left: 3%;
+}
+
+.friends-list-title {
+font-size: 30px;
+color: #333;
+font-weight: bold;
+margin-bottom: 20px;
+text-align: center;
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+}
+
+.friend-profile-picture {
+    width: 40px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
+    border-radius: 50%;
+    margin-right: 10px; /* Adjust the margin as needed */
+}
 </style>
 {% endblock %}
 
@@ -95,12 +113,12 @@
         <!-- Sidebar with scrollable friends list -->
         <div class="col-sm-4 contacts">
             <div class="contact-container">
-                <h3 class="friends-list-title">Friends List</h3>
+                <h3 class="friends-list-title">Friend List</h3>
                 <div class="contact-table-scroll">
                     <div class="list-group">
                         {% for friend in friends %}
                         <a href="{% url 'chat' username=friend %}" class="list-group-item list-group-item-action">
-        
+                            <img src="{% static 'assets/dp.png' %}" class="friend-profile-picture">
                             {{ friend }}
                         </a>
                         {% endfor %}
@@ -111,6 +129,13 @@
             <div class="d-flex flex-column">
                 <a href="{% url 'addfriend' %}" class="btn btn-primary mb-2" id="addFriendBtn">Add Friend</a>
                 <a href="{% url 'login' %}" class="btn btn-danger" id="quitBtn">Quit</a>
+            </div>
+        </div>
+        <div class="col-sm-8 message-area d-flex align-items-center justify-content-center">
+            <div class="message-container text-center">
+                <h3>
+                    Start Chatting!
+                </h3>
             </div>
         </div>
     </div>
