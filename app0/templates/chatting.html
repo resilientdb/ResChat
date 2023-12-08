@@ -60,18 +60,23 @@ background-color: #008080;
     flex-direction: column;
     justify-content: space-between;
     top: 50%;
-    overflow-y: auto;
-    max-height: 100%;
     }
 
 .contacts {
     flex: 1;
     margin-right: 3%;
+    overflow-y: auto;
+    max-height: 100%;
 }
 
-.message-area {
-    flex: 2;
-    margin-left: 3%;
+/* Add padding to the chat history */
+.chat-history {
+    padding: 10px;
+}
+
+/* Add padding to the message box */
+.message-box {
+    padding: 10px;
 }
 
 .friends-list-title {
@@ -119,7 +124,7 @@ text-align: center;
         <div class="col-sm-4 border-right border-secondary">
             <img src="{% static 'assets/dp.png' %}" alt="" class="friend-profile-picture">
             <span class="ml-2">{{user}}</span>
-            <span class="float-right mt-2">
+            <span class="float-right d-flex align-items-center">
                 <div class="notification">
                     <i class="fa fa-bell-o" aria-hidden="true"></i>
                     <span class="badge" id="count_badge"></span>
