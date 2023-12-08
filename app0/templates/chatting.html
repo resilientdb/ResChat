@@ -69,14 +69,9 @@ background-color: #008080;
     max-height: 100%;
 }
 
-/* Add padding to the chat history */
-.chat-history {
-    padding: 10px;
-}
-
-/* Add padding to the message box */
-.message-box {
-    padding: 10px;
+.message-area {
+    flex: 2;
+    margin-left: 3%;
 }
 
 .friends-list-title {
@@ -120,7 +115,7 @@ text-align: center;
     <div class="circle circle8"></div>
 </div>
 <div class="container-fluid">
-    <div class="row chat-top">
+    <div class="row chat-top d-flex align-items-center">
         <div class="col-sm-4 border-right border-secondary">
             <img src="{% static 'assets/dp.png' %}" alt="" class="friend-profile-picture">
             <span class="ml-2">{{user}}</span>
@@ -149,7 +144,7 @@ text-align: center;
                 {% else %}
                     <small id="{{user.username}}_small">Offline</small>
                 {% endif %}
-            <span class="float-right mt-2">
+            <span class="float-right d-flex align-items-center">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
@@ -265,7 +260,7 @@ text-align: center;
                 </table>
             </div>
             <div class="row message-box p-3">
-                <div class="col-sm-2 mt-2">
+                <div class="col-sm-2 d-flex align-items-center">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-emoji-smile" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"
@@ -291,7 +286,7 @@ text-align: center;
                 <form method="post" action="/chat/{{ friend }}/">
                     {% csrf_token %}
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="message_input" name="message" placeholder="Write message...">
+                    <input type="text" class="form-control col-12" id="message_input" name="message" placeholder="Write message...">
 
                 </div>
                 <div class="col-sm-2 mt-1">
