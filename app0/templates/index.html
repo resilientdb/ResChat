@@ -100,7 +100,7 @@
                     <div class="list-group">
                         {% for friend in friends %}
                         <a href="{% url 'chat' username=friend %}" class="list-group-item list-group-item-action">
-                            <img src="{% static 'assets/dp.png' %}" alt="" class="profile-image rounded-circle">
+        
                             {{ friend }}
                         </a>
                         {% endfor %}
