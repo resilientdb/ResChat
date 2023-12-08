@@ -5,19 +5,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Features</title>
-    <!-- Add any additional head content here (like CSS links) -->
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: larger;
+        }
+
+        p {
+            font-size: medium;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .circle {
+            border-radius: 50%;
+            position: absolute;
+            animation: move 25s linear infinite;
+            opacity: 0.3; /* Reduced opacity */
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20vh); }
+        }
+
+        .circle1 { width: 150px; height: 150px; background-color: #008080; left: 5%; top: 10%; animation-duration: 30s; }
+        .circle2 { width: 200px; height: 200px; background-color: #808080; right: 8%; top: 35%; animation-duration: 22s; }
+        .circle3 { width: 180px; height: 180px; background-color: #008080; left: 65%; bottom: 25%; animation-duration: 28s; }
+        .circle4 { width: 220px; height: 220px; background-color: #808080; right: 30%; bottom: 45%; animation-duration: 20s; }
+        .circle5 { width: 160px; height: 160px; background-color: #008080; left: 35%; top: 5%; animation-duration: 18s; }
+        .circle6 { width: 210px; height: 210px; background-color: #808080; right: 50%; bottom: 10%; animation-duration: 24s; }
+    </style>
 </head>
 <body>
-    <h1>Features</h1>
+    <div class="background">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+        <div class="circle circle4"></div>
+        <div class="circle circle5"></div>
+        <div class="circle circle6"></div>
+    </div>
+
+    <h1>Welcome to Reschat!</h1>
     <p>
-        Here are some of the features of our product/service:
-        <ul>
-            <li>Feature 1</li>
-            <li>Feature 2</li>
-            <li>Feature 3</li>
-            <!-- Add more features as needed -->
-        </ul>
+        Reschat is a new kind of decentralized chat program that was made to address the growing concerns about data privacy and security in digital communication. Reschat uses blockchain technology and Resilient DB to make sure the platform is safe, efficient, and reliable in answer to the growing problems with centralized software. Reschat makes sure that user privacy is protected by reducing the chance of data leaks by spreading out the chat program. The use of Resilient DB ensures the integrity of the data, which makes the app even more reliable, making it a powerful tool that combines the advantages of blockchain sharing with Resilient DB's strong data protection features.  The ResilientDB blockchain stores messages safely by encrypting them with the RSA algorithm to protect privacy. This new method not only fits with how digital communication is changing, but it also makes Reschat the best and most important choice for people who want a safe, decentralized chat space.
+    </p>
+    <h1>Resilient DB</h1>
+    <p>
+        With its careful approach to protecting data security, Resilient DB stands out as a database service that you can rely on. Using complex algorithms and encryption protocols, Resilient DB regularly checks that saved data is correct and consistent. With redundant storage and regular security checks, any possible problems with discrepancies or corruption are quickly found and fixed. The service has built-in ways to find and fix errors, which makes sure that info stays the same over time. By making data integrity a top priority at every level of its design, Resilient DB gives users peace of mind that their data is safe, unaltered, and always available, even when problems arise out of the blue. This dedication to protecting the privacy of data makes Resilient DB stand out as a solid and dependable option for companies that count on the consistency and dependability of their digital assets.
     </p>
     <a href="{% url 'login' %}">Back to Home</a> <!-- Link back to the main page using Django's url template tag -->
+
 </body>
 </html>
