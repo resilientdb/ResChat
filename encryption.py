@@ -1,68 +1,65 @@
-
 from getpass import getpass
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 import binascii
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from kv_operation import get_message, send_message
+import hashlib
 
 
-# User username and password to create public key and private key
-def create_keys(username, password):
-    key = RSA.generate(2048)
-
-    private_key = key.exportKey(passphrase=password, pkcs=8)
-    with open(f"private_key.pem", "wb") as f:
-        f.write(private_key)
-
-    public_key = key.publickey().exportKey()
-    with open(f"public_key.pem", "wb") as f:
-        f.write(public_key)
-
-    print(f"Keys for {username} have been generated and saved.")
-    return private_key, public_key
+def hash_with_sha256(input_string):
+    sha_signature = hashlib.sha256(input_string.encode()).hexdigest()
+    return sha_signature
 
 
-# Use public key to encrypt message
-def encrypt_message(message, public_key):
-    cipher = PKCS1_OAEP.new(public_key)
-    encrypted_message = cipher.encrypt(message)
-    return binascii.hexlify(encrypted_message).decode('ascii')
+def create_user(username: str, password: str) -> bool:
+    user_info = get_message(username)
+    if user_info == "" or user_info == "\n":
+        key = RSA.generate(2048)
+        private_key = key.exportKey(passphrase=username + password, pkcs=8)
+        public_key = key.publickey()
+        public_key_str = public_key_to_string(public_key)
+        enc_psw = hash_with_sha256(password)
+        with open(f"private_key.pem", "wb") as f:
+            f.write(private_key)
+        send_message(username, enc_psw + " " + public_key_str)
+        return True
+    else:
+        return False
 
 
-# Use private key to decrypt message
-def decrypt_message(encrypted_message, private_key):
-    encrypted_message = binascii.unhexlify(encrypted_message)
-    cipher = PKCS1_OAEP.new(private_key)
-    decrypted_message = cipher.decrypt(encrypted_message)
-    return decrypted_message
+def load_user(username: str, password: str) -> list or bool:
+    user_info = get_message(username)
+    if user_info == "" or user_info == "\n":
+        print("User not exist")
+        return False
+    else:
+        split_user_info = user_info.split(" ")
+        if len(split_user_info) != 2:
+            print("Storage format is wrong")
+            return False
+        else:
+            enc_psw = split_user_info[0]
+            public_key_string = split_user_info[1]
+
+            if enc_psw != hash_with_sha256(password):
+                print("Wrong password or username")
+                return False
+            else:
+                try:
+                    with open("private_key.pem", "rb") as f:
+                        private_key = RSA.import_key(f.read(), passphrase=password)
+                except Exception as e:
+                    print("Error loading private key:", str(e))
+                    return False
+            public_key = string_to_public_key(public_key_string)
+            return [username, password, public_key, private_key]
 
 
-# Load user public key from local
-def load_public_key():
-    try:
-        with open("public_key.pem", "rb") as f:
-            public_key = RSA.import_key(f.read())
-        return public_key
-    except Exception as e:
-        print("Error loading public key:", str(e))
-        return None
-
-
-# Load user private key from local
-def load_private_key(password: str):
-    try:
-        with open("private_key.pem", "rb") as f:
-            private_key = RSA.import_key(f.read(), passphrase=password)
-        return private_key
-    except Exception as e:
-        print("Error loading private key:", str(e))
-        return None
-
-
-# Convert Crypto.PublicKey.RSA.RsaKey type to string
 def public_key_to_string(pub_key):
     return pub_key.exportKey(format='PEM').decode('utf-8')
 
 
-# Convert string to Crypto.PublicKey.RSA.RsaKey type
 def string_to_public_key(pub_key_string):
     return RSA.importKey(pub_key_string.encode('utf-8'))
