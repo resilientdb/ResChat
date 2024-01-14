@@ -8,10 +8,10 @@ working_directory = os.path.expanduser('~/Desktop/incubator-resilientdb')
 config_path = "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"
 
 
-def send_message(message: str, page_name: str, page_num: str = ""):
+def send_message(key: str, value: str):
     command = [
         "bazel", "run", "//service/tools/kv/api_tools:kv_service_tools", "--",
-        config_path, "set", page_name + " " + page_num, message
+        config_path, "set", key, value
     ]
 
     result = subprocess.run(command, capture_output=True, text=True, cwd=working_directory)

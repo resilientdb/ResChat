@@ -1,15 +1,26 @@
-from kv_operation import send_message
-from kv_operation import get_message
+import encryption as enc
+import kv_operation as kv
+import file_operation as f
 
-import hashlib
+# print(kv.get_message("a"))
 
-def hash_with_sha256(input_string):
-    # 创建一个新的sha256哈希对象
-    sha_signature = hashlib.sha256(input_string.encode()).hexdigest()
-    return sha_signature
+# enc.create_user("a", "123456")
 
-# 使用示例
-input_string = "your_password_here"
-hashed_string = hash_with_sha256(input_string)
-print("原始字符串:", input_string)
-print("SHA-256哈希值:", hashed_string)
+# kv.send_message("a", "")
+
+username, password, public_key, private_key = enc.load_user("a", "123456")
+# test_msg = "this is a test"
+#
+# # 加密
+# encrypted_msg, encrypted_aes_key = enc.encrypt_message(test_msg, public_key)
+#
+# # 解密
+# decrypted_msg = enc.decrypt_message(encrypted_msg, encrypted_aes_key, private_key)
+# print(decrypted_msg)
+
+test_img_path = "test_img.jpeg"
+test_img_str = f.read_file(test_img_path)
+enc_test_img_str, encrypted_aes_key_sender, encrypted_aes_key_receiver = enc.encrypt_message_for_two_recipients(test_img_str, public_key, public_key)
+decrypted_msg = enc.decrypt_message(enc_test_img_str, encrypted_aes_key_receiver, private_key)
+f.write_file("test_img1.jpeg", decrypted_msg)
+
