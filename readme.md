@@ -3,7 +3,7 @@
   <img src="readme_images/logo.png" alt="ResChat" width="200"/>
 </p>
 
-<p align="center">A Decentralized chat system based on ResilientDB</p>
+<p align="center">A ResilientDB blockchain based chatting system</p>
 <p align="center">By Jiazhi(Kenny) Sun</p>
 
 
