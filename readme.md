@@ -1,7 +1,11 @@
-# ResChat
-A Decentralized chat system based on ResilientDB
 
-Jiazhi(Kenny) Sun
+<p align="center">
+  <img src="readme_images/logo.png" alt="ResChat" width="200"/>
+</p>
+
+<p align="center">A Decentralized chat system based on ResilientDB</p>
+<p align="center">By Jiazhi(Kenny) Sun</p>
+
 
 ## 1. Project Description
 ### 1.1 Overview
