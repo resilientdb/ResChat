@@ -26,4 +26,4 @@ and only the sender and recipient can encrypt and decrypt the message during the
 This project uses RSA + AES as the encryption algorithm. The message will be first encrypted by a randomly generated 16 bytes(128 bits) AES key. 
 Then, this AES key will be encrypted by 2048 bits RSA public key(AES key will be encrypted twice, one with sender's public key, another with receiver's public key).
 In this approach, ResChat can achieve not only secure text messages transfer but also secure file transfer(RSA can not encrypt a string that is too long).
-![encryption diagram](readme_images/encryption.jpg)
+![encryption diagram](readme_images/encryption.png)
