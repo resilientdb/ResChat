@@ -2,10 +2,38 @@ import subprocess
 from page import Page
 import os
 
+
 # Working directory where the bazel workspace is located
-working_directory = os.path.expanduser('~/Desktop/incubator-resilientdb')
+# working_directory = os.path.expanduser('~/Desktop/incubator-resilientdb')
 # Config path relative to the working_directory
-config_path = "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"
+# config_path = "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"
+
+# config_path = ""
+
+
+def assign_resdb_path(master_folder_location: str) -> bool:
+    config_path = os.path.join(master_folder_location, "scripts/deploy/config_out/client.config")
+    if os.path.exists(config_path):
+        with open(f"resdb_path.config", "w") as f:
+            f.write(master_folder_location)
+            return True
+    else:
+        print(f"{master_folder_location}/scripts/deploy/config_out/client.config does not exists.")
+        return False
+
+
+def load_resdb_path() -> bool or str:
+    if os.path.exists("resdb_path.config"):
+        with open(f"resdb_path.config", "r") as f:
+            config_path = f.readline()
+            if os.path.exists(config_path):
+                return config_path
+            else:
+                print(f"{config_path} does not exists.")
+                return False
+    else:
+        print("Please assign ResilientDB path first")
+        return False
 
 
 def send_message(key: str, value: str):
