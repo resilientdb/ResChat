@@ -59,3 +59,16 @@ In this approach, ResChat can achieve not only secure text messages transfer but
 ### 2.3 Decryption
 
 
+## 3. Functions
+
+## 4. How to run
+  ### 4.1 System Requirement
+  1. Ubuntu 18 or newer
+  2. Pyhton 3.8
+  3. Python packages: Numpy, Pandas, Pycrypto, Pycryptodome
+  ### 4.2 Start ResChat
+  1. cd to ResilientDB_ResChat folder
+  2. Change .config file to the absolate path to the ResilientDB client.config file
+  3. Run bazel 
+
+
