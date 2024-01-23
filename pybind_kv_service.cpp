@@ -16,28 +16,35 @@ using resdb::KVClient;
 using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 
-auto kv(char** command) {
-    ResDBConfig config = GenerateResDBConfig("kv_server.conf");
+
+
+
+std::string get(std::string key, std::string config_path) {
+    ResDBConfig config = GenerateResDBConfig(config_path);
     config.SetClientTimeoutMs(100000);
     KVClient client(config);
-    std::string cmd = command[0];
-    std::string key = command[1];
+    auto result_ptr = client.Get(key); // result_ptr is a std::unique_ptr<std::string>
+    if (result_ptr) {
+        return *result_ptr; // Dereference the pointer to get the string
+    } else {
+        return ""; // Or handle the null pointer case as needed
+    }
+}
 
-    if(cmd == "get") {
-        auto result = client.Get(key);
-        if (result == nullptr) {
-            printf("client get value fail\n");
-        } else {
-            return result;
-        }
-    } else if(cmd == "set") {
-        std::string value = command[2];
-        int result = client.Set(key, value);
-        printf("set key = %s, value = %s done, result = %d\n", key.c_str(), value.c_str(), result);
+bool set(std::string key, std::string value, std::string config_path) {
+    ResDBConfig config = GenerateResDBConfig(config_path);
+    config.SetClientTimeoutMs(100000);
+    KVClient client(config);
+    int result = client.Set(key, value);
+    if (result == 0) {
+        return true;
+    } else {
+        return false;
     }
 }
 
 PYBIND11_MODULE(pybind_kv, m) {
-    m.def("kv", &kv, "set or get operation");
+    m.def("get", &get, "A function that gets a value from the key-value store");
+    m.def("set", &set, "A function that sets a value in the key-value store");
 }
 
