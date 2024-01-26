@@ -1,4 +1,4 @@
-
+<p align="center">Still under developing</p>
 <p align="center">
   <img src="readme_images/logo.png" alt="ResChat" width="200"/>
 </p>
