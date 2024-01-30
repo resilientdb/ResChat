@@ -72,6 +72,5 @@ TODO
   1. cd to ResilientDB_ResChat folder
   2. Change .config file to the absolate path to the ResilientDB client.config file
   3. Run bazel
-  TODO
 
 
