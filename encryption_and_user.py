@@ -22,7 +22,7 @@ def create_user(username: str, password: str) -> bool:
         enc_psw = hash_with_sha256(password)
         with open(f"private_key.pem", "wb") as f:
             f.write(private_key)
-        send_message(username, enc_psw + " " + public_key_str)
+        send_message(username, public_key_str)
         return True
     else:
         print("Username already taken")
@@ -30,32 +30,20 @@ def create_user(username: str, password: str) -> bool:
 
 
 def load_user(username: str, password: str) -> list or bool:
-    user_info = get_message(username)
+    public_key_string = get_message(username)
 
-    if user_info == "" or user_info == "\n":
+    if public_key_string == "" or public_key_string == "\n":
         print("User not exist")
         return False
     else:
-        split_user_info = user_info.split(" ", 1)
-        if len(split_user_info) != 2:
-            print("Storage format is wrong")
+        try:
+            with open("private_key.pem", "rb") as f:
+                private_key = RSA.import_key(f.read(), passphrase=username + password)
+        except Exception as e:
+            print("Error loading private key:", str(e))
             return False
-        else:
-            enc_psw = split_user_info[0]
-            public_key_string = split_user_info[1]
-
-            if enc_psw != hash_with_sha256(password):
-                print("Wrong password or username")
-                return False
-            else:
-                try:
-                    with open("private_key.pem", "rb") as f:
-                        private_key = RSA.import_key(f.read(), passphrase=username + password)
-                except Exception as e:
-                    print("Error loading private key:", str(e))
-                    return False
-            public_key = string_to_public_key(public_key_string)
-            return [username, password, public_key, private_key]
+    public_key = string_to_public_key(public_key_string)
+    return [username, password, public_key, private_key]
 
 
 def public_key_to_string(pub_key):
