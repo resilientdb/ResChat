@@ -1,0 +1,6 @@
+/bazel-testlogs/
+/bazel-ResilientDB_ResChat/
+/bazel-out/
+/bazel-bin/
+/MODULE.bazel
+/MODULE.bazel.lock
