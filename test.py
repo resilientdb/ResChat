@@ -7,7 +7,7 @@ from encryption_and_user import *
 # send_message("2940009621", "\n")
 # create_user("2940009621", "123456")
 
-print(get_message("2940009621"))
+# print(get_message("2940009621"))
 
 
 
