@@ -24,6 +24,7 @@ def send_message(key: str, value: str):
     pybind_kv.set(key, value, config_path)
 
 
+
 def get_message(key: str) -> str:
     global config_path
     if config_path is None:
