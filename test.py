@@ -6,8 +6,9 @@ from encryption_and_user import *
 # print(pybind_kv.get("a", "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"))
 # send_message("2940009621", "\n")
 # create_user("2940009621", "123456")
+usr_name, psw, pub, pri = load_user("2940009621", "123456")
 
-print(get_message("2940009621"))
+
 
 
 

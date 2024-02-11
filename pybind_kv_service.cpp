@@ -23,11 +23,11 @@ std::string get(std::string key, std::string config_path) {
     ResDBConfig config = GenerateResDBConfig(config_path);
     config.SetClientTimeoutMs(100000);
     KVClient client(config);
-    auto result_ptr = client.Get(key); // result_ptr is a std::unique_ptr<std::string>
+    auto result_ptr = client.Get("RESCHAT " + key);
     if (result_ptr) {
-        return *result_ptr; // Dereference the pointer to get the string
+        return *result_ptr;
     } else {
-        return ""; // Or handle the null pointer case as needed
+        return "";
     }
 }
 
@@ -35,7 +35,7 @@ bool set(std::string key, std::string value, std::string config_path) {
     ResDBConfig config = GenerateResDBConfig(config_path);
     config.SetClientTimeoutMs(100000);
     KVClient client(config);
-    int result = client.Set(key, value);
+    int result = client.Set("RESCHAT " + key, value);
     if (result == 0) {
         return true;
     } else {
