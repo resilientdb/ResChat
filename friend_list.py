@@ -31,7 +31,8 @@ def set_my_friend_list(username: str, friend_list: dict):
     send_message(username + " FRIEND", friend_list_string)
 
 
-def add_friend(friend_username: str, my_username: str, nickname: str, friend_list: dict) -> bool:
+def add_friend(friend_username: str, my_username: str, nickname: str) -> bool:
+    friend_list = get_my_friend_list(my_username)
     if nickname in friend_list:
         print(f"you already add {nickname} as friend")
         return False
@@ -46,19 +47,25 @@ def add_friend(friend_username: str, my_username: str, nickname: str, friend_lis
     checker = get_my_friend_list(first_username + " " + second_username + " " + "FILE_COUNT")
     if checker == "\n" or checker == "":
         send_message(first_username + " " + second_username + " " + "FILE_COUNT", "0")
+    set_my_friend_list(my_username, friend_list)
     return True
 
 
-def get_all_friends(friend_list: dict) -> list:
+def get_all_friends(username: str) -> list:
+    friend_list = get_my_friend_list(username)
     if friend_list == {}:
         return []
     else:
+        set_my_friend_list(username, friend_list)
         return list(friend_list.keys())
 
 
-def delete_friend(nickname: str, friend_list: dict) -> dict:
+def delete_friend(nickname: str, username: str) -> bool:
+    friend_list = get_my_friend_list(username)
     if nickname in friend_list:
         friend_list.pop(nickname)
+        set_my_friend_list(username, friend_list)
+        return True
     else:
         print(f"{nickname} is not your friend")
-        return friend_list
+        return False

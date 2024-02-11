@@ -7,11 +7,13 @@ import hashlib
 from kv_operation import get_message, send_message
 
 
+# Internal function
 def hash_with_sha256(input_string):
     sha_signature = hashlib.sha256(input_string.encode()).hexdigest()
     return sha_signature
 
 
+# External function
 def create_user(username: str, password: str) -> bool:
     user_info = get_message(username)
     if user_info == "" or user_info == "\n":
