@@ -38,7 +38,7 @@ def add_friend(friend_username: str, my_username: str, nickname: str) -> bool:
         return False
     else:
         friend_pub_key = search_friend(friend_username)
-        friend_list[nickname] = {"public_key": friend_pub_key, "current_page": 1}
+        friend_list[nickname] = {"public_key": friend_pub_key, "current_page": 1, "friend_username": friend_username}
 
     sorted_usernames = sorted([my_username, friend_username])
     first_username = sorted_usernames[0]
@@ -56,7 +56,6 @@ def get_all_friends(username: str) -> list:
     if friend_list == {}:
         return []
     else:
-        set_my_friend_list(username, friend_list)
         return list(friend_list.keys())
 
 
@@ -68,4 +67,29 @@ def delete_friend(nickname: str, username: str) -> bool:
         return True
     else:
         print(f"{nickname} is not your friend")
+        return False
+
+
+def update_page_num(nickname: str, username: str) -> bool:
+    friend_list = get_my_friend_list(username)
+    if nickname in friend_list:
+        friend_list[nickname]['current_page'] += 1
+        set_my_friend_list(username, friend_list)
+        return True
+    else:
+        return False
+
+
+def update_file_num(nickname: str, username: str) -> bool:
+    friend_list = get_my_friend_list(username)
+    if nickname in friend_list:
+        friend_username = friend_list[nickname]['friend_username']
+        sorted_usernames = sorted([username, friend_username])
+        first_username = sorted_usernames[0]
+        second_username = sorted_usernames[1]
+        current_file_count = get_message(first_username + " " + second_username + " " + "FILE_COUNT")
+        current_file_count = int(current_file_count)
+        send_message(first_username + " " + second_username + " " + "FILE_COUNT", str(current_file_count + 1))
+        return True
+    else:
         return False
