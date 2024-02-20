@@ -38,10 +38,6 @@ client.login("2940009621", "123456")
 # a = pg.all_messages()
 # print(a[0][0])
 
-tmp_list = [[1, 2], [3, 4], [5, 6]]  # 示例列表
-target_list = [[10, 20], [30, 40]]  # 另一个列表，想要将tmp_list的元素从后往前加入到这个列表中
-
-# 将tmp_list从后往前加入到target_list中
-target_list.extend(tmp_list[::-1])
-
-print(target_list)
+my_list = [[1, 2], [3, 4]]
+my_list.insert(0, [5, 6])  # 在列表最前面添加元素1
+print(my_list)  # 输出: [1, 2, 3, 4]

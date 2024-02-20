@@ -19,7 +19,7 @@ from encryption_and_user import (create_user, load_user,
 # This variable stores login user's public key(RSA public key)
 my_public_key = None
 
-# # This variable stores login user's private key(RSA private key)
+# This variable stores login user's private key(RSA private key)
 my_private_key = None
 
 # This variable stores login user's public key(string)
@@ -51,6 +51,8 @@ current_chatting_friend_username = ""
 # This variable stores the page name, when system want to get a page just use this variable + " " + page_number
 current_chatting_page_name = ""
 
+# This variable records which previous page the user has loaded.
+previous_page_num = -1
 
 # This list contains all information that required for frontend message dispaly
 # - Decrypted message/file location(key)
@@ -66,7 +68,8 @@ current_chatting_message_count = -1
 
 def login(username: str, password: str):
     """This function will be called when user login. It will assign values to user's information global variables."""
-    global my_public_key, my_private_key, my_friend_list, my_username, my_password, my_public_key_string
+    global my_public_key, my_private_key, my_friend_list
+    global my_username, my_password, my_public_key_string
     user_info = load_user(username, password)
     if user_info is False:
         print("User not exist or wrong password or error loading private key")
@@ -91,7 +94,7 @@ def select_friend_to_chat_with(nickname: str) -> bool:
     global my_friend_list, current_chatting_friend_nickname, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_username
     global current_chatting_friend_public_key_string, current_chatting_message_count
-    global current_chat_history
+    global current_chat_history, previous_page_num
     if nickname not in my_friend_list:
         return False
     else:
@@ -105,6 +108,9 @@ def select_friend_to_chat_with(nickname: str) -> bool:
         current_chatting_friend_public_key_string = public_key_to_string(current_chatting_friend_public_key)
         current_chatting_message_count = -1
         current_chat_history = []
+        current_page_num = get_current_page_num(my_username, current_chatting_friend_username)
+        if current_page_num >= 3:
+            previous_page_num = current_page_num - 2
         return True
 
 
@@ -417,3 +423,35 @@ def download_file(path: str, key: str, encrypted_aes_key: str):
 
     # Write file
     write_file(path, decrypted_file_string)
+
+
+def load_previous_chat_history():
+    """This function load one previous page and add it into chat history list"""
+    global current_chat_history, previous_page_num
+
+    # Check is there still previous page exist
+    if previous_page_num == -1:
+        print("No more previous chat history")
+        return
+
+    # Get page string
+    previous_page_string = get_message(current_chatting_page_name + " " + str(previous_page_num))
+
+    # Construct page
+    page = Page().from_string(previous_page_string)
+
+    # Get all messages
+    all_messages = page.all_messages()
+
+    # Decrypt messages
+    for i in range(len(all_messages)):
+        tmp = encapsulated_decrypt_message(all_messages[i])
+        current_chat_history.insert(0, tmp)
+
+    # Update previous_page_num
+    if previous_page_num == 1:
+        previous_page_num = -1
+    else:
+        previous_page_num -= 1
+
+
