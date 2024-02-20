@@ -1,15 +1,11 @@
 import os
 
-"""""
-We don't need to worry about this part for right now,
-we can add this later after the basic functions are done
-"""""
 
-
-# Read file into a string
+# External function
 def read_file(path: str) -> (str or None):
+    """Read file into a string"""
     if os.path.exists(path):
-        with open(path, 'rb') as file:  # Use the variable path, not the string 'path_to_file'
+        with open(path, 'rb') as file:
             file_content = file.read()
 
         hex_string = file_content.hex()
@@ -19,8 +15,9 @@ def read_file(path: str) -> (str or None):
         return None
 
 
-# Reconstruct file from string
+# External function
 def write_file(path: str, file_string: str) -> None:
+    """Reconstruct file from string"""
     try:
         # Convert the hex string back to bytes
         file_content = bytes.fromhex(file_string)

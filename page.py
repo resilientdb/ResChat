@@ -1,4 +1,5 @@
 import numpy as np
+from kv_operation import send_message, get_message
 
 
 class Page:
@@ -74,3 +75,4 @@ class Page:
         for i in range(self.message_count):
             messages[i] = (self.msg[i])
         return messages
+
