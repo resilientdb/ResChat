@@ -94,7 +94,7 @@ def update_page_num(nickname: str, my_username: str, friend_username: str) -> bo
 
 
 # External function
-def update_file_num(nickname: str, my_username: str, friend_username: str) -> bool:
+def update_file_num(my_username: str, friend_username: str) -> bool:
     """+1 to the current file count"""
     sorted_usernames = sorted([my_username, friend_username])
     first_username = sorted_usernames[0]
@@ -106,7 +106,7 @@ def update_file_num(nickname: str, my_username: str, friend_username: str) -> bo
 
 
 # External function
-def get_current_page_num(nickname: str, my_username: str, friend_username: str) -> int:
+def get_current_page_num(my_username: str, friend_username: str) -> int:
     """Return the current page number"""
     sorted_usernames = sorted([my_username, friend_username])
     first_username = sorted_usernames[0]
@@ -117,7 +117,7 @@ def get_current_page_num(nickname: str, my_username: str, friend_username: str) 
 
 
 # External function
-def get_current_file_count(nickname: str, my_username: str, friend_username: str) -> int:
+def get_current_file_count(my_username: str, friend_username: str) -> int:
     """Return the current file count"""
     sorted_usernames = sorted([my_username, friend_username])
     first_username = sorted_usernames[0]

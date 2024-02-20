@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from page import Page
 from kv_operation import send_message, get_message
@@ -25,6 +26,7 @@ current_chatting_page_name = ""
 
 
 def login(username: str, password: str):
+    """This function will be called when user login. It will assign values to user's information global variables."""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password
     user_info = load_user(username, password)
     if user_info is False:
@@ -39,11 +41,13 @@ def login(username: str, password: str):
 
 
 def logout():
+    """This function will be called when user logout. It will set an updated friend list into ResilientDB"""
     global my_username, my_friend_list
     set_my_friend_list(my_username, my_friend_list)
 
 
 def select_friend_to_chat_with(nickname: str) -> bool:
+    """This function will be called when select a friend to chat. It will update all the global variables"""
     global my_friend_list, current_chatting_friend_nickname, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_username
     global current_chatting_friend_public_key_string
@@ -62,16 +66,19 @@ def select_friend_to_chat_with(nickname: str) -> bool:
 
 
 def encapsulated_add_friend(friend_username: str, nickname: str):
+    """Encapsulates the add_friend function to allow it can modify those global variables"""
     global my_username, my_friend_list
     my_friend_list = add_friend(friend_username, my_username, nickname, my_friend_list)
 
 
 def encapsulated_delete_friend(nickname: str):
+    """Encapsulates the delete_friend function to allow it can modify those global variables"""
     global my_friend_list
     my_friend_list = delete_friend(nickname, my_friend_list)
 
 
-def send_text_message(message: str, nickname: str) -> bool:
+def send_text_message(message: str) -> bool:
+    """This function contains the whole process of sending a text message"""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_nickname
 
@@ -83,8 +90,7 @@ def send_text_message(message: str, nickname: str) -> bool:
                                                                       current_chatting_friend_public_key)
 
     # Get current page number
-    current_page_num = get_current_page_num(current_chatting_friend_nickname,
-                                            my_username,
+    current_page_num = get_current_page_num(my_username,
                                             current_chatting_friend_username)
 
     # Get current page
@@ -95,7 +101,7 @@ def send_text_message(message: str, nickname: str) -> bool:
         page = Page()
     else:
         page = Page().from_string(page_string)
-        page = page.sort_by_time()
+        page.sort_by_time()
 
     # Check if the page is full
     if page.is_full():
@@ -134,3 +140,99 @@ def send_text_message(message: str, nickname: str) -> bool:
         send_message(current_chatting_page_name + " " + str(current_page_num), page_string)
 
         return True
+
+
+def send_file(path: str):
+    global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
+    global current_chatting_friend_public_key, current_chatting_friend_nickname
+
+    # Read file
+    file_string = read_file(path)
+
+    # Get file name
+    file_name = os.path.basename(path)
+
+    # Encrypt message for two users
+    (encrypted_message,
+     encrypted_aes_key_sender,
+     encrypted_aes_key_receiver) = encrypt_message_for_two_recipients(file_string,
+                                                                      my_public_key,
+                                                                      current_chatting_friend_public_key)
+
+    # Get current page number
+    current_page_num = get_current_page_num(my_username,
+                                            current_chatting_friend_username)
+
+    # Get current file count
+    current_file_count = get_current_file_count(my_username,
+                                                current_chatting_friend_username)
+
+    # Get current page
+    page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
+
+    # Check the page exist or not
+    if page_string == "\n" or page_string == "" or page_string == " ":
+        page = Page()
+    else:
+        page = Page().from_string(page_string)
+        page.sort_by_time()
+
+    # Check if the page is full
+    if page.is_full():
+        # Create a new page
+        new_page = Page()
+
+        # Add file location into this new page
+        new_page.add_message(current_chatting_friend_public_key_string,
+                             "FILE",
+                             datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
+                             file_name,
+                             current_chatting_page_name + " FILE " + str(current_file_count),
+                             encrypted_aes_key_sender,
+                             encrypted_aes_key_receiver)
+
+        # Update page number
+        update_page_num(current_chatting_friend_nickname, my_username, current_chatting_friend_username)
+        current_page_num += 1
+
+        # Send page
+        new_page_string = new_page.to_string()
+        send_message(current_chatting_page_name + " " + str(current_page_num), new_page_string)
+
+        # Update file count on ResilientDB
+        update_file_num(my_username, current_chatting_friend_username)
+
+        # Send file string
+        send_message(current_chatting_page_name + current_chatting_page_name + " FILE " + str(current_file_count),
+                     encrypted_message)
+
+    else:
+        # Add file location into this new page
+        page.add_message(current_chatting_friend_public_key_string,
+                         "FILE",
+                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
+                         file_name,
+                         current_chatting_page_name + " FILE " + str(current_file_count),
+                         encrypted_aes_key_sender,
+                         encrypted_aes_key_receiver)
+
+        # Update page number
+        update_page_num(current_chatting_friend_nickname, my_username, current_chatting_friend_username)
+        current_page_num += 1
+
+        # Send page
+        new_page_string = page.to_string()
+        send_message(current_chatting_page_name + " " + str(current_page_num), new_page_string)
+
+        # Update file count on ResilientDB
+        update_file_num(my_username, current_chatting_friend_username)
+
+        # Send file string
+        send_message(current_chatting_page_name + current_chatting_page_name + " FILE " + str(current_file_count),
+                     encrypted_message)
+
+
+
+
+
+
