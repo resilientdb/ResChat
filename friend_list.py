@@ -52,11 +52,11 @@ def add_friend(friend_username: str, my_username: str, nickname: str, friend_lis
 
     checker = get_message(first_username + " " + second_username + " " + "FILE_COUNT")
     if checker == "\n" or checker == "":
-        send_message(first_username + " " + second_username + " " + "FILE_COUNT", "0")
+        send_message(first_username + " " + second_username + " " + "FILE_COUNT", "1")
 
     checker = get_message(first_username + " " + second_username + " " + "PAGE_NUM")
     if checker == "\n" or checker == "":
-        send_message(first_username + " " + second_username + " " + "PAGE_NUM", "0")
+        send_message(first_username + " " + second_username + " " + "PAGE_NUM", "1")
 
     return friend_list
 

@@ -78,7 +78,7 @@ def encrypt_aes_key_with_rsa(aes_key, public_key):
 
 # Internal function
 def decrypt_aes_key_with_rsa(encrypted_aes_key, private_key):
-    """User RSA public key to decrypt AES key"""
+    """Use RSA private key to decrypt AES key"""
     encrypted_aes_key = binascii.unhexlify(encrypted_aes_key)
     cipher_rsa = PKCS1_OAEP.new(private_key)
     aes_key = cipher_rsa.decrypt(encrypted_aes_key)

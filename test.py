@@ -16,34 +16,35 @@ import client
 # second_username = sorted_usernames[1]
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
-# client.login("2940009621", "123456")
-# # print(message.my_public_key, message.my_private_key, message.my_friend_list)
+client.login("2940009621", "123456")
+print(type(client.my_public_key_string))
 #
 # client.logout()
-pg = Page()
-pg.add_message(pub_key="123",
-               msg_type="TEXT",
-               t_stamp="2024-02-19 19:36:57.0",
-               msg_type_ext="NONE",
-               message="Hi",
-               encrypted_aes_key_sender="123",
-               encrypted_aes_key_receiver="456")
-pg.add_message(pub_key="123",
-               msg_type="TEXT",
-               t_stamp="2024-02-19 19:36:57.2",
-               msg_type_ext="NONE",
-               message="Hi",
-               encrypted_aes_key_sender="123",
-               encrypted_aes_key_receiver="456")
-pg.add_message(pub_key="123",
-               msg_type="TEXT",
-               t_stamp="2024-02-19 19:36:57.1",
-               msg_type_ext="NONE",
-               message="Hi",
-               encrypted_aes_key_sender="123",
-               encrypted_aes_key_receiver="456")
-pg.sort_by_time()
-print(pg.to_string())
+# pg = Page()
+# pg.add_message(pub_key="123",
+#                msg_type="TEXT",
+#                t_stamp="2024-02-19 19:36:57.0",
+#                msg_type_ext="NONE",
+#                message="Hi",
+#                encrypted_aes_key_sender="123",
+#                encrypted_aes_key_receiver="456")
+# pg.add_message(pub_key="123",
+#                msg_type="TEXT",
+#                t_stamp="2024-02-19 19:36:57.2",
+#                msg_type_ext="NONE",
+#                message="Hi",
+#                encrypted_aes_key_sender="123",
+#                encrypted_aes_key_receiver="456")
+# pg.add_message(pub_key="123",
+#                msg_type="TEXT",
+#                t_stamp="2024-02-19 19:36:57.1",
+#                msg_type_ext="NONE",
+#                message="Hi",
+#                encrypted_aes_key_sender="123",
+#                encrypted_aes_key_receiver="456")
+# pg.sort_by_time()
+# a = pg.all_messages()
+# print(a[0][0])
 
 
 
