@@ -63,14 +63,30 @@ TODO
 TODO
 
 ## 4. How to run
-  ### 4.1 System Requirement
-  1. Ubuntu 18 or newer
-  2. Pyhton 3.8
-  3. Python packages: Numpy, Pandas, Pycrypto, Pycryptodome
-  TODO
-  ### 4.2 Start ResChat
-  1. cd to ResilientDB_ResChat folder
-  2. Change .config file to the absolate path to the ResilientDB client.config file
-  3. Run bazel
+1. Anaconda [Download Link](https://www.anaconda.com/download#downloads)
+```
+sudo apt-get update
+cd Download
+bash Anaconda3-2022.05-Linux-x86_64.sh
+source ~/.bashrc
+```
+
+2. Setup Anaconda Environment
+```
+conda create --name YOUR_ENV_NAME python=3.8
+conda activate YOUR_ENV_NAME
+pip install pandas pycrypto pycryptodome numpy Django
+```
+3. Install ResCHat
+```angular2html
+cd ResChat
+bazel build :pybind_kv_so
+```
+
+4. Run Service
+```angular2html
+TODO
+```
+
 
 
