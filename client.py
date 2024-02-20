@@ -1,6 +1,6 @@
 import datetime
 import os
-
+import numpy as np
 from page import Page
 from kv_operation import send_message, get_message
 from file_operation import read_file, write_file
@@ -14,18 +14,53 @@ from encryption_and_user import (create_user, load_user,
                                  string_to_public_key, public_key_to_string, decrypt_aes_key_with_rsa)
 
 # Global Variables
+
+"""These global variables will be assigned when login function been called"""
+# This variable stores login user's public key(RSA public key)
 my_public_key = None
+
+# # This variable stores login user's private key(RSA private key)
 my_private_key = None
+
+# This variable stores login user's public key(string)
 my_public_key_string = ""
+
+# This variable stores login user's friend list
 my_friend_list = {}
+
+# This variable stores login user's username
 my_username = ""
+
+# This variable stores login user's password
 my_password = ""
+
+
+"""These global variables will be assigned/reassigned when select_friend_to_chat_with function been called"""
+# This variable stores the current selected friend's nickname
 current_chatting_friend_nickname = ""
+
+# This variable stores the current selected friend's public key(RSA public key)
 current_chatting_friend_public_key = None
+
+# This variable stores the current selected friend's public key(string)
 current_chatting_friend_public_key_string = ""
+
+# This variable stores the current selected friend's username
 current_chatting_friend_username = ""
+
+# This variable stores the page name, when system want to get a page just use this variable + " " + page_number
 current_chatting_page_name = ""
+
+
+# This list contains all information that required for frontend message dispaly
+# - Decrypted message/file location(key)
+# - Message type(TEXT or FILE)
+# - Timestamp
+# - Message type extension(NONE or file name)
+# - NONE or decrypted AES key(NONE if this message is TEXT)
 current_chat_history = []
+
+# Not in use right now
 current_chatting_message_count = -1
 
 
@@ -74,19 +109,51 @@ def select_friend_to_chat_with(nickname: str) -> bool:
 
 
 def encapsulated_add_friend(friend_username: str, nickname: str):
-    """Encapsulates the add_friend function to allow it can modify those global variables"""
+    """
+    Encapsulates the add_friend function to allow it can modify those global variables.
+    This function should be called when user want to add a friend
+    """
     global my_username, my_friend_list
     my_friend_list = add_friend(friend_username, my_username, nickname, my_friend_list)
 
 
+def encapsulated_decrypt_message(encrypted_message) -> []:
+    """Encapsulated decrypt_message_function to allow other function to use it more easily"""
+    tmp = []
+    if encrypted_message[0] == my_public_key_string:
+        if encrypted_message[1] == "TEXT":
+            decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[6], my_private_key)
+            tmp.append([decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"])
+        elif encrypted_message[1] == "FILE":
+            tmp.append([encrypted_message[4],
+                        "FILE",
+                        encrypted_message[2],
+                        encrypted_message[3],
+                        decrypt_aes_key_with_rsa(encrypted_message[6], my_private_key)])
+    else:
+        if encrypted_message[1] == "TEXT":
+            decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[5], my_private_key)
+            tmp.append([decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"])
+        elif encrypted_message[1] == "FILE":
+            tmp.append([encrypted_message[4],
+                        "FILE",
+                        encrypted_message[2],
+                        encrypted_message[3],
+                        decrypt_aes_key_with_rsa(encrypted_message[5], my_private_key)])
+    return tmp
+
+
 def encapsulated_delete_friend(nickname: str):
-    """Encapsulates the delete_friend function to allow it can modify those global variables"""
+    """
+    Encapsulates the delete_friend function to allow it can modify those global variables
+    This function should be called when user want to delete a friend
+    """
     global my_friend_list
     my_friend_list = delete_friend(nickname, my_friend_list)
 
 
 def send_text_message(message: str) -> bool:
-    """This function contains the whole process of sending a text message"""
+    """This function should be called when user want to send a full text message"""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_nickname
 
@@ -151,6 +218,7 @@ def send_text_message(message: str) -> bool:
 
 
 def send_file(path: str):
+    """This function should be called when user decide to send a file"""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_nickname
 
@@ -242,6 +310,7 @@ def send_file(path: str):
 
 def initial_chat_history_loading():
     """
+    This function should be only called once when chat history been first loaded
     Return type is a list and constructed by following elements:
     - Decrypted message/file location(key)
     - Message type(TEXT or FILE)
@@ -283,62 +352,68 @@ def initial_chat_history_loading():
 
     # Decrypt messages
     for i in range(len(page_1_messages)):
-        tmp = []
-        if page_1_messages[i][0] == my_public_key_string:
-            if page_1_messages[i][1] == "TEXT":
-                decrypted_message = decrypt_message(page_1_messages[i][4], page_1_messages[i][6], my_private_key)
-                tmp.append([decrypted_message, "TEXT", page_1_messages[i][2], "NONE", "NONE"])
-            elif page_1_messages[i][1] == "FILE":
-                tmp.append([page_1_messages[i][4],
-                            "FILE",
-                            page_1_messages[i][2],
-                            page_1_messages[i][3],
-                            decrypt_aes_key_with_rsa(page_1_messages[i][6], my_private_key)])
-        else:
-            if page_1_messages[i][1] == "TEXT":
-                decrypted_message = decrypt_message(page_1_messages[i][4], page_1_messages[i][5], my_private_key)
-                tmp.append([decrypted_message, "TEXT", page_1_messages[i][2], "NONE", "NONE"])
-            elif page_1_messages[i][1] == "FILE":
-                tmp.append([page_1_messages[i][4],
-                            "FILE",
-                            page_1_messages[i][2],
-                            page_1_messages[i][3],
-                            decrypt_aes_key_with_rsa(page_1_messages[i][5], my_private_key)])
+        tmp = [encapsulated_decrypt_message(page_1_messages[i])]
         current_chat_history.append(tmp)
 
     for j in range(len(page_2_messages)):
-        tmp = []
-        if page_2_messages[i][0] == my_public_key_string:
-            if page_2_messages[i][1] == "TEXT":
-                decrypted_message = decrypt_message(page_2_messages[i][4], page_2_messages[i][6], my_private_key)
-                tmp.append([decrypted_message, "TEXT", page_2_messages[i][2], "NONE", "NONE"])
-            elif page_2_messages[i][1] == "FILE":
-                tmp.append([page_2_messages[i][4],
-                            "FILE",
-                            page_2_messages[i][2],
-                            page_2_messages[i][3],
-                            decrypt_aes_key_with_rsa(page_2_messages[i][6], my_private_key)])
-        else:
-            if page_2_messages[i][1] == "TEXT":
-                decrypted_message = decrypt_message(page_2_messages[i][4], page_2_messages[i][5], my_private_key)
-                tmp.append([decrypted_message, "TEXT", page_2_messages[i][2], "NONE", "NONE"])
-            elif page_2_messages[i][1] == "FILE":
-                tmp.append([page_2_messages[i][4],
-                            "FILE",
-                            page_2_messages[i][2],
-                            page_2_messages[i][3],
-                            decrypt_aes_key_with_rsa(page_2_messages[i][5], my_private_key)])
+        tmp = [encapsulated_decrypt_message(page_2_messages[j])]
         current_chat_history.append(tmp)
 
 
-# def update_chat_history():
-    # global my_username, current_chatting_friend_username, current_chatting_page_name
-    #
-    # # Get current page num
-    # current_page_num = get_current_page_num(my_username, current_chatting_friend_username)
-    #
-    # # Get current page
-    # page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
-    #
-    # # Construct page from string
-    # page = Page().from_string(page_string)
+def update_chat_history():
+    """This function should be cyclic called after initial_chat_history been called"""
+
+    global my_username, current_chatting_friend_username, current_chatting_page_name, current_chat_history
+
+    # Get current page number
+    current_page_num = get_current_page_num(my_username, current_chatting_friend_username)
+
+    # Get page string
+    page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
+
+    # Check page_string is empty or not
+    if page_string == "\n" or page_string == "" or page_string == " ":
+        return
+
+    # Construct page
+    page = Page().from_string(page_string)
+
+    # Get all messages
+    all_messages = page.all_messages()
+
+    # Check if update needed
+    if all_messages[len(all_messages) - 1][2] == current_chat_history[len(current_chat_history) - 1][2]:
+        # No update needed situation
+        return
+    else:
+        # Update needed situation
+        flag = True
+        tmp_list = []
+        while flag:
+            pg = Page().from_string(get_message(current_chatting_page_name + " " + str(current_page_num)))
+            all_messages = pg.all_messages()
+
+            for i in range(len(all_messages) - 1, -1, -1):
+                if all_messages[i][2] == current_chat_history[len(current_chat_history) - 1][2]:
+                    flag = False
+                    break
+                else:
+                    tmp_list.append(encapsulated_decrypt_message(all_messages[i]))
+
+            if flag:
+                current_page_num -= 1
+
+    current_chat_history.extend(tmp_list[::-1])
+
+
+def download_file(path: str, key: str, encrypted_aes_key: str):
+    """This function should be called when user decide to download a file"""
+
+    # Download file string
+    encrypted_file_string = get_message(key)
+
+    # Decrypt file string
+    decrypted_file_string = decrypt_message(encrypted_file_string, encrypted_aes_key, my_private_key)
+
+    # Write file
+    write_file(path, decrypted_file_string)
