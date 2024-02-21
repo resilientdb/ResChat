@@ -34,7 +34,6 @@ my_username = ""
 # This variable stores login user's password
 my_password = ""
 
-
 """These global variables will be assigned/reassigned when select_friend_to_chat_with function been called"""
 # This variable stores the current selected friend's nickname
 current_chatting_friend_nickname = ""
@@ -60,6 +59,7 @@ previous_page_num = -1
 # - Timestamp
 # - Message type extension(NONE or file name)
 # - NONE or decrypted AES key(NONE if this message is TEXT)
+# - RECEIVER or SENDER to identify current user is sender or receiver of this message
 current_chat_history = []
 
 # Not in use right now
@@ -125,27 +125,29 @@ def encapsulated_add_friend(friend_username: str, nickname: str):
 
 def encapsulated_decrypt_message(encrypted_message) -> []:
     """Encapsulated decrypt_message_function to allow other function to use it more easily"""
-    tmp = []
+
     if encrypted_message[0] == my_public_key_string:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[6], my_private_key)
-            tmp.append([decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"])
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
         elif encrypted_message[1] == "FILE":
-            tmp.append([encrypted_message[4],
-                        "FILE",
-                        encrypted_message[2],
-                        encrypted_message[3],
-                        decrypt_aes_key_with_rsa(encrypted_message[6], my_private_key)])
+            tmp = [encrypted_message[4],
+                   "FILE",
+                   encrypted_message[2],
+                   encrypted_message[3],
+                   decrypt_aes_key_with_rsa(encrypted_message[6], my_private_key),
+                   "RECEIVER"]
     else:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[5], my_private_key)
-            tmp.append([decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"])
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
         elif encrypted_message[1] == "FILE":
-            tmp.append([encrypted_message[4],
-                        "FILE",
-                        encrypted_message[2],
-                        encrypted_message[3],
-                        decrypt_aes_key_with_rsa(encrypted_message[5], my_private_key)])
+            tmp = [encrypted_message[4],
+                   "FILE",
+                   encrypted_message[2],
+                   encrypted_message[3],
+                   decrypt_aes_key_with_rsa(encrypted_message[5], my_private_key),
+                   "SENDER"]
     return tmp
 
 
@@ -358,12 +360,10 @@ def initial_chat_history_loading():
 
     # Decrypt messages
     for i in range(len(page_1_messages)):
-        tmp = [encapsulated_decrypt_message(page_1_messages[i])]
-        current_chat_history.append(tmp)
+        current_chat_history.append(encapsulated_decrypt_message(page_1_messages[i]))
 
     for j in range(len(page_2_messages)):
-        tmp = [encapsulated_decrypt_message(page_2_messages[j])]
-        current_chat_history.append(tmp)
+        current_chat_history.append(encapsulated_decrypt_message(page_2_messages[j]))
 
 
 def update_chat_history():
@@ -453,5 +453,3 @@ def load_previous_chat_history():
         previous_page_num = -1
     else:
         previous_page_num -= 1
-
-
