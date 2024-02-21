@@ -17,8 +17,8 @@ import client
 # second_username = sorted_usernames[1]
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
-client.login("2940009621", "123456")
-# print(type(client.my_public_key_string))
+print(client.login("2940009621", "123456"))
+print(client.my_public_key_string)
 # enc_msg, enc_aes_sender, enc_aes_receiver = encrypt_message_for_two_recipients("123456",
 #                                                                                client.my_public_key,
 #                                                                                client.my_public_key)
