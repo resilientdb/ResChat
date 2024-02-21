@@ -38,6 +38,6 @@ client.login("2940009621", "123456")
 # a = pg.all_messages()
 # print(a[0][0])
 
-my_list = [[1, 2], [3, 4]]
-my_list.insert(0, [5, 6])  # 在列表最前面添加元素1
-print(my_list)  # 输出: [1, 2, 3, 4]
+# my_list = [[1, 2], [3, 4]]
+# my_list.insert(0, [5, 6])  # 在列表最前面添加元素1
+# print(my_list)  # 输出: [1, 2, 3, 4]
