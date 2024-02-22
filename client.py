@@ -1,9 +1,10 @@
 import datetime
 import os
 import numpy as np
+from Crypto.Random import get_random_bytes
+
 from page import Page
 from kv_operation import send_message, get_message
-from file_operation import read_file, write_file
 from friend_list import (add_friend, get_all_friends,
                          delete_friend, update_page_num,
                          update_file_num, get_my_friend_list,
@@ -14,6 +15,8 @@ from encryption_and_user import (create_user, load_user,
                                  string_to_public_key, public_key_to_string, decrypt_aes_key_with_rsa)
 
 # Global Variables
+"""Setting, please change following variable base on your RAM size and computing power"""
+max_chunk_size_MB = 200
 
 """These global variables will be assigned when login function been called"""
 # This variable stores login user's public key(RSA public key)
@@ -58,7 +61,7 @@ previous_page_num = -1
 # - Message type(TEXT or FILE)
 # - Timestamp
 # - Message type extension(NONE or file name)
-# - NONE or decrypted AES key(NONE if this message is TEXT)
+# - NONE or encrypted AES key(NONE if this message is TEXT)
 # - RECEIVER or SENDER to identify current user is sender or receiver of this message
 current_chat_history = []
 
@@ -135,7 +138,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    "FILE",
                    encrypted_message[2],
                    encrypted_message[3],
-                   decrypt_aes_key_with_rsa(encrypted_message[6], my_private_key),
+                   encrypted_message[6],
                    "RECEIVER"]
     else:
         if encrypted_message[1] == "TEXT":
@@ -146,7 +149,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    "FILE",
                    encrypted_message[2],
                    encrypted_message[3],
-                   decrypt_aes_key_with_rsa(encrypted_message[5], my_private_key),
+                   encrypted_message[5],
                    "SENDER"]
     return tmp
 
@@ -228,81 +231,72 @@ def send_text_message(message: str) -> bool:
 def send_file(path: str):
     """This function should be called when user decide to send a file"""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
-    global current_chatting_friend_public_key, current_chatting_friend_nickname
+    global current_chatting_friend_public_key, current_chatting_friend_nickname, max_chunk_size_MB
 
-    # Read file
-    file_string = read_file(path)
+    with open(path, 'rb') as file:
+        # Generate random AES key to ensure all file chunks encrypted with same AES key
+        aes_key = get_random_bytes(16)
 
-    # Get file name
-    file_name = os.path.basename(path)
+        # Get file name
+        file_name = os.path.basename(path)
 
-    # Encrypt message for two users
-    (encrypted_message,
-     encrypted_aes_key_sender,
-     encrypted_aes_key_receiver) = encrypt_message_for_two_recipients(file_string,
-                                                                      my_public_key,
-                                                                      current_chatting_friend_public_key)
+        # Get first max_chunk_size_MB size chunk and convert it into bytes
+        first_chunk = file.read(max_chunk_size_MB * 1024 * 1024)
+        first_chunk_string = first_chunk.hex().encode()
 
-    # Get current page number
-    current_page_num = get_current_page_num(my_username,
-                                            current_chatting_friend_username)
+        # Encrypt first chunk
+        (encrypted_first_chunk,
+         encrypted_aes_key_sender,
+         encrypted_aes_key_receiver) = encrypt_message_for_two_recipients(first_chunk_string,
+                                                                          my_public_key,
+                                                                          current_chatting_friend_public_key,
+                                                                          aes_key)
 
-    # Get current file count
-    current_file_count = get_current_file_count(my_username,
+        # Get current page number
+        current_page_num = get_current_page_num(my_username,
                                                 current_chatting_friend_username)
 
-    # Get current page
-    page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
+        # Get current file count
+        current_file_count = get_current_file_count(my_username,
+                                                    current_chatting_friend_username)
 
-    # Check the page exist or not
-    if page_string == "\n" or page_string == "" or page_string == " ":
-        page = Page()
-    else:
-        page = Page().from_string(page_string)
-        page.sort_by_time()
+        # Get current page
+        page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
 
-    # Check if the page is full
-    if page.is_full():
-        # Create a new page
-        new_page = Page()
+        # Check the page exist or not
+        if page_string == "\n" or page_string == "" or page_string == " ":
+            page = Page()
+        else:
+            page = Page().from_string(page_string)
+            page.sort_by_time()
 
-        # Add file location into this new page
-        new_page.add_message(current_chatting_friend_public_key_string,
+        # Check if the page is full
+        if page.is_full():
+            # Create a new page
+            new_page = Page()
+
+            # Add file location into this new page
+            new_page.add_message(current_chatting_friend_public_key_string,
+                                 "FILE",
+                                 datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
+                                 file_name,
+                                 current_chatting_page_name + " FILE " + str(current_file_count),
+                                 encrypted_aes_key_sender,
+                                 encrypted_aes_key_receiver)
+
+            # Update page number
+            update_page_num(current_chatting_friend_nickname, my_username, current_chatting_friend_username)
+            current_page_num += 1
+
+        else:
+            # Add file location into this new page
+            page.add_message(current_chatting_friend_public_key_string,
                              "FILE",
                              datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
                              file_name,
                              current_chatting_page_name + " FILE " + str(current_file_count),
                              encrypted_aes_key_sender,
                              encrypted_aes_key_receiver)
-
-        # Update page number
-        update_page_num(current_chatting_friend_nickname, my_username, current_chatting_friend_username)
-        current_page_num += 1
-
-        # Send page
-        new_page_string = new_page.to_string()
-        send_message(current_chatting_page_name + " " + str(current_page_num), new_page_string)
-
-        # Update file count on ResilientDB
-        update_file_num(my_username, current_chatting_friend_username)
-
-        # Send file string
-        send_message(current_chatting_page_name + current_chatting_page_name + " FILE " + str(current_file_count),
-                     encrypted_message)
-
-    else:
-        # Add file location into this new page
-        page.add_message(current_chatting_friend_public_key_string,
-                         "FILE",
-                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
-                         file_name,
-                         current_chatting_page_name + " FILE " + str(current_file_count),
-                         encrypted_aes_key_sender,
-                         encrypted_aes_key_receiver)
-
-        # Update page number
-        update_page_num(current_chatting_friend_nickname, my_username, current_chatting_friend_username)
-        current_page_num += 1
 
         # Send page
         new_page_string = page.to_string()
@@ -311,9 +305,32 @@ def send_file(path: str):
         # Update file count on ResilientDB
         update_file_num(my_username, current_chatting_friend_username)
 
-        # Send file string
+        # Send first file string
         send_message(current_chatting_page_name + current_chatting_page_name + " FILE " + str(current_file_count),
-                     encrypted_message)
+                     encrypted_first_chunk)
+
+        i = 1
+        while True:
+            next_chunk = file.read(max_chunk_size_MB * 1024 * 1024)
+            if not next_chunk:
+                break
+
+            # Convert next chunk into string
+            next_chunk_string = next_chunk.hex().encode()
+
+            # Encrypt next chunk
+            encrypted_next_chunk, _, _ = encrypt_message_for_two_recipients(first_chunk_string,
+                                                                            my_public_key,
+                                                                            current_chatting_friend_public_key,
+                                                                            aes_key)
+
+            # Send next chunk
+            send_message(current_chatting_page_name + current_chatting_page_name +
+                         " FILE " + str(current_file_count) + " " + str(i),
+                         encrypted_first_chunk)
+
+            # Update counter
+            i += 1
 
 
 def initial_chat_history_loading():
@@ -415,14 +432,33 @@ def update_chat_history():
 def download_file(path: str, key: str, encrypted_aes_key: str):
     """This function should be called when user decide to download a file"""
 
-    # Download file string
-    encrypted_file_string = get_message(key)
+    with open(path, 'wb') as file:
+        # Get first encrypted data chunk
+        first_encrypted_data_string = get_message(key)
 
-    # Decrypt file string
-    decrypted_file_string = decrypt_message(encrypted_file_string, encrypted_aes_key, my_private_key)
+        # Decrypt first data chunk
+        decrypted_first_data_string = decrypt_message(first_encrypted_data_string, encrypted_aes_key, my_private_key)
 
-    # Write file
-    write_file(path, decrypted_file_string)
+        # Write first data chunk into file
+        file.write(bytes.fromhex(decrypted_first_data_string))
+
+        i = 1
+        flag = True
+        while flag:
+            # Get next data chunk
+            encrypted_next_data_chunk_string = get_message(key + " " + str(i))
+
+            # Check is this data chunk is empty or not
+            if decrypted_first_data_string == "\n" or decrypted_first_data_string == "" or decrypted_first_data_string == " ":
+                flag = False
+            else:
+                # Decrypt next data chunk
+                decrypted_next_data_chunk = decrypt_message(encrypted_next_data_chunk_string,
+                                                            encrypted_aes_key,
+                                                            my_private_key)
+
+                # Write next data chunk into file
+                file.write(bytes.fromhex(decrypted_next_data_chunk))
 
 
 def load_previous_chat_history():

@@ -34,8 +34,8 @@ Each `Page` has 20 messages and each message has 7 different fields. When a page
 3. Time stamp: When this message been sent.
 4. Message type extension: Only in use when message type is `FILE` to store file name and extension such like `testFile.pdf`
 5. Encrypted message: If message type is `TEXT`, this field will store the encrypted text string. 
-   If message type is `FILE`, this field will store a key and the corresponding value is encrypted file string.
-   In this way, it will not give a high pressure to internet, users can choose to download the file or not.
+   If message type is `FILE`, this field will store a key(A ResilientDB key) and the corresponding value is encrypted file string.
+   In this way, it will not give a high pressure to the internet, and computing power. Users can choose to download the file or not.
 6. Encrypted AES key with sender's RSA public key: Use sender's RSA public key to encrypt randomly generated AES key. 
    So, sender can decrypt AES key with his/her RSA private key.
 7. Encrypted AES key with receiver's RSA public key: Use receiver's RSA public key to encrypt the AES key. Only receiver can decrypt this message.

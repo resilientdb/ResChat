@@ -1,10 +1,13 @@
 import datetime
+import os.path
 import sys
 from page import *
 import kv_operation as kv
 from friend_list import *
 from encryption_and_user import *
 import client
+from file_operation import *
+import time
 
 # pybind_kv.set("test", "123", "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config")
 # print(pybind_kv.get("a", "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"))
@@ -17,13 +20,41 @@ import client
 # second_username = sorted_usernames[1]
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
-print(client.login("2940009621", "123456"))
-print(client.my_public_key_string)
-print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23])
+client.login("2940009621", "123456")
+# print(client.my_public_key_string)
+# print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23])
+
+# start_time = time.time()
+# image_string = read_file("/home/ubuntu/Desktop/test_large_file_600M.iso")
 enc_msg, enc_aes_sender, enc_aes_receiver = encrypt_message_for_two_recipients("123456",
                                                                                client.my_public_key,
-                                                                               client.my_public_key)
-print(enc_msg)
+                                                                               client.my_public_key,
+                                                                               b"1234567890123456")
+print(decrypt_aes_key_with_rsa(enc_aes_receiver, client.my_private_key))
+
+
+# print(((len(enc_msg) / 1024) / 1024) / 1024)
+# send_message("test", "\n")
+# send_message("test", enc_msg)
+# enc_msg_from_chain = get_message("test")
+# if enc_msg_from_chain == enc_msg:
+#     print("TRUE!!!")
+# else:
+#     print("FALSE!!!")
+# dec_msg = decrypt_message(enc_msg_from_chain, enc_aes_sender, client.my_private_key)
+# #
+# # write_file("/home/ubuntu/Desktop/test_large_file_600M_2.iso", dec_msg)
+# end_time = time.time()
+# elapsed_time = end_time - start_time
+# print(f"Program took {elapsed_time} seconds to run.")
+
+# file_size_bytes = os.path.getsize("/home/ubuntu/Desktop/test_large_file_600M.iso")
+# file_size_KB = file_size_bytes / 1024
+# file_size_MB = file_size_KB / 1024
+# file_size_GB = file_size_MB / 1024
+#
+# print(file_size_MB)
+
 #
 # pg = Page()
 # pg.add_message("000",

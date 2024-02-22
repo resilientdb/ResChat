@@ -86,9 +86,10 @@ def decrypt_aes_key_with_rsa(encrypted_aes_key, private_key):
 
 
 # Internal function
-def encrypt_data_with_aes(data):
+def encrypt_data_with_aes(data, aes_key=None):
     """User AES to encrypt a string"""
-    aes_key = get_random_bytes(16)
+    if aes_key is None:
+        aes_key = get_random_bytes(16)
     cipher_aes = AES.new(aes_key, AES.MODE_GCM)
     ciphertext, tag = cipher_aes.encrypt_and_digest(data)
     return aes_key, cipher_aes.nonce, tag, ciphertext
@@ -104,7 +105,10 @@ def decrypt_data_with_aes(encrypted_data, aes_key, nonce, tag):
 
 # External function
 
-def encrypt_message_for_two_recipients(message: str or bytes, public_key_sender, public_key_receiver):
+def encrypt_message_for_two_recipients(message: str or bytes,
+                                       public_key_sender,
+                                       public_key_receiver,
+                                       aes_key_input=None):
     """
     Use two senders' RSA public key to encrypt a message
     Return a list [encrypted message,
@@ -114,7 +118,7 @@ def encrypt_message_for_two_recipients(message: str or bytes, public_key_sender,
     if isinstance(message, str):
         message = message.encode('utf-8')
 
-    aes_key, nonce, tag, encrypted_data = encrypt_data_with_aes(message)
+    aes_key, nonce, tag, encrypted_data = encrypt_data_with_aes(message, aes_key_input)
     encrypted_aes_key_sender = encrypt_aes_key_with_rsa(aes_key, public_key_sender)
     encrypted_aes_key_receiver = encrypt_aes_key_with_rsa(aes_key, public_key_receiver)
 
