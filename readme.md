@@ -44,11 +44,16 @@ In this approach, sender and receiver can both encrypt and decrypt certain messa
 Both sender and receiver will obtain some shared pages. This project is using kv service of the ResilientDB, 
 and the command line instructions are set `key` `value` and get `key`. 
 The `key` part constructed with two fields `page name` and `page number`. 
-The `page name` is constructed by sender and receiver's public key(sorted in ASCII order) to ensure that both receiver and sender will have the same page name. 
+The `page name` is constructed by sender and receiver's username(sorted in ASCII order) to ensure that both receiver and sender will have the same page name. 
 Page name will never change throughout the chatting. On the other hand, `page number` starts at 1, 
 and it will increase by 1 everytime the page is full. 
 ResChat will load most recent two pages everytime user start up the client(current page and current page -1) In this way, 
 all chat history are stored on the chain(ResilientDB) and user can load as many as previous chatting history as he/she wants.
+
+Example:
+Let's assume my username is 123456 and the friend I am currently chatting with has username 654321. Below image shows
+how pages and files are stored in the ResilientDB in a key value pair form.
+
 ![page and file image](readme_images/page_and_file.jpg)
 
 ### 2.2 Encryption
