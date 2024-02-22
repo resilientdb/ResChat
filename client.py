@@ -306,28 +306,30 @@ def send_file(path: str):
         update_file_num(my_username, current_chatting_friend_username)
 
         # Send first file string
-        send_message(current_chatting_page_name + current_chatting_page_name + " FILE " + str(current_file_count),
+        send_message(current_chatting_page_name + " FILE " + str(current_file_count),
                      encrypted_first_chunk)
 
         i = 1
         while True:
+
             next_chunk = file.read(max_chunk_size_MB * 1024 * 1024)
             if not next_chunk:
+                print(f"CHECK i: {i}")
                 break
 
             # Convert next chunk into string
             next_chunk_string = next_chunk.hex().encode()
 
             # Encrypt next chunk
-            encrypted_next_chunk, _, _ = encrypt_message_for_two_recipients(first_chunk_string,
+            encrypted_next_chunk, _, _ = encrypt_message_for_two_recipients(next_chunk_string,
                                                                             my_public_key,
                                                                             current_chatting_friend_public_key,
                                                                             aes_key)
 
             # Send next chunk
-            send_message(current_chatting_page_name + current_chatting_page_name +
-                         " FILE " + str(current_file_count) + " " + str(i),
-                         encrypted_first_chunk)
+            send_message(current_chatting_page_name + " FILE " + str(current_file_count) + " " + str(i),
+                         encrypted_next_chunk)
+            print(current_chatting_page_name + " FILE " + str(current_file_count) + " " + str(i) + "111111")
 
             # Update counter
             i += 1
@@ -404,26 +406,46 @@ def update_chat_history():
     # Get all messages
     all_messages = page.all_messages()
 
-    # Check if update needed
-    if all_messages[len(all_messages) - 1][2] == current_chat_history[len(current_chat_history) - 1][2]:
-        # No update needed situation
+
+    tmp_list = []
+    # Check if current_chat_history and all_messages is empty
+    if len(all_messages) == 0 and len(current_chat_history) == 0:
         return
+
+    elif len(current_chat_history) != 0 and len(all_messages) != 0:
+        # Check if update needed
+        if all_messages[len(all_messages) - 1][2] == current_chat_history[len(current_chat_history) - 1][2]:
+            # No update needed situation
+            return
+        else:
+            # Update needed situation
+            flag = True
+            while flag:
+                pg = Page().from_string(get_message(current_chatting_page_name + " " + str(current_page_num)))
+                all_messages = pg.all_messages()
+
+                for i in range(len(all_messages) - 1, -1, -1):
+                    if all_messages[i][2] == current_chat_history[len(current_chat_history) - 1][2]:
+                        flag = False
+                        break
+                    else:
+                        tmp_list.append(encapsulated_decrypt_message(all_messages[i]))
+
+                if flag:
+                    current_page_num -= 1
     else:
         # Update needed situation
         flag = True
-        tmp_list = []
         while flag:
             pg = Page().from_string(get_message(current_chatting_page_name + " " + str(current_page_num)))
             all_messages = pg.all_messages()
 
             for i in range(len(all_messages) - 1, -1, -1):
-                if all_messages[i][2] == current_chat_history[len(current_chat_history) - 1][2]:
-                    flag = False
-                    break
-                else:
-                    tmp_list.append(encapsulated_decrypt_message(all_messages[i]))
+                tmp_list.append(encapsulated_decrypt_message(all_messages[i]))
 
-            if flag:
+            if current_page_num == 1:
+                flag = False
+            else:
                 current_page_num -= 1
 
     current_chat_history.extend(tmp_list[::-1])
@@ -441,15 +463,17 @@ def download_file(path: str, key: str, encrypted_aes_key: str):
 
         # Write first data chunk into file
         file.write(bytes.fromhex(decrypted_first_data_string))
-
         i = 1
         flag = True
         while flag:
             # Get next data chunk
             encrypted_next_data_chunk_string = get_message(key + " " + str(i))
 
+            print(key + " " + str(i) + "222222")
+
             # Check is this data chunk is empty or not
-            if decrypted_first_data_string == "\n" or decrypted_first_data_string == "" or decrypted_first_data_string == " ":
+            if encrypted_next_data_chunk_string == "\n" or encrypted_next_data_chunk_string == "" or encrypted_next_data_chunk_string == " ":
+                print(f"CHECK i: {i}")
                 flag = False
             else:
                 # Decrypt next data chunk
@@ -459,6 +483,9 @@ def download_file(path: str, key: str, encrypted_aes_key: str):
 
                 # Write next data chunk into file
                 file.write(bytes.fromhex(decrypted_next_data_chunk))
+
+                # Update counter
+                i += 1
 
 
 def load_previous_chat_history():

@@ -20,57 +20,30 @@ import time
 # second_username = sorted_usernames[1]
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
+
+
+send_message("2940009621 920904204 1", "\n")
+send_message("2940009621 920904204 FILE_COUNT", "1")
+send_message("2940009621 920904204 PAGE_NUM", "1")
 client.login("2940009621", "123456")
-# print(client.my_public_key_string)
-# print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23])
+client.select_friend_to_chat_with("test")
 
-# start_time = time.time()
-# image_string = read_file("/home/ubuntu/Desktop/test_large_file_600M.iso")
-enc_msg, enc_aes_sender, enc_aes_receiver = encrypt_message_for_two_recipients("123456",
-                                                                               client.my_public_key,
-                                                                               client.my_public_key,
-                                                                               b"1234567890123456")
-print(decrypt_aes_key_with_rsa(enc_aes_receiver, client.my_private_key))
+print("CHECK TEST1")
+client.send_file("test_img.jpeg")
+client.update_chat_history()
+# f = read_file("test_img.jpeg")
 
+print("CHECK TEST2")
+client.download_file("test_img2.jpeg", client.current_chat_history[0][0], client.current_chat_history[0][4])
+# f1 = get_message("2940009621 920904204 FILE 1")
 
-# print(((len(enc_msg) / 1024) / 1024) / 1024)
-# send_message("test", "\n")
-# send_message("test", enc_msg)
-# enc_msg_from_chain = get_message("test")
-# if enc_msg_from_chain == enc_msg:
-#     print("TRUE!!!")
+# print(len(f))
+# if f == f_str:
+#     print("TRUE")
 # else:
-#     print("FALSE!!!")
-# dec_msg = decrypt_message(enc_msg_from_chain, enc_aes_sender, client.my_private_key)
-# #
-# # write_file("/home/ubuntu/Desktop/test_large_file_600M_2.iso", dec_msg)
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-# print(f"Program took {elapsed_time} seconds to run.")
+#     print("FALSE")
+# print(len(f))
+# print(len(f_str))
+# write_file("test_img2.jpeg", f_str)
 
-# file_size_bytes = os.path.getsize("/home/ubuntu/Desktop/test_large_file_600M.iso")
-# file_size_KB = file_size_bytes / 1024
-# file_size_MB = file_size_KB / 1024
-# file_size_GB = file_size_MB / 1024
-#
-# print(file_size_MB)
 
-#
-# pg = Page()
-# pg.add_message("000",
-#                "TEXT",
-#                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:23],
-#                "NONE",
-#                enc_msg,
-#                enc_aes_sender,
-#                "000")
-# msg_string = pg.all_messages()
-# tmp = client.encapsulated_decrypt_message(msg_string[0])
-# print(tmp)
-# pg.sort_by_time()
-# a = pg.all_messages()
-# print(a[0][0])
-
-# my_list = [[1, 2], [3, 4]]
-# my_list.insert(0, [5, 6])  # 在列表最前面添加元素1
-# print(my_list)  # 输出: [1, 2, 3, 4]

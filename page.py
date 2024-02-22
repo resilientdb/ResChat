@@ -55,14 +55,15 @@ class Page:
         """从字符串创建 Page 对象"""
         page = cls()
         messages = page_string.strip().split("\n")
-        for i in range(0, len(messages), 7):
-            pub_key = messages[i]
-            msg_type = messages[i + 1]
-            t_stamp = messages[i + 2]
-            msg_type_ext = messages[i + 3]
-            message = messages[i + 4]
-            encrypted_aes_key_sender = messages[i + 5]
-            encrypted_aes_key_receiver = messages[i + 6]
+        for i in range(0, len(messages), 15):
+            # print(f"i: {i}")
+            pub_key = "\n".join(messages[i:i + 9])
+            msg_type = messages[i + 9]
+            t_stamp = messages[i + 10]
+            msg_type_ext = messages[i + 11]
+            message = messages[i + 12]
+            encrypted_aes_key_sender = messages[i + 13]
+            encrypted_aes_key_receiver = messages[i + 14]
             page.add_message(pub_key, msg_type, t_stamp, msg_type_ext, message, encrypted_aes_key_sender,
                              encrypted_aes_key_receiver)
 
