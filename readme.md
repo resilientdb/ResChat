@@ -49,6 +49,7 @@ Page name will never change throughout the chatting. On the other hand, `page nu
 and it will increase by 1 everytime the page is full. 
 ResChat will load most recent two pages everytime user start up the client(current page and current page -1) In this way, 
 all chat history are stored on the chain(ResilientDB) and user can load as many as previous chatting history as he/she wants.
+![page and file image](readme_images/page_and_file.jpg)
 
 ### 2.2 Encryption
 This project uses RSA + AES as the encryption algorithm. The message will be first encrypted by a randomly generated 16 bytes(128 bits) AES key. 

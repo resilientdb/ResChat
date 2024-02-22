@@ -53,7 +53,7 @@ current_chatting_page_name = ""
 # This variable records which previous page the user has loaded.
 previous_page_num = -1
 
-# This list contains all information that required for frontend message dispaly
+# This list contains all information that required for frontend message display
 # - Decrypted message/file location(key)
 # - Message type(TEXT or FILE)
 # - Timestamp
