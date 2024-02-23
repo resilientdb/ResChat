@@ -1,5 +1,7 @@
 import datetime
 import os.path
+import random
+import string
 import sys
 from page import *
 import kv_operation as kv
@@ -22,19 +24,19 @@ import time
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
 
 
-send_message("2940009621 920904204 1", "\n")
-send_message("2940009621 920904204 FILE_COUNT", "1")
-send_message("2940009621 920904204 PAGE_NUM", "1")
-client.login("2940009621", "123456")
-client.select_friend_to_chat_with("test")
-
-print("CHECK TEST1")
-client.send_file("test_img.jpeg")
-client.update_chat_history()
-# f = read_file("test_img.jpeg")
-
-print("CHECK TEST2")
-client.download_file("test_img2.jpeg", client.current_chat_history[0][0], client.current_chat_history[0][4])
+# send_message("2940009621 920904204 1", "\n")
+# send_message("2940009621 920904204 FILE_COUNT", "1")
+# send_message("2940009621 920904204 PAGE_NUM", "1")
+# client.login("2940009621", "123456")
+# client.select_friend_to_chat_with("test")
+#
+# print("CHECK TEST1")
+# client.send_file("test_img.jpeg")
+# client.update_chat_history()
+# # f = read_file("test_img.jpeg")
+#
+# print("CHECK TEST2")
+# client.download_file("test_img2.jpeg", client.current_chat_history[0][0], client.current_chat_history[0][4])
 # f1 = get_message("2940009621 920904204 FILE 1")
 
 # print(len(f))
@@ -45,5 +47,11 @@ client.download_file("test_img2.jpeg", client.current_chat_history[0][0], client
 # print(len(f))
 # print(len(f_str))
 # write_file("test_img2.jpeg", f_str)
-
+# characters = string.ascii_letters + string.digits
+# # 使用random.choice从字符集中随机选择字符
+# random_string = ''.join(random.choice(characters) for i in range(10))
+# print(random_string)
+# print(client.check_connection_to_chain())
+send_message("test", "123")
+print(get_message("test"))
 

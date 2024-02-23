@@ -2,7 +2,7 @@ import datetime
 import os
 import numpy as np
 from Crypto.Random import get_random_bytes
-
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from page import Page
 from kv_operation import send_message, get_message
 from friend_list import (add_friend, get_all_friends,
@@ -13,6 +13,8 @@ from friend_list import (add_friend, get_all_friends,
 from encryption_and_user import (create_user, load_user,
                                  encrypt_message_for_two_recipients, decrypt_message,
                                  string_to_public_key, public_key_to_string, decrypt_aes_key_with_rsa)
+import random
+import string
 
 # Global Variables
 """Setting, please change following variable base on your RAM size and computing power"""
@@ -67,6 +69,37 @@ current_chat_history = []
 
 # Not in use right now
 current_chatting_message_count = -1
+
+
+def check_connection_to_chain():
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for i in range(10))
+
+    # 使用ThreadPoolExecutor来处理超时
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        # 尝试send_message并设置超时时间
+        send_future = executor.submit(send_message, "test", random_string)
+        try:
+            send_future.result(timeout=3)  # 3秒超时
+        except TimeoutError:
+            print("send有问题")
+
+        # 尝试get_message并设置超时时间
+        get_future = executor.submit(get_message, "test")
+        try:
+            result = get_future.result(timeout=3)
+            if result == random_string:
+                return True
+        except TimeoutError:
+            print("get有问题")
+
+    return False
+
+
+def update_max_data_chunk_size(size):
+    """This function should be called when user want to change max_chunk_size_MB"""
+    global max_chunk_size_MB
+    max_chunk_size_MB = size
 
 
 def login(username: str, password: str):
@@ -232,6 +265,11 @@ def send_file(path: str):
     """This function should be called when user decide to send a file"""
     global my_public_key, my_private_key, my_friend_list, my_username, my_password, current_chatting_page_name
     global current_chatting_friend_public_key, current_chatting_friend_nickname, max_chunk_size_MB
+
+    # Check file size
+    if os.path.getsize(path) * 1024 * 1024 > 5:
+        print("Can not send file greater then 5MB")
+        return
 
     with open(path, 'rb') as file:
         # Generate random AES key to ensure all file chunks encrypted with same AES key
@@ -405,7 +443,6 @@ def update_chat_history():
 
     # Get all messages
     all_messages = page.all_messages()
-
 
     tmp_list = []
     # Check if current_chat_history and all_messages is empty
