@@ -72,6 +72,7 @@ current_chatting_message_count = -1
 
 
 def check_connection_to_chain():
+    """BUG!!"""
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for i in range(10))
 
@@ -117,6 +118,7 @@ def login(username: str, password: str):
         my_username = username
         my_password = password
         my_public_key_string = public_key_to_string(my_public_key)
+        return True
 
 
 def logout():

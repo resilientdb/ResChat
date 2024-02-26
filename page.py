@@ -1,6 +1,7 @@
 import numpy as np
 from kv_operation import send_message, get_message
 
+
 class Page:
     """
     Page 结构用于存储和传输加密消息。
@@ -75,4 +76,3 @@ class Page:
         for i in range(self.message_count):
             messages[i] = (self.msg[i])
         return messages
-

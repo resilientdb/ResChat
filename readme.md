@@ -50,11 +50,18 @@ and it will increase by 1 everytime the page is full.
 ResChat will load most recent two pages everytime user start up the client(current page and current page -1) In this way, 
 all chat history are stored on the chain(ResilientDB) and user can load as many as previous chatting history as he/she wants.
 
+### 2.2 File Transfer
+As mentioned above, when user want to download a file. System will first read the corresponding value(encrypted file string)
+of the file location. However, to avoid overload the RAM during the encryption and decryption process, a large file will be break into 
+different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, which is the first file chunk,
+then, system will check `123456 654321 FILE 1 1` which is the second file chunk next is `123456 654321 FILE 1 3`... 
+Such process will keep going until a key's corresponding value is none.
+
 Example:
 Let's assume my username is 123456 and the friend I am currently chatting with has username 654321. Below image shows
 how pages and files are stored in the ResilientDB in a key value pair form.
 
-![page and file image](readme_images/page_and_file.jpg)
+![page and file image](readme_images/page_and_file.png)
 
 ### 2.2 Encryption
 This project uses RSA + AES as the encryption algorithm. The message will be first encrypted by a randomly generated 16 bytes(128 bits) AES key. 
