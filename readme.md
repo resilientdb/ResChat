@@ -55,7 +55,7 @@ As mentioned above, when user want to download a file. System will first read th
 of the file location. However, to avoid overload the RAM during the encryption and decryption process, a large file will be break into 
 different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, 
 which is a checker to show this file has been uploaded completely or not. If this field is `FINISHED` means file has been uploaded completely,
-then, system will check `123456 654321 FILE 1 1` which is the second file chunk next is `123456 654321 FILE 1 3`... 
+then, system will check `123456 654321 FILE 1 1` which is the first file chunk next is `123456 654321 FILE 1 2` which is the second file chunk... 
 Such process will keep going until a key's corresponding value is none.
 
 Example:
