@@ -12,13 +12,14 @@ from friend_list import (add_friend, get_all_friends,
                          get_current_page_num)
 from encryption_and_user import (create_user, load_user,
                                  encrypt_message_for_two_recipients, decrypt_message,
-                                 string_to_public_key, public_key_to_string, decrypt_aes_key_with_rsa)
+                                 string_to_public_key, public_key_to_string, decrypt_aes_key_with_rsa,
+                                 encrypt_aes_key_with_rsa)
 import random
 import string
 
 # Global Variables
 """Setting, please change following variable base on your RAM size and computing power"""
-max_chunk_size_MB = 200
+max_chunk_size_MB = 2
 
 """These global variables will be assigned when login function been called"""
 # This variable stores login user's public key(RSA public key)
@@ -167,13 +168,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
     if encrypted_message[0] == my_public_key_string:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[6], my_private_key)
-            tmp = [decrypted_message,
-                   "TEXT",
-                   encrypted_message[2],
-                   "NONE",
-                   "NONE",
-                   "RECEIVER"]
-
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -181,19 +176,10 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    encrypted_message[3],
                    encrypted_message[6],
                    "RECEIVER"]
-        else:
-            return False
-        return tmp
     else:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[5], my_private_key)
-            tmp = [decrypted_message,
-                   "TEXT",
-                   encrypted_message[2],
-                   "NONE",
-                   "NONE",
-                   "SENDER"]
-
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -201,9 +187,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    encrypted_message[3],
                    encrypted_message[5],
                    "SENDER"]
-        else:
-            return False
-        return tmp
+    return tmp
 
 
 def encapsulated_delete_friend(nickname: str):
@@ -241,11 +225,8 @@ def send_text_message(message: str) -> bool:
         page = Page().from_string(page_string)
         page.sort_by_time()
 
-    print(f"Sending message {message}")
-
     # Check if the page is full
     if page.is_full():
-        print("PAGE IS FULL")
         # Create a new page
         new_page = Page()
 
@@ -280,9 +261,7 @@ def send_text_message(message: str) -> bool:
         page_string = page.to_string()
         send_message(current_chatting_page_name + " " + str(current_page_num), page_string)
 
-    print(f"Message {message} has been sent")
-
-    return True
+        return True
 
 
 def send_file(path: str):
@@ -291,7 +270,7 @@ def send_file(path: str):
     global current_chatting_friend_public_key, current_chatting_friend_nickname, max_chunk_size_MB
 
     # Check file size
-    if os.path.getsize(path) * 1024 * 1024 > 5:
+    if os.path.getsize(path) / 1024 / 1024 > 5:
         print("Can not send file greater then 5MB")
         return
 
@@ -302,18 +281,6 @@ def send_file(path: str):
         # Get file name
         file_name = os.path.basename(path)
 
-        # Get first max_chunk_size_MB size chunk and convert it into bytes
-        first_chunk = file.read(max_chunk_size_MB * 1024 * 1024)
-        first_chunk_string = first_chunk.hex().encode()
-
-        # Encrypt first chunk
-        (encrypted_first_chunk,
-         encrypted_aes_key_sender,
-         encrypted_aes_key_receiver) = encrypt_message_for_two_recipients(first_chunk_string,
-                                                                          my_public_key,
-                                                                          current_chatting_friend_public_key,
-                                                                          aes_key)
-
         # Get current page number
         current_page_num = get_current_page_num(my_username,
                                                 current_chatting_friend_username)
@@ -321,6 +288,12 @@ def send_file(path: str):
         # Get current file count
         current_file_count = get_current_file_count(my_username,
                                                     current_chatting_friend_username)
+
+        # Update file count on ResilientDB
+        update_file_num(my_username, current_chatting_friend_username)
+
+        encrypted_aes_key_sender = encrypt_aes_key_with_rsa(aes_key, my_public_key)
+        encrypted_aes_key_receiver = encrypt_aes_key_with_rsa(aes_key, current_chatting_friend_public_key)
 
         # Get current page
         page_string = get_message(current_chatting_page_name + " " + str(current_page_num))
@@ -364,19 +337,12 @@ def send_file(path: str):
         new_page_string = page.to_string()
         send_message(current_chatting_page_name + " " + str(current_page_num), new_page_string)
 
-        # Update file count on ResilientDB
-        update_file_num(my_username, current_chatting_friend_username)
-
-        # Send first file string
-        send_message(current_chatting_page_name + " FILE " + str(current_file_count),
-                     encrypted_first_chunk)
-
         i = 1
         while True:
 
             next_chunk = file.read(max_chunk_size_MB * 1024 * 1024)
             if not next_chunk:
-                print(f"CHECK i: {i}")
+                # print(f"CHECK i: {i}")
                 break
 
             # Convert next chunk into string
@@ -391,10 +357,12 @@ def send_file(path: str):
             # Send next chunk
             send_message(current_chatting_page_name + " FILE " + str(current_file_count) + " " + str(i),
                          encrypted_next_chunk)
-            print(current_chatting_page_name + " FILE " + str(current_file_count) + " " + str(i) + "111111")
 
             # Update counter
             i += 1
+
+        # Send FINISHED message
+        send_message(current_chatting_page_name + " FILE " + str(current_file_count), "FINISHED")
 
 
 def initial_chat_history_loading():
@@ -514,27 +482,24 @@ def update_chat_history():
 
 def download_file(path: str, key: str, encrypted_aes_key: str):
     """This function should be called when user decide to download a file"""
+    # Check if this file is broken
+    if get_message(key) != "FINISHED":
+        print("File is broken")
+        return False
 
     with open(path, 'wb') as file:
-        # Get first encrypted data chunk
-        first_encrypted_data_string = get_message(key)
 
-        # Decrypt first data chunk
-        decrypted_first_data_string = decrypt_message(first_encrypted_data_string, encrypted_aes_key, my_private_key)
-
-        # Write first data chunk into file
-        file.write(bytes.fromhex(decrypted_first_data_string))
         i = 1
         flag = True
         while flag:
             # Get next data chunk
             encrypted_next_data_chunk_string = get_message(key + " " + str(i))
 
-            print(key + " " + str(i) + "222222")
+            # print(key + " " + str(i) + "222222")
 
             # Check is this data chunk is empty or not
             if encrypted_next_data_chunk_string == "\n" or encrypted_next_data_chunk_string == "" or encrypted_next_data_chunk_string == " ":
-                print(f"CHECK i: {i}")
+                # print(f"CHECK i: {i}")
                 flag = False
             else:
                 # Decrypt next data chunk
@@ -568,8 +533,8 @@ def load_previous_chat_history():
     all_messages = page.all_messages()
 
     # Decrypt messages
-    for message in all_messages[::-1]:
-        tmp = encapsulated_decrypt_message(message)
+    for i in range(len(all_messages)):
+        tmp = encapsulated_decrypt_message(all_messages[i])
         current_chat_history.insert(0, tmp)
 
     # Update previous_page_num

@@ -24,25 +24,47 @@ import time
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
 def reset_and_clear_all():
-    for i in range(5):
+    for i in range(10):
         send_message(f"2940009621 920904204 {i + 1}", "\n")
 
     send_message("2940009621 920904204 PAGE_NUM", "1")
+    send_message("2940009621 920904204 FILE 1", "\n")
+    for j in range(5):
+        for k in range(5):
+            # print(f"Resetting 2940009621 920904204 FILE {j} {k}")
+            send_message(f"2940009621 920904204 FILE {j} {k}", "\n")
     send_message("2940009621 920904204 FILE_COUNT", "1")
 
 
-# reset_and_clear_all()
+reset_and_clear_all()
+
 client.login("2940009621", "123456")
 client.select_friend_to_chat_with("test")
-# for i in range(80):
-#     client.send_text_message(f"Message {i+1}")
+# for i in range(40):
+#     client.send_text_message(f"Message {i + 1}")
+
 
 client.initial_chat_history_loading()
-client.load_previous_chat_history()
-client.load_previous_chat_history()
-client.load_previous_chat_history()
+
+client.send_file("/home/ubuntu/Desktop/ResChat/test_img.jpeg")
+
+# client.update_chat_history()
+client.initial_chat_history_loading()
+
+# client.load_previous_chat_history()
+# client.load_previous_chat_history()
+# client.load_previous_chat_history()
+print(get_message("2940009621 920904204 FILE 1"))
+client.download_file("/home/ubuntu/Desktop/ResChat/test_img_2.jpeg",
+                     "2940009621 920904204 FILE 1",
+                     client.current_chat_history[0][4])
+
 
 print(f"TOTAL MESSAGES: {len(client.current_chat_history)}")
-
+f_count = get_current_file_count("2940009621", "920904204")
+p_count = get_current_page_num("2940009621", "920904204")
+print(f"CURRENT PAGE COUNT: {p_count}")
+print(f"CURRENT FILE COUNT: {f_count}")
 for i in range(len(client.current_chat_history)):
     print(client.current_chat_history[i])
+
