@@ -53,7 +53,8 @@ all chat history are stored on the chain(ResilientDB) and user can load as many 
 ### 2.2 File Transfer
 As mentioned above, when user want to download a file. System will first read the corresponding value(encrypted file string)
 of the file location. However, to avoid overload the RAM during the encryption and decryption process, a large file will be break into 
-different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, which is the first file chunk,
+different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, 
+which is a checker to show this file has been uploaded completely or not. If this field is `FINISHED` means file has been uploaded completely,
 then, system will check `123456 654321 FILE 1 1` which is the second file chunk next is `123456 654321 FILE 1 3`... 
 Such process will keep going until a key's corresponding value is none.
 
