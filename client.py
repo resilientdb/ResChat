@@ -167,7 +167,13 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
     if encrypted_message[0] == my_public_key_string:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[6], my_private_key)
-            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
+            tmp = [decrypted_message,
+                   "TEXT",
+                   encrypted_message[2],
+                   "NONE",
+                   "NONE",
+                   "RECEIVER"]
+
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -175,10 +181,19 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    encrypted_message[3],
                    encrypted_message[6],
                    "RECEIVER"]
+        else:
+            return False
+        return tmp
     else:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[5], my_private_key)
-            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
+            tmp = [decrypted_message,
+                   "TEXT",
+                   encrypted_message[2],
+                   "NONE",
+                   "NONE",
+                   "SENDER"]
+
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -186,7 +201,9 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
                    encrypted_message[3],
                    encrypted_message[5],
                    "SENDER"]
-    return tmp
+        else:
+            return False
+        return tmp
 
 
 def encapsulated_delete_friend(nickname: str):
@@ -224,8 +241,11 @@ def send_text_message(message: str) -> bool:
         page = Page().from_string(page_string)
         page.sort_by_time()
 
+    print(f"Sending message {message}")
+
     # Check if the page is full
     if page.is_full():
+        print("PAGE IS FULL")
         # Create a new page
         new_page = Page()
 
@@ -260,7 +280,9 @@ def send_text_message(message: str) -> bool:
         page_string = page.to_string()
         send_message(current_chatting_page_name + " " + str(current_page_num), page_string)
 
-        return True
+    print(f"Message {message} has been sent")
+
+    return True
 
 
 def send_file(path: str):
@@ -546,8 +568,8 @@ def load_previous_chat_history():
     all_messages = page.all_messages()
 
     # Decrypt messages
-    for i in range(len(all_messages)):
-        tmp = encapsulated_decrypt_message(all_messages[i])
+    for message in all_messages[::-1]:
+        tmp = encapsulated_decrypt_message(message)
         current_chat_history.insert(0, tmp)
 
     # Update previous_page_num

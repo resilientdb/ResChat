@@ -11,6 +11,7 @@ import client
 from file_operation import *
 import time
 
+
 # pybind_kv.set("test", "123", "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config")
 # print(pybind_kv.get("a", "/home/ubuntu/Desktop/incubator-resilientdb/scripts/deploy/config_out/client.config"))
 # send_message("2940009621", "\n")
@@ -22,36 +23,26 @@ import time
 # second_username = sorted_usernames[1]
 # update_page_num("test", usr_name)
 # print(get_message(first_username + " " + second_username + " " + "PAGE_NUM"))
+def reset_and_clear_all():
+    for i in range(5):
+        send_message(f"2940009621 920904204 {i + 1}", "\n")
+
+    send_message("2940009621 920904204 PAGE_NUM", "1")
+    send_message("2940009621 920904204 FILE_COUNT", "1")
 
 
-# send_message("2940009621 920904204 1", "\n")
-# send_message("2940009621 920904204 FILE_COUNT", "1")
-# send_message("2940009621 920904204 PAGE_NUM", "1")
-# client.login("2940009621", "123456")
-# client.select_friend_to_chat_with("test")
-#
-# print("CHECK TEST1")
-# client.send_file("test_img.jpeg")
-# client.update_chat_history()
-# # f = read_file("test_img.jpeg")
-#
-# print("CHECK TEST2")
-# client.download_file("test_img2.jpeg", client.current_chat_history[0][0], client.current_chat_history[0][4])
-# f1 = get_message("2940009621 920904204 FILE 1")
+# reset_and_clear_all()
+client.login("2940009621", "123456")
+client.select_friend_to_chat_with("test")
+# for i in range(80):
+#     client.send_text_message(f"Message {i+1}")
 
-# print(len(f))
-# if f == f_str:
-#     print("TRUE")
-# else:
-#     print("FALSE")
-# print(len(f))
-# print(len(f_str))
-# write_file("test_img2.jpeg", f_str)
-# characters = string.ascii_letters + string.digits
-# # 使用random.choice从字符集中随机选择字符
-# random_string = ''.join(random.choice(characters) for i in range(10))
-# print(random_string)
-# print(client.check_connection_to_chain())
-send_message("test", "123")
-print(get_message("test"))
+client.initial_chat_history_loading()
+client.load_previous_chat_history()
+client.load_previous_chat_history()
+client.load_previous_chat_history()
 
+print(f"TOTAL MESSAGES: {len(client.current_chat_history)}")
+
+for i in range(len(client.current_chat_history)):
+    print(client.current_chat_history[i])
