@@ -1,3 +1,4 @@
+import _io
 import datetime
 import os.path
 import random
@@ -36,35 +37,22 @@ def reset_and_clear_all():
     send_message("2940009621 920904204 FILE_COUNT", "1")
 
 
-reset_and_clear_all()
-
-client.login("2940009621", "123456")
-client.select_friend_to_chat_with("test")
+# reset_and_clear_all()
+# client.login("2940009621", "123456")
+# send_message("920904204", client.my_public_key_string)
+# client.encapsulated_add_friend("920904204", "test")
+# client.logout()
+# print(get_message("test"))
+# client.select_friend_to_chat_with("test")
 # for i in range(40):
+#     print(f"Sending Message {i+1}")
 #     client.send_text_message(f"Message {i + 1}")
+#
+# client.initial_chat_history_loading()
+# for i in range(len(client.current_chat_history)):
+#     print(client.current_chat_history[i])
+with open("test_img.jpeg", "rb") as f:
+    print(type(f))
 
-
-client.initial_chat_history_loading()
-
-client.send_file("/home/ubuntu/Desktop/ResChat/test_img.jpeg")
-
-# client.update_chat_history()
-client.initial_chat_history_loading()
-
-# client.load_previous_chat_history()
-# client.load_previous_chat_history()
-# client.load_previous_chat_history()
-print(get_message("2940009621 920904204 FILE 1"))
-client.download_file("/home/ubuntu/Desktop/ResChat/test_img_2.jpeg",
-                     "2940009621 920904204 FILE 1",
-                     client.current_chat_history[0][4])
-
-
-print(f"TOTAL MESSAGES: {len(client.current_chat_history)}")
-f_count = get_current_file_count("2940009621", "920904204")
-p_count = get_current_page_num("2940009621", "920904204")
-print(f"CURRENT PAGE COUNT: {p_count}")
-print(f"CURRENT FILE COUNT: {f_count}")
-for i in range(len(client.current_chat_history)):
-    print(client.current_chat_history[i])
+def test(f: _io.BufferedReader)
 
