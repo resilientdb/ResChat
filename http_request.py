@@ -29,7 +29,6 @@ async def handle_signup(request):
 
 
 async def get_friend_list(request):
-    print(f"++++++{client.my_friend_list}+++++++++")
     return web.json_response(client.my_friend_list)
 
 
