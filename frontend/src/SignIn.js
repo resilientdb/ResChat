@@ -39,7 +39,19 @@ function SignIn() {
     }
 
     async function signUp() {
-        
+        const username = usernameRef.current.input.value
+        const password = passwordRef.current.input.value
+        if (!username || !password) {
+            error('Please input your username and password')
+            return
+        }
+        const response = await fetch(`http://localhost:8080/signup?usrname=${username}&psw=${password}`)
+        const data = await response.json()
+        if (data.result) {
+            navigate("/chat");
+        } else {
+            error(data.message);
+        }
     }
 
     return (
@@ -70,7 +82,7 @@ function SignIn() {
                     <Input ref={passwordRef} className="inputBox" placeholder="Password"/>
                 </div>
                 <div className={"buttonBorder"}>
-                    <Button style={{marginBottom: "5%", width: "40%", height: "20%", borderRadius: 15}}
+                    <Button onClick={signUp} style={{marginBottom: "5%", width: "40%", height: "20%", borderRadius: 15}}
                             type={"default"}>Sign Up</Button>
                     <Button onClick={logIn} style={{height: "20%", width: "40%", borderRadius: 15}} type={"primary"}>Login</Button>
                 </div>

@@ -1,4 +1,6 @@
 import asyncio
+import json
+
 from aiohttp import web
 import client
 import os
@@ -6,19 +8,29 @@ import aiohttp_cors
 
 
 async def handle_login(request):
-    if os.path.exists('public_key.pem') and os.path.exists('private_key.pem'):
+    if os.path.exists('private_key.pem'):
         result = client.login(request.query.get('usrname'), request.query.get('psw'))
         if result:
             return web.json_response({'result': True, 'message': 'Login in successfully'})
         else:
             return web.json_response({'result': False, 'message': 'Wrong username or password'})
     else:
-        return web.json_response({'result': False, 'message': 'No public key and private key found, please signup'})
+        return web.json_response({'result': False, 'message': 'No private key found, please signup'})
 
 
 async def handle_signup(request):
+    if os.path.exists('private_key.pem'):
+        return web.json_response({'result': False, 'message': 'Private key already exists, please login'})
     result = client.encapsulated_create_user(request.query.get('usrname'), request.query.get('psw'))
-    return web.json_response({'result': result})
+    if not result:
+        return web.json_response({'result': False, 'message': 'Username already taken, please try another one'})
+    else:
+        return web.json_response({'result': True, 'message': 'Signup successfully, please login'})
+
+
+async def get_friend_list(request):
+    print(f"++++++{client.my_friend_list}+++++++++")
+    return web.json_response(client.my_friend_list)
 
 
 #
@@ -28,6 +40,7 @@ async def handle_signup(request):
 app = web.Application()
 app.router.add_get('/login', handle_login)
 app.router.add_get('/signup', handle_signup)
+app.router.add_get('/friendList', get_friend_list)
 
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(

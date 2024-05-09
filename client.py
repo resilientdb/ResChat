@@ -155,7 +155,12 @@ def select_friend_to_chat_with(nickname: str) -> bool:
 
 def encapsulated_create_user(username: str, password: str):
     """Encapsulated create_user function to allow front-end use it more easily"""
-    return create_user(username, password)
+    result = create_user(username, password)
+    if result:
+        login(username, password)
+        return True
+    else:
+        return False
 
 
 def encapsulated_add_friend(friend_username: str, nickname: str):

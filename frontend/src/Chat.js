@@ -15,19 +15,28 @@ function Chat (){
     const [isChat, setIsChat] = useState(true);
     const back = useNavigate();
     const inputRef = useRef(null);
-    const[data, setData] = useState([{
-            nickname: 'Friend 1', username: 'Friend 1 username',
-        },
-        {
-            nickname: 'Friend 2', username: 'Friend 2 username',
-        },
-        {
-            nickname: 'Friend 3', username: 'Friend 3 username',
-        },
-        {
-            nickname: 'Friend 4', username: 'Friend 4 username',
-        },],)
+    const[friendData, setFriendData] = useState([])
 
+    useEffect(()=>{
+        fetch(`http://localhost:8080/friendList`).then(
+            response => {
+                return response.json()
+            }
+        ).then(
+            data => {
+                console.log('bbb', data)
+                const lst = Object.entries(data).map(([key, value])=>{
+                    return ({'nickname': key, 'username': value})
+                })
+                console.log(lst)
+                setFriendData(lst)
+            }
+        ).catch(
+            error => {
+                console.log('aaa', error)
+            }
+        )
+    },[])
     function changeIsChat() {
         setIsChat(!isChat)
     }
@@ -75,7 +84,7 @@ function Chat (){
 
                     <div className='friendList'>
                         <List
-                            dataSource={data}
+                            dataSource={friendData}
                             renderItem={(item, index) => (
                                 <List.Item onClick={() => onClickSelectFriend(item.nickname)} className={currentChattingFriend===item.nickname?'friendSelected':'friendNotSelected'}>
                                         <List.Item.Meta
