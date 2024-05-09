@@ -5,3 +5,7 @@
 private_key.pem
 MODULE.bazel
 MODULE.bazel.lock
+.ijwb
+.vscode
+.idea
+node_modules/
