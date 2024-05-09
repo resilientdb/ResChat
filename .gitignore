@@ -9,3 +9,4 @@ MODULE.bazel.lock
 .vscode
 .idea
 node_modules/
+__pycache__
