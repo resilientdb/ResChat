@@ -1,6 +1,6 @@
 <p align="center">Still under developing</p>
 <p align="center">
-  <img src="readme_images/logo.png" alt="ResChat" width="200"/>
+  <img src="readme_images/reschat_logo.svg" alt="ResChat" width="200"/>
 </p>
 
 <p align="center">A ResilientDB blockchain based chatting system</p>
@@ -84,20 +84,42 @@ cd Download
 bash Anaconda3-2022.05-Linux-x86_64.sh
 source ~/.bashrc
 ```
+2. Install Bazel
 
-2. Setup Anaconda Environment
+Ubuntu
+```angular2html
+sudo apt install apt-transport-https curl gnupg -y
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+sudo apt update
+sudo apt install bazel-5.0.0
+```
+
+Mac
+```angular2html
+xcode-select --install
+sudo xcodebuild -license accept
+export BAZEL_VERSION=5.2.0
+Download your bazel package from https://github.com/bazelbuild/bazel/releases/tag/5.0.0
+chmod +x "bazel-5.0.0-installer-darwin-x86_64.sh"
+./bazel-5.0.0-installer-darwin-x86_64.sh --user
+export PATH="PATH:HOME/bin"
+```
+
+3. Setup Anaconda Environment
 ```
 conda create --name YOUR_ENV_NAME python=3.8
 conda activate YOUR_ENV_NAME
 pip install pandas pycrypto pycryptodome numpy Django
 ```
-3. Install ResCHat
+4. Install ResChat
 ```angular2html
 cd ResChat
 bazel build :pybind_kv_so
 ```
 
-4. Run Service
+5. Run Service
 ```angular2html
 TODO
 ```
