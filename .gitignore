@@ -1,4 +1,5 @@
 /bazel-*/
+/bazel-*
 private_key.pem
 MODULE.bazel
 MODULE.bazel.lock
@@ -6,4 +7,4 @@ MODULE.bazel.lock
 .vscode
 .idea
 node_modules/
-__pycache__
+__pycache__/
