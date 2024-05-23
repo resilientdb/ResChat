@@ -50,70 +50,50 @@ and it will increase by 1 everytime the page is full.
 ResChat will load most recent two pages everytime user start up the client(current page and current page -1) In this way, 
 all chat history are stored on the chain(ResilientDB) and user can load as many as previous chatting history as he/she wants.
 
-### 2.2 File Transfer
-As mentioned above, when user want to download a file. System will first read the corresponding value(encrypted file string)
-of the file location. However, to avoid overload the RAM during the encryption and decryption process, a large file will be break into 
-different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, 
-which is a checker to show this file has been uploaded completely or not. If this field is `FINISHED` means file has been uploaded completely,
-then, system will check `123456 654321 FILE 1 1` which is the first file chunk next is `123456 654321 FILE 1 2` which is the second file chunk... 
-Such process will keep going until a key's corresponding value is none.
+[//]: # (### 2.2 File Transfer)
 
-Example:
-Let's assume my username is 123456 and the friend I am currently chatting with has username 654321. Below image shows
-how pages and files are stored in the ResilientDB in a key value pair form.
+[//]: # (As mentioned above, when user want to download a file. System will first read the corresponding value&#40;encrypted file string&#41;)
 
-![page and file image](readme_images/page_and_file.png)
+[//]: # (of the file location. However, to avoid overload the RAM during the encryption and decryption process, a large file will be break into )
 
-### 2.2 Encryption
+[//]: # (different small chunks. For example, if the file location is `123456 654321 FILE 1`, system will first get the value from this key, )
+
+[//]: # (which is a checker to show this file has been uploaded completely or not. If this field is `FINISHED` means file has been uploaded completely,)
+
+[//]: # (then, system will check `123456 654321 FILE 1 1` which is the first file chunk next is `123456 654321 FILE 1 2` which is the second file chunk... )
+
+[//]: # (Such process will keep going until a key's corresponding value is none.)
+
+[//]: # ()
+[//]: # (Example:)
+
+[//]: # (Let's assume my username is 123456 and the friend I am currently chatting with has username 654321. Below image shows)
+
+[//]: # (how pages and files are stored in the ResilientDB in a key value pair form.)
+
+[//]: # ()
+[//]: # (![page and file image]&#40;readme_images/page_and_file.png&#41;)
+
+### 2.2 Encryption/Decryption
 This project uses RSA + AES as the encryption algorithm. The message will be first encrypted by a randomly generated 16 bytes(128 bits) AES key. 
 Then, this AES key will be encrypted by 2048 bits RSA public key(AES key will be encrypted twice, one with sender's public key, another with receiver's public key).
 In this approach, ResChat can achieve not only secure text messages transfer but also secure file transfer(RSA can not encrypt a string that is too long).
 ![encryption diagram](readme_images/encryption.png)
 
-### 2.3 Decryption
-TODO
 
-## 3. Functions
-TODO
+## 3. How to run
+1.  [Install Anaconda](https://www.anaconda.com/download#downloads)
 
-## 4. How to run
-1. Anaconda [Download Link](https://www.anaconda.com/download#downloads)
-```
-sudo apt-get update
-cd Download
-bash Anaconda3-2022.05-Linux-x86_64.sh
-source ~/.bashrc
-```
-2. Install Bazel
+2. Install Bazel 5.0.0 on [Ubuntu](https://bazel.build/install/ubuntu) or [Mac](https://bazel.build/install/os-x)
 
-Ubuntu
-```angular2html
-sudo apt install apt-transport-https curl gnupg -y
-curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
-sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-sudo apt update
-sudo apt install bazel-5.0.0
-```
-
-Mac
-```angular2html
-xcode-select --install
-sudo xcodebuild -license accept
-export BAZEL_VERSION=5.2.0
-Download your bazel package from https://github.com/bazelbuild/bazel/releases/tag/5.0.0
-chmod +x "bazel-5.0.0-installer-darwin-x86_64.sh"
-./bazel-5.0.0-installer-darwin-x86_64.sh --user
-export PATH="PATH:HOME/bin"
-```
 
 3. Setup Anaconda Environment
 ```
 conda create --name YOUR_ENV_NAME python=3.8
 conda activate YOUR_ENV_NAME
-pip install pandas pycrypto pycryptodome numpy Django
+pip install pandas pycrypto pycryptodome numpy
 ```
-4. Install ResChat
+4. Build Bazel(Make sure run bazel build command with the Anaconda environment just crated )
 ```angular2html
 cd ResChat
 bazel build :pybind_kv_so
@@ -121,7 +101,10 @@ bazel build :pybind_kv_so
 
 5. Run Service
 ```angular2html
-TODO
+cd frontend
+npm run install
+npm run start
+
 ```
 
 
