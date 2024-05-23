@@ -1,4 +1,4 @@
-/bazel-*
+/bazel-*/
 private_key.pem
 MODULE.bazel
 MODULE.bazel.lock
