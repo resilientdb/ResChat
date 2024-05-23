@@ -437,6 +437,7 @@ def update_chat_history():
 
     global my_username, current_chatting_friend_username, current_chatting_page_name, current_chat_history
 
+
     # Get current page number
     current_page_num = get_current_page_num(my_username, current_chatting_friend_username)
 

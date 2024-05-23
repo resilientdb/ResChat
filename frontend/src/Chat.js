@@ -9,10 +9,13 @@ import reschatLogo from "./resource/reschat_logo.svg";
 
 
 function Chat (){
-    const[currentChattingFriend, setCurrentChattingFriend] = useState();
-    const[myChatData, setMyChatData] = useState([['Hello', 'TEXT', '2024-3-20 23:01', 'NONE', 'RECEIVER'],
-        ['HI', 'TEXT', '2024-3-20 23:02', 'NONE', 'SENDER']])
+    const [inputMessage, setInputMessage] = useState("");
+    const [sendButtonLoading, setSendButtonLoading] = useState(false);
+    const [historyButtonLoading, setHistoryButtonLoading] = useState(false);
+    const[currentChattingFriend, setCurrentChattingFriend] = useState(null);
+    const[myChatData, setMyChatData] = useState([])
     const [isChat, setIsChat] = useState(true);
+    const chatListRef = useRef(null)
     const back = useNavigate();
     const inputRef = useRef(null);
     const[friendData, setFriendData] = useState([])
@@ -41,16 +44,16 @@ function Chat (){
             }
         ).then(
             data => {
-                console.log('bbb', data)
+                // console.log('bbb', data)
                 const lst = Object.entries(data).map(([key, value])=>{
                     return ({'nickname': key, 'username': value["friend_username"]})
                 })
-                console.log(lst)
+                // console.log(lst)
                 setFriendData(lst)
             }
         ).catch(
             error => {
-                console.log('aaa', error)
+                // console.log('aaa', error)
             }
         )
     },[])
@@ -62,20 +65,40 @@ function Chat (){
         back("/", {replace: true})
     }
 
+    function handleInputChange(e) {
+        setInputMessage(e.target.value)
+    }
 
-    function getChatList() {
+    async function loadPreviousHistory() {
+        // TODO
+    }
 
+
+    async function update() {
+        const response = await fetch('http://localhost:8080/updateChatHistory')
+        const data = await response.json()
+        if (data.result.length > 0) {
+            setMyChatData(data.result)
+        }
     }
 
     async function sendMessage() {
-        const message = inputRef.current.input.value
-        await fetch(`http://localhost:8080/sendMessage?message=${message}`)
+        if (inputRef.current.input.value !== "") {
+            setSendButtonLoading(true)
+            const message = inputRef.current.input.value
+            await fetch(`http://localhost:8080/sendMessage?message=${message}`)
+            setInputMessage("")
+            setSendButtonLoading(false)
+        } else {
+            error("Can not send empty message")
+        }
     }
+
 
     async function addFriend() {
         const username = addFriendUsernameRef.current.input.value
         const nickname = addFriendNicknameRef.current.input.value
-        console.log(username)
+        // console.log(username)
         if (!username || !nickname) {
             error("Please input username and nickname")
             return
@@ -96,24 +119,31 @@ function Chat (){
         }
     }
 
-    async function selectFriend() {
-        //TODO
-    }
-
-
-
-
 
     useEffect(()=>{
-        getChatList()
-        console.log(currentChattingFriend)
+        // console.log(currentChattingFriend)
+        if (currentChattingFriend !== null) {
+            const intervalId = setInterval(()=>{
+            update()
+            }, 2000)
+            return ()=> clearInterval(intervalId)
+        }
     },[currentChattingFriend])
+
+
     async function onClickSelectFriend(nickname) {
         setCurrentChattingFriend(nickname)
         const response = await fetch(`http://localhost:8080/selectFriend?message=${nickname}`)
         const data = await response.json()
-        if (!data.result) {
+        if (data.result.length === 0) {
             error(data.message)
+        } else {
+            setMyChatData(data.result)
+        }
+
+        if (chatListRef.current) {
+
+            chatListRef.current.scrollTop = chatListRef.current.scrollHeight
         }
     }
 
@@ -123,16 +153,22 @@ function Chat (){
         <div className='webPage'>
             {contextHolder}
             <div className={"logos"}>
-                <a href="https://blog.resilientdb.com/2023/12/20/ResChat.html" target="_blank">
-                    <Image src={reschatLogo} width="7%" preview={false}></Image>
-                </a>
-                <a href="https://resilientdb.incubator.apache.org/" target="_blank">
-                    <Image src={resdbLogo} style={{marginLeft: "10%", marginRight: "10%"}} width="6%" preview={false}></Image>
-                </a>
-                <a href="https://cs.ucdavis.edu/" target="_blank">
-                    <Image src={ucdavisLogo} style={{marginLeft: "10%"}} width="6%" preview={false}></Image>
-                </a>
+                <span>
+                    <a href="https://blog.resilientdb.com/2023/12/20/ResChat.html" target="_blank">
+                        <Image src={reschatLogo} height={50} preview={false}></Image>
+                    </a>
+                </span>
 
+                <span style={{marginLeft: 20}}>
+                    <a href="https://resilientdb.incubator.apache.org/" target="_blank">
+                        <Image src={resdbLogo} height={50} preview={false}></Image>
+                    </a>
+                </span>
+                <span style={{marginLeft: 20}}>
+                    <a href="https://cs.ucdavis.edu/" target="_blank">
+                        <Image src={ucdavisLogo} style={{marginLeft: 0}} height={45} preview={false}></Image>
+                    </a>
+                </span>
             </div>
             <div className='chatPage'>
                 <div className='leftWrap'>
@@ -159,11 +195,12 @@ function Chat (){
 
                     </div>
                 {isChat ? <div className='rightWrap'>
-                    <div className='chatList'>
+                    <div className='chatList' ref={chatListRef}>
                         <List
+                            header={currentChattingFriend !== null ? <div className='loadMore'><Button>Load History</Button></div> : <div/>}
                             dataSource={myChatData}
                             renderItem={(item, index) => (
-                                item[4] === 'RECEIVER' ?
+                                item[5] === 'RECEIVER' ?
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar
@@ -177,20 +214,18 @@ function Chat (){
                                                 {item[0]}
                                             </div>
                                             <Avatar className='senderAvatar'
-                                                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}/>
+                                                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=John`}/>
                                         </div>
                                     </List.Item>
                             )}
                         />
                     </div>
                     <div className='inputWrap'>
-
-                        <Input ref={inputRef} style={{marginLeft: 15, marginRight: 15, borderRadius: 15}} placeholder="Enter your message"/>
-                        <Button onClick={sendMessage} style={{marginRight: 15, borderRadius: 15}} type="primary">Send</Button>
+                        <Input ref={inputRef} style={{marginLeft: 15, marginRight: 15, borderRadius: 15}} onChange={handleInputChange} value={inputMessage} placeholder="Enter your message"/>
+                        <Button onClick={sendMessage} loading={sendButtonLoading} style={{marginRight: 15, borderRadius: 15}} type="primary">Send</Button>
 
                     </div>
                 </div> : <div className='addFriendWrap'>
-                    {/*TODO: Add Friend*/}
                     <Input placeholder={"Username"} ref={addFriendUsernameRef} style={{marginTop: '10%', marginLeft: '10%', marginRight: '10%', width: '50%', height: '10%', borderRadius: 15}}/>
                     <Input placeholder={"Nickname"} ref={addFriendNicknameRef} style={{marginTop: '10%', marginLeft: '10%', marginRight: '10%', width: '50%', height: '10%', borderRadius: 15}}/>
                     <Button type="primary" onClick={addFriend} style={{marginTop: '10%', borderRadius: 15, width: '10%', height: '6%'}}> Add </Button>

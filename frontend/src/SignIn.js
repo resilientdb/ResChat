@@ -58,16 +58,22 @@ function SignIn() {
         <div className='webPage'>
             {contextHolder}
             <div className={"logos"}>
-                <a href="https://blog.resilientdb.com/2023/12/20/ResChat.html" target="_blank">
-                    <Image src={reschatLogo} width="7%" preview={false}></Image>
-                </a>
-                <a href="https://resilientdb.incubator.apache.org/" target="_blank">
-                    <Image src={resdbLogo} style={{marginLeft: "10%", marginRight: "10%"}} width="6%"
-                           preview={false}></Image>
-                </a>
-                <a href="https://cs.ucdavis.edu/" target="_blank">
-                    <Image src={ucdavisLogo} style={{marginLeft: "10%"}} width="6%" preview={false}></Image>
-                </a>
+                <span>
+                    <a href="https://blog.resilientdb.com/2023/12/20/ResChat.html" target="_blank">
+                        <Image src={reschatLogo} height={50} preview={false}></Image>
+                    </a>
+                </span>
+
+                <span style={{marginLeft: 20}}>
+                    <a href="https://resilientdb.incubator.apache.org/" target="_blank">
+                        <Image src={resdbLogo} height={50} preview={false}></Image>
+                    </a>
+                </span>
+                <span style={{marginLeft: 20}}>
+                    <a href="https://cs.ucdavis.edu/" target="_blank">
+                        <Image src={ucdavisLogo} style={{marginLeft: 0}} height={45} preview={false}></Image>
+                    </a>
+                </span>
             </div>
             <div className='logInBox'>
                 <div className='welcome'>Welcome to ResChat</div>
@@ -84,7 +90,8 @@ function SignIn() {
                 <div className={"buttonBorder"}>
                     <Button onClick={signUp} style={{marginBottom: "5%", width: "40%", height: "20%", borderRadius: 15}}
                             type={"default"}>Sign Up</Button>
-                    <Button onClick={logIn} style={{height: "20%", width: "40%", borderRadius: 15}} type={"primary"}>Login</Button>
+                    <Button onClick={logIn} style={{height: "20%", width: "40%", borderRadius: 15}}
+                            type={"primary"}>Login</Button>
                 </div>
             </div>
 

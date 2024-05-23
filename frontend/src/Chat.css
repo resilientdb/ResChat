@@ -49,7 +49,14 @@
 }
 
 .chatList {
+  overflow-y: auto;
   height: calc(100% - 60px);
+}
+
+.loadMore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .rightWrap {

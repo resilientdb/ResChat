@@ -43,14 +43,23 @@ async def handle_add_friend(request):
 async def handle_send_message(request):
     # print(request)
     result = client.send_text_message(request.query.get('message'))
-    return result
+    return web.json_response({'result': result, 'message': None})
+
 
 async def handle_select_friend(request):
-    result = client.select_friend_to_chat_with(request.query.get('message'))
-    if result:
-        return web.json_response({'result': True, 'message': None})
+    select_result = client.select_friend_to_chat_with(request.query.get('message'))
+    client.initial_chat_history_loading()
+    chat_history = client.current_chat_history
+    if select_result:
+        return web.json_response({'result': chat_history, 'message': ""})
     else:
-        return web.json_response({'result': False, 'message': 'Friend not found in your friend list'})
+        return web.json_response({'result': [], 'message': 'Friend not found in your friend list'})
+
+
+async def handle_update_chat_history(request):
+    client.update_chat_history()
+    chat_history = client.current_chat_history
+    return web.json_response({'result': chat_history, 'message': ""})
 
 
 app = web.Application()
@@ -59,7 +68,8 @@ app.router.add_get('/signup', handle_signup)
 app.router.add_get('/friendList', get_friend_list)
 app.router.add_get('/addFriend', handle_add_friend)
 app.router.add_get('/sendMessage', handle_send_message)
-app.router.add_get('/selectFriend', handel_select_friend)
+app.router.add_get('/selectFriend', handle_select_friend)
+app.router.add_get('/updateChatHistory', handle_update_chat_history)
 
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(
