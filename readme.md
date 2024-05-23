@@ -1,4 +1,4 @@
-<p align="center">Still under developing</p>
+
 <p align="center">
   <img src="readme_images/reschat_logo.svg" alt="ResChat" width="200"/>
 </p>
@@ -91,7 +91,8 @@ In this approach, ResChat can achieve not only secure text messages transfer but
 ```
 conda create --name YOUR_ENV_NAME python=3.8
 conda activate YOUR_ENV_NAME
-pip install pandas pycrypto pycryptodome numpy
+cd ResChat
+pip install -r requirements.txt
 ```
 4. Build Bazel(Make sure run bazel build command with the Anaconda environment just crated )
 ```angular2html
@@ -99,12 +100,16 @@ cd ResChat
 bazel build :pybind_kv_so
 ```
 
-5. Run Service
+5. Run Front-end Service
 ```angular2html
 cd frontend
 npm run install
 npm run start
+```
 
+6. Run Back-end Service
+```angular2html
+python3 http_request.py
 ```
 
 
