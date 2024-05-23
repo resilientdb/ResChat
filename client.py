@@ -171,9 +171,10 @@ def encapsulated_add_friend(friend_username: str, nickname: str):
     global my_username, my_friend_list
     result = add_friend(friend_username, my_username, nickname, my_friend_list)
     if not result:
-        return None
+        return result
     else:
         my_friend_list = result
+        set_my_friend_list(my_username, my_friend_list)
         return result
 
 
@@ -261,6 +262,7 @@ def send_text_message(message: str) -> bool:
         # Send page
         new_page_string = new_page.to_string()
         send_message(current_chatting_page_name + " " + str(current_page_num), new_page_string)
+        return True
 
     else:
         # Add message into page

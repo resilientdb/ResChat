@@ -32,14 +32,34 @@ async def get_friend_list(request):
     return web.json_response(client.my_friend_list)
 
 
-#
-# async def handle_add_friend(request):
-#     result = client.add_friend()
+async def handle_add_friend(request):
+    result = client.encapsulated_add_friend(request.query.get('usrname'), request.query.get('nickname'))
+    if not result:
+        return web.json_response({'result': False, 'message': 'Username not found or nickname already in use'})
+    else:
+        return web.json_response({'result': True, 'message': result})
+
+
+async def handle_send_message(request):
+    # print(request)
+    result = client.send_text_message(request.query.get('message'))
+    return result
+
+async def handle_select_friend(request):
+    result = client.select_friend_to_chat_with(request.query.get('message'))
+    if result:
+        return web.json_response({'result': True, 'message': None})
+    else:
+        return web.json_response({'result': False, 'message': 'Friend not found in your friend list'})
+
 
 app = web.Application()
 app.router.add_get('/login', handle_login)
 app.router.add_get('/signup', handle_signup)
 app.router.add_get('/friendList', get_friend_list)
+app.router.add_get('/addFriend', handle_add_friend)
+app.router.add_get('/sendMessage', handle_send_message)
+app.router.add_get('/selectFriend', handel_select_friend)
 
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(

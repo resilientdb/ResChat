@@ -29,4 +29,5 @@ def get_message(key: str) -> str:
     if config_path is None:
         if not load_config_path():
             raise ValueError("无法加载配置文件路径")
+    print(f"CHECK{key}")
     return pybind_kv.get(key, config_path)
