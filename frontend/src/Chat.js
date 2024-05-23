@@ -201,6 +201,7 @@ function Chat (){
                             dataSource={myChatData}
                             renderItem={(item, index) => (
                                 item[5] === 'RECEIVER' ?
+                                    // TODO: 聊天记录方向还是有问题
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar
