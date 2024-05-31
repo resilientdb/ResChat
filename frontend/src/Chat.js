@@ -3,16 +3,19 @@ import { useNavigate, Link } from 'react-router-dom';
 import resdbLogo from "./resource/resilientdb_logo.svg";
 import ucdavisLogo from "./resource/ucdavis_logo.png";
 // import logo from './logo.svg';
-import {Avatar, List, Button, Input, Image, message, Space} from 'antd';
+import {Avatar, List, Button, Input, Image, message, Space, Spin} from 'antd';
 import './Chat.css';
 import reschatLogo from "./resource/reschat_logo.svg";
 
 
 function Chat (){
+    const [chatListLoading, setChatListLoading] = useState(false)
+    const [currentIntervalId, setCurrentIntervalId] = useState(null)
     const [inputMessage, setInputMessage] = useState("");
     const [sendButtonLoading, setSendButtonLoading] = useState(false);
     const [historyButtonLoading, setHistoryButtonLoading] = useState(false);
     const[currentChattingFriend, setCurrentChattingFriend] = useState(null);
+    const [friendListRowNum, setFriendListRowNum] = useState(null);
     const[myChatData, setMyChatData] = useState([])
     const [isChat, setIsChat] = useState(true);
     const chatListRef = useRef(null)
@@ -70,7 +73,11 @@ function Chat (){
     }
 
     async function loadPreviousHistory() {
-        // TODO
+        const response = await fetch('http://localhost:8080/loadPreviousHistory')
+        const data = await response.json()
+        if (data.result.length > 0) {
+            setMyChatData(data.result)
+        }
     }
 
 
@@ -114,37 +121,40 @@ function Chat (){
                 })
             setFriendData(lst)
             success(`${nickname} has added to your friend list`)
+            setIsChat(true)
         } else {
             error(data.message)
         }
+
     }
 
 
     useEffect(()=>{
+        if (currentIntervalId) {
+            clearInterval(currentIntervalId)
+        }
         // console.log(currentChattingFriend)
         if (currentChattingFriend !== null) {
             const intervalId = setInterval(()=>{
             update()
             }, 2000)
+            setCurrentIntervalId(intervalId)
             return ()=> clearInterval(intervalId)
         }
     },[currentChattingFriend])
 
 
-    async function onClickSelectFriend(nickname) {
+    async function onClickSelectFriend(nickname, index) {
+        setChatListLoading(true)
         setCurrentChattingFriend(nickname)
+        setFriendListRowNum(index)
         const response = await fetch(`http://localhost:8080/selectFriend?message=${nickname}`)
         const data = await response.json()
-        if (data.result.length === 0) {
-            error(data.message)
-        } else {
-            setMyChatData(data.result)
-        }
-
+        setMyChatData(data.result)
         if (chatListRef.current) {
-
             chatListRef.current.scrollTop = chatListRef.current.scrollHeight
         }
+        setChatListLoading(false)
     }
 
 
@@ -177,7 +187,7 @@ function Chat (){
                         <List
                             dataSource={friendData}
                             renderItem={(item, index) => (
-                                <List.Item onClick={() => onClickSelectFriend(item.nickname)} className={currentChattingFriend===item.nickname?'friendSelected':'friendNotSelected'}>
+                                <List.Item onClick={() => onClickSelectFriend(item.nickname, index)} className={currentChattingFriend===item.nickname?'friendSelected':'friendNotSelected'}>
                                         <List.Item.Meta
                                             avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}/>}
                                             title={item.nickname}
@@ -195,17 +205,18 @@ function Chat (){
 
                     </div>
                 {isChat ? <div className='rightWrap'>
+                    {chatListLoading ? <div style={{height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex'}}><Spin size='large'/></div> :
+                        <>
                     <div className='chatList' ref={chatListRef}>
-                        <List
-                            header={currentChattingFriend !== null ? <div className='loadMore'><Button>Load History</Button></div> : <div/>}
+                        <List split={false} locale={{'emptyText': 'No Chat History Yet'}}
+                            header={currentChattingFriend !== null ? <div className='loadMore'><Button onClick={loadPreviousHistory}>Load History</Button></div> : <div/>}
                             dataSource={myChatData}
                             renderItem={(item, index) => (
                                 item[5] === 'RECEIVER' ?
-                                    // TODO: 聊天记录方向还是有问题
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar
-                                                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}/>}
+                                                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${friendListRowNum}`}/>}
                                             title={item[0]}
                                         />
                                     </List.Item> :
@@ -226,6 +237,7 @@ function Chat (){
                         <Button onClick={sendMessage} loading={sendButtonLoading} style={{marginRight: 15, borderRadius: 15}} type="primary">Send</Button>
 
                     </div>
+                        </>}
                 </div> : <div className='addFriendWrap'>
                     <Input placeholder={"Username"} ref={addFriendUsernameRef} style={{marginTop: '10%', marginLeft: '10%', marginRight: '10%', width: '50%', height: '10%', borderRadius: 15}}/>
                     <Input placeholder={"Nickname"} ref={addFriendNicknameRef} style={{marginTop: '10%', marginLeft: '10%', marginRight: '10%', width: '50%', height: '10%', borderRadius: 15}}/>
