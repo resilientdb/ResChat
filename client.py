@@ -137,6 +137,7 @@ def select_friend_to_chat_with(nickname: str) -> bool:
     if nickname not in my_friend_list:
         return False
     else:
+        current_chat_history = []
         current_chatting_friend_public_key = string_to_public_key(my_friend_list[nickname]['public_key'])
         current_chatting_friend_nickname = nickname
         current_chatting_friend_username = my_friend_list[nickname]['friend_username']
@@ -184,7 +185,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
     if encrypted_message[0] == my_public_key_string:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[6], my_private_key)
-            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE", "RECEIVER"]
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -195,7 +196,7 @@ def encapsulated_decrypt_message(encrypted_message) -> []:
     else:
         if encrypted_message[1] == "TEXT":
             decrypted_message = decrypt_message(encrypted_message[4], encrypted_message[5], my_private_key)
-            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE"]
+            tmp = [decrypted_message, "TEXT", encrypted_message[2], "NONE", "NONE", "SENDER"]
         elif encrypted_message[1] == "FILE":
             tmp = [encrypted_message[4],
                    "FILE",
@@ -476,7 +477,9 @@ def update_chat_history():
                         flag = False
                         break
                     else:
-                        tmp_list.append(encapsulated_decrypt_message(all_messages[i]))
+                        tmp = encapsulated_decrypt_message(all_messages[i])
+                        print(tmp)
+                        tmp_list.append(tmp)
 
                 if flag:
                     current_page_num -= 1
@@ -552,8 +555,9 @@ def load_previous_chat_history():
 
     # Decrypt messages
     for i in range(len(all_messages)):
-        tmp = encapsulated_decrypt_message(all_messages[i])
+        tmp = encapsulated_decrypt_message(all_messages[len(all_messages) - 1 - i])
         current_chat_history.insert(0, tmp)
+
 
     # Update previous_page_num
     if previous_page_num == 1:

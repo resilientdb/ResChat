@@ -59,8 +59,14 @@ async def handle_select_friend(request):
 async def handle_update_chat_history(request):
     client.update_chat_history()
     chat_history = client.current_chat_history
+    # print(chat_history)
     return web.json_response({'result': chat_history, 'message': ""})
 
+
+async def handle_load_previous_chat_history(request):
+    client.load_previous_chat_history()
+    chat_history = client.current_chat_history
+    return web.json_response({'result': chat_history, 'message': ""})
 
 app = web.Application()
 app.router.add_get('/login', handle_login)
@@ -70,6 +76,7 @@ app.router.add_get('/addFriend', handle_add_friend)
 app.router.add_get('/sendMessage', handle_send_message)
 app.router.add_get('/selectFriend', handle_select_friend)
 app.router.add_get('/updateChatHistory', handle_update_chat_history)
+app.router.add_get('/loadPreviousHistory', handle_load_previous_chat_history)
 
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(
