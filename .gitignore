@@ -1,8 +1,6 @@
-/backend/bazel-*/
-backend/bazel-*
-backend/private_key.pem
-backend/MODULE.bazel
-backend/MODULE.bazel.lock
+backend/bazel/bazel-*
+backend/bazel/MODULE.bazel
+backend/bazel/MODULE.bazel.lock
 .ijwb
 .vscode
 .idea
