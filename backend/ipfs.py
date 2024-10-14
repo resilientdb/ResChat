@@ -31,8 +31,8 @@ def send_file_ipfs(file_path: str):
         if res == 1:
             return 1
 
-    cid = client.add(file_path)
-    return cid
+    res = client.add(file_path)
+    return res
 
 
 def get_file_ipfs(save_path: str, cid: str):
@@ -44,8 +44,8 @@ def get_file_ipfs(save_path: str, cid: str):
     return 0
 
 
-tempCid = send_file_ipfs("test/page_test.py")
-print(tempCid)
+# tempCid = send_file_ipfs("test/page_test.py")
+# print(tempCid)
 
 
 

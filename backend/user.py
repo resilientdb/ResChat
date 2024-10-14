@@ -2,13 +2,14 @@ from kv_operation import get_message, send_message
 import hashlib
 from crypto_service import public_key_to_string, string_to_public_key
 from Crypto.PublicKey import RSA
+from ipfs import send_file_ipfs, get_file_ipfs
 
 
 
 
 
 
-def create_user(username: str, password: str) -> bool:
+def create_user(username: str, password: str, profile_pic_path: str) -> bool:
     """Create a user, return True if user has been created successfully. Return False if username has already taken"""
     user_info = get_message(username)
     if user_info == "" or user_info == "\n":
@@ -21,7 +22,9 @@ def create_user(username: str, password: str) -> bool:
             f.close()
         with open(f"keys/public_key.pem", "wb") as f:
             f.write(public_key_str)
-        send_message(username, public_key_str)
+
+        res = send_file_ipfs(profile_pic_path)
+        send_message(username, public_key_str + " " + res['Hash'])
         return True
     else:
         print("Username already taken")
@@ -48,3 +51,6 @@ def load_user(username: str, password: str) -> list:
             return []
     public_key = string_to_public_key(public_key_string)
     return [username, password, public_key, private_key]
+
+
+

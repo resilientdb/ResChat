@@ -4,6 +4,8 @@ backend/bazel/MODULE.bazel.lock
 .ijwb
 .vscode
 .idea
+backend/keys/private_key.pem
+backend/keys/public_key.pem
 backend/node_modules/
 __pycache__/
 backend/public_key.pem
