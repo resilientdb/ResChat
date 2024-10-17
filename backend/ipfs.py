@@ -45,6 +45,7 @@ def get_file_ipfs(save_path: str, cid: str):
 
 
 # tempCid = send_file_ipfs("test/page_test.py")
+# get_file_ipfs("profile_pics/", "QmbzKuzMmwt16SBtN7m2ZVMykn8eYqEnAqd72ickF5yCQR")
 # print(tempCid)
 
 

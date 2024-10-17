@@ -12,3 +12,5 @@ backend/public_key.pem
 backend/fernet.key
 __pycache__
 backend/test.jpeg
+profile_pics/*
+temp/*

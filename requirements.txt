@@ -10,3 +10,7 @@ setuptools~=75.1.0
 six~=1.16.0
 ipfshttpclient~=0.7.0
 psutil~=5.9.0
+pillow~=10.4.0
+multiaddr~=0.0.9
+urllib3~=2.2.3
+requests~=2.32.3
