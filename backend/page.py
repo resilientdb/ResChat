@@ -4,19 +4,18 @@ import json
 
 class Page:
     """
-    Page 结构用于存储和传输加密消息。
+    Page
     key = index(int)
     value = {}(dict)
-    每个 Page 包含多个消息，每个消息由以下部分组成:
-    - 接收方的公钥 (rsa_pub_key)
-    - 消息类型 (msg_type)
-    - 时间戳 (t_stamp)
-    - 文件所存放的key (file_location_key)
-    - 加密消息本身 (message)
-    - 用发送方公钥加密的AES密钥 (encrypted_aes_key_sender)
-    - 用接收方公钥加密的AES密钥 (encrypted_aes_key_receiver)
+    One page includes 20 messages, and each message is constructed as:
+    - Receiver's RSA public key (rsa_pub_key)
+    - Message Type (msg_type)
+    - Time stamp (t_stamp)
+    - File location key (file_location_key)
+    - Encrypted message (message)
+    - Encrypted AES key with sender's RSA public key (encrypted_aes_key_sender)
+    - Encrypted AES key with receiver's RSA public key (encrypted_aes_key_receiver)
 
-    每个 Page 可以存储的消息数量是固定的（例如，20条消息）。
     """
     def __init__(self):
         self.msg = {}
@@ -34,12 +33,6 @@ class Page:
                     encrypted_message: str,
                     encrypted_aes_key_sender: str,
                     encrypted_aes_key_receiver: str) -> bool:
-
-        """
-        向页面中添加一条消息
-        成功返回true
-        失败返回false
-        """
         if self.is_full():
             return False
         else:

@@ -6,15 +6,12 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 import os
 import psutil
-sys.path.append("bazel/bazel-out/k8-fastbuild/bin/aes_encryption/")
+sys.path.append("bazel/bazel-bin/aes_encryption/")
 from pybind_aes import aes_file_encrypt, aes_file_decrypt, aes_key_generate, aes_text_encrypt, aes_text_decrypt
-
-
 
 
 def generate_aes_key() -> str:
     return aes_key_generate()
-
 
 
 # Internal function
@@ -23,43 +20,39 @@ def public_key_to_string(pub_key):
     return pub_key.exportKey(format='PEM').decode('utf-8')
 
 
-
 # Internal function
 def string_to_public_key(pub_key_string):
     """Convert a string to an RSA public key"""
     return RSA.importKey(pub_key_string.encode('utf-8'))
 
 
-
 def encrypt_text_with_aes(plain_text: str) -> [str, str]:
     """
-    使用AES加密纯文字
-    返回随机生成的AES key和加密过后的字符串
+    Use AES to encrypt plain text
+    return randomly generated AES key
     """
     key = generate_aes_key()
     return key, aes_text_encrypt(plain_text, key)
 
 
-
 def decrypt_text_with_aes(cipher_text: str, key: str):
     """
-    使用AES解密纯文字
-    返回解密过后的文字
+    Use AES to decrypt cipher text
+    return decrypted text
     """
     return aes_text_decrypt(cipher_text, key)
 
 
-
 def encrypt_file_with_aes(file_path: str) -> str:
     """
-    使用AES加密文件
-    成功返回AES key
-    文件不存在返回1
-    内存空间不够返回2
-    加密失败返回3
+    Use AES to encrypt file
+    If successful, return the AES key
+    If the file does not exist, return 1
+    If there is not enough RAM, return 2
+    If encryption fails, return 3
     """
     memory_info = psutil.virtual_memory()
-    free_memory = memory_info.available  # 获取可用内存（以字节为单位）
+    free_memory = memory_info.available  # Get available memory (in bytes)
     file_size = os.path.getsize(file_path)
     if not os.path.exists(file_path):
         return "1"
@@ -73,13 +66,12 @@ def encrypt_file_with_aes(file_path: str) -> str:
             return "3"
 
 
-
 def decrypt_file_with_aes(encrypted_file_path: str, save_path: str, key: str) -> str:
     """
-    使用AES解密文件
-    解密成功返回0
-    加密文件不存在返回1
-    解密失败返回2
+    Use AES to decrypt file
+    If successful, return 0
+    If the encrypted file does not exist, return 1
+    If decryption fails, return 2
     """
     if not os.path.exists(encrypted_file_path):
         return "1"
@@ -89,12 +81,11 @@ def decrypt_file_with_aes(encrypted_file_path: str, save_path: str, key: str) ->
         return "2"
 
 
-
 # Internal function
 def encrypt_aes_key_with_rsa(aes_key: str or bytes, public_key):
     """
-    使用RSA公钥加密加密AES key
-    返回加密后的AES key
+    Use an RSA public key to encrypt the AES key
+    Returns the encrypted AES key
     """
     if type(aes_key) == str:
         aes_key = aes_key.encode('utf-8')
@@ -103,23 +94,22 @@ def encrypt_aes_key_with_rsa(aes_key: str or bytes, public_key):
     return binascii.hexlify(encrypted_aes_key).decode('ascii')
 
 
-
 # Internal function
 def decrypt_aes_key_with_rsa(encrypted_aes_key, private_key) -> str:
     """
-    使用RSA私钥解密AES key
-    返回解密后的AES key
+    Use an RSA private key to decrypt the AES key
+    Returns the decrypted AES key
     """
     encrypted_aes_key = binascii.unhexlify(encrypted_aes_key)
     cipher_rsa = PKCS1_OAEP.new(private_key)
     aes_key = cipher_rsa.decrypt(encrypted_aes_key)
-    return aes_key.decode('utf-8')  # 确保返回解码后的字符串
+    return aes_key.decode('utf-8')  # Ensure the returned value is decoded
 
 
 def encrypt_message_for_two_recipients(plain_text: str or bytes, public_key_sender , public_key_receiver):
     """
-    使用两个用户双方的RSA公钥来加密一条消息
-    返回一个List [encrypted message,
+    Use both the sender's and receiver's RSA public keys to encrypt a message
+    Returns a list [encrypted message,
                 encrypted AES key by sender's RSA public key,
                 encrypted AES key by receiver's RSA public key]
     """
@@ -133,77 +123,78 @@ def encrypt_message_for_two_recipients(plain_text: str or bytes, public_key_send
     return encrypted_message, encrypted_aes_key_sender, encrypted_aes_key_receiver
 
 
-
 def decrypt_message(encrypted_message: str, encrypted_aes_key, private_key):
     """
-    使用RSA私钥解密AES key，并使用该AES key解密消息
-    返回解密后的消息
+    Use an RSA private key to decrypt the AES key and then use that AES key to decrypt the message
+    Returns the decrypted message
     """
     aes_key = decrypt_aes_key_with_rsa(encrypted_aes_key, private_key)
     decrypted_data = decrypt_text_with_aes(encrypted_message, aes_key)
-    return decrypted_data  # 去除 .decode('utf-8')
+    return decrypted_data  # Remove .decode('utf-8')
+
 
 class TestEncryptionFunctions(unittest.TestCase):
 
     def test_aes_text_encryption_decryption(self):
-        plain_text = "这是一条测试信息！"
+        plain_text = "This is a test message!"
 
-        # 使用AES加密纯文本
+        # Use AES to encrypt the plain text
         aes_key = generate_aes_key()
         encrypted_text = aes_text_encrypt(plain_text, aes_key)
 
-        # 使用AES解密纯文本
+        # Use AES to decrypt the plain text
         decrypted_text = aes_text_decrypt(encrypted_text, aes_key)
 
-        # 验证解密结果
+        # Verify the decryption result
         self.assertEqual(decrypted_text, plain_text)
 
     def test_aes_file_encryption_decryption(self):
-        # 创建一个临时文件
+        # Create a temporary file
         with NamedTemporaryFile(delete=False) as temp_file:
-            # 将中文字符串编码为 UTF-8 字节
-            temp_file.write("这是一个测试文件。".encode('utf-8'))
+            # Encode the string into UTF-8 bytes
+            temp_file.write("This is a test file.".encode('utf-8'))
             temp_file_path = temp_file.name
 
-        # 使用AES加密文件
+        # Use AES to encrypt the file
         aes_key = encrypt_file_with_aes(temp_file_path)
 
-        # 验证AES密钥生成成功
+        # Verify AES key generation was successful
         self.assertNotEqual(aes_key, "1")
         self.assertNotEqual(aes_key, "2")
         self.assertNotEqual(aes_key, "3")
 
-        # 搜索 temp 文件夹中的加密文件
+        # Search for the encrypted file in the temp folder
         # temp_folder = os.path.join(os.path.dirname(temp_file_path), "temp")
         temp_folder = "temp/"
         encrypted_file_path = None
 
-        # 遍历 temp 文件夹，找到加密后的文件
+        # Iterate through the temp folder to find the encrypted file
         for file_name in os.listdir(temp_folder):
             if file_name.endswith(".enc"):
                 encrypted_file_path = os.path.join(temp_folder, file_name)
                 break
 
-        # 确保找到加密后的文件
-        self.assertIsNotNone(encrypted_file_path, "未找到加密文件")
+        # Ensure the encrypted file is found
+        self.assertIsNotNone(encrypted_file_path, "Encrypted file not found")
 
-        # 创建解密后的保存路径
+        # Create a save path for the decrypted file
         decrypted_file_path = temp_file_path + ".dec"
 
-        # 使用AES解密文件
+        # Use AES to decrypt the file
         decrypt_status = decrypt_file_with_aes(encrypted_file_path, decrypted_file_path, aes_key)
 
-        # 验证解密状态
+        # Verify the decryption status
         self.assertEqual(decrypt_status, "0")
 
-        # 比较原文件和解密后的文件内容
+        # Compare the original file with the decrypted file
         with open(temp_file_path, 'rb') as original, open(decrypted_file_path, 'rb') as decrypted:
             self.assertEqual(original.read(), decrypted.read())
 
-        # 清理临时文件
+        # Clean up temporary files
         os.remove(temp_file_path)
         os.remove(decrypted_file_path)
         os.remove("temp/" + os.path.basename(temp_file_path) + ".enc")
+
 
 if __name__ == '__main__':
     unittest.main()

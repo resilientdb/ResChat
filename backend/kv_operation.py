@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append(os.path.abspath("bazel/bazel-out/k8-fastbuild/bin/kv_service/"))
+sys.path.append(os.path.abspath("bazel/bazel-bin/kv_service/"))
 import pybind_kv
 config_path = os.path.abspath("config/kv_server.config")
 def send_message(key: str, value: str):

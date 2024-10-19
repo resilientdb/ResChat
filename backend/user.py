@@ -65,7 +65,6 @@ def create_user(username: str, password: str, profile_pic_path: str) -> dict:
 def load_user(username: str, password: str) -> list:
     """
     Load user information from ResilientDB. Return [username, password, public key, private key].
-    如果返回空array说明错误
     """
     public_key_string = get_message(username)
 
