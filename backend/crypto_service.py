@@ -1,6 +1,8 @@
 """
 This file contains all the encryption and decryption functions
 """
+import os
+
 import Crypto
 from Crypto.Cipher import PKCS1_OAEP, AES
 from Crypto.PublicKey import RSA
@@ -95,3 +97,16 @@ def load_private_key_from_disk(password: str) -> Crypto.PublicKey.RSA.RsaKey:
     : return RSA key type object (Not a string or bytes)
     """
     # TODO: Finish this
+
+
+def verify_key_pair(public_key: Crypto.PublicKey.RSA.RsaKey, private_key: Crypto.PublicKey.RSA.RsaKey) -> bool:
+    """Verify if the RSA key pair matches"""
+    try:
+        test_message = binascii.hexlify(os.urandom(20)).decode('utf-8')
+        cipher_rsa_enc = PKCS1_OAEP.new(public_key)
+        encrypted_message = cipher_rsa_enc.encrypt(test_message.encode('utf-8'))
+        cipher_rsa_dec = PKCS1_OAEP.new(private_key)
+        decrypted_message = cipher_rsa_dec.decrypt(encrypted_message).decode('utf-8')
+        return decrypted_message == test_message
+    except (ValueError, TypeError):
+        return False
