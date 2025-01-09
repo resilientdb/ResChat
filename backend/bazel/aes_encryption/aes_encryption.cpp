@@ -279,9 +279,9 @@ std::string aes_decrypt_text(const std::string& base64_ciphertext, const std::st
 }
 
 PYBIND11_MODULE(pybind_aes, m) {
-    m.def("aes_file_encrypt", &aes_encrypt_file, "");
-    m.def("aes_file_decrypt", &aes_decrypt_file, "");
-    m.def("aes_key_generate", &generate_random_key, "Generate random 16 bytes key");
-    m.def("aes_text_encrypt", &aes_encrypt_text, "");
-    m.def("aes_text_decrypt", &aes_decrypt_text, "");
+    m.def("aes_encrypt_file", &aes_encrypt_file, "");
+    m.def("aes_decrypt_file", &aes_decrypt_file, "");
+    m.def("generate_random_key", &generate_random_key, "Generate random 16 bytes key");
+    m.def("aes_encrypt_text", &aes_encrypt_text, "");
+    m.def("aes_decrypt_text", &aes_decrypt_text, "");
 }
