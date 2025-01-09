@@ -3,6 +3,9 @@ from pydoc import pager
 import numpy as np
 from RSDB_kv_service import set_kv, get_kv
 
+"""
+TODO: Test all these functions
+"""
 class Page:
     def __init__(self):
         """
@@ -58,6 +61,13 @@ class Page:
             page_string += message_string + "\n"
         return page_string
 
+
+    def all_messages(self) -> np.array:
+        """获取页面上的所有消息"""
+        messages = np.empty((self.message_count, 6), dtype=object)
+        for i in range(self.message_count):
+            messages[i] = (self.message[i])
+        return messages
 
 def from_string(page_string: str) -> Page:
     res_page = Page()
