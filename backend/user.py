@@ -21,3 +21,17 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
         # TODO: 5.2 crete {USERNAME + " FRIEND": {}} key value pair
         # TODO: 5.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
     # TODO: Might be more
+
+
+def load_user(username: str, password: str) -> {}:
+    """
+    This function should be called when user wants to log in
+    : return When success {"result": True, "message": [RSA public key, RSA private key]},
+        both of those key's type should be RSA key type (not string or byte)
+    : return When fail a dict {"result": False, "message": Corresponding error message}
+    """
+
+    # TODO: 1. Load RSA private and public key from disk (/keys/*)
+    # TODO: 2. Check if loaded RSA public key matches RSA public key on RSDB
+    # TODO: 3. Check if password can unlock RSA private key
+    # TODO: 4. Check if RSA public key and private key matches (call verify_key_pair() in crypto_service.py)
