@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydoc import pager
 
 import numpy as np
@@ -68,6 +69,15 @@ class Page:
         for i in range(self.message_count):
             messages[i] = (self.message[i])
         return messages
+
+
+    def sort_by_time(self):
+        """
+        Sort messages in the current Page object by their timestamp (ascending).
+        """
+        sorted_indices = np.argsort(self.message[:self.message_count, 2])
+        self.message[:self.message_count] = self.message[sorted_indices]
+
 
 def from_string(page_string: str) -> Page:
     res_page = Page()

@@ -16,11 +16,11 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
         # TODO: 3.1 return {"result": False, "message": "User name already taken"}
     # TODO: 4. Create RSA public and private key
         # TODO: 4.1 Write these two keys in /keys/public_key.pem and /keys/private_key.pem
-    # TODO: 5. Create corresponding key value pair in RSDB
-        # TODO: 5.1 create {USERNAME: PUBLIC KEY} key value pair
-        # TODO: 5.2 crete {USERNAME + " FRIEND": {}} key value pair
-        # TODO: 5.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
-    # TODO: Might be more
+    # TODO: 5. Add avatar into IPFS
+    # TODO: 6. Create corresponding key value pair in RSDB
+        # TODO: 6.1 create {USERNAME: PUBLIC KEY} key value pair
+        # TODO: 6.2 crete {USERNAME + " FRIEND": {}} key value pair
+        # TODO: 6.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
 
 
 def load_user(username: str, password: str) -> {}:
