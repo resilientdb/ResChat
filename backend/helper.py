@@ -16,7 +16,7 @@ def combine_string_in_ascii(str1: str, str2: str) -> str:
 
 
 
-def write_log(message: str):
+def write_log(message: str or Exception):
     time = datetime.now()
     caller_stack = inspect.stack()
     log_list = []
@@ -30,9 +30,9 @@ def write_log(message: str):
     for log in log_list[1:len(log_list)-1]:
         log_message += f"\n{line_indent}└──>{log}"
         line_indent += "\t"
-    log_message += f"\t\tMessage: {message}\n\n"
+    log_type = "Message" if isinstance(message, str) else "Error"
+    log_message += f"\t\t{log_type}: {message}\n\n"
     with open("log.txt", "a") as log:
         log.write(log_message)
         log.close()
-    print(log_list)
     return
