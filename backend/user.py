@@ -1,7 +1,7 @@
 """
 This file contains all user operations such like create user, load user etc.
 """
-
+from RSDB_kv_service import get_kv, set_kv
 
 def create_user(username: str, password: str, avatar_location: str) -> {}:
     """
@@ -10,10 +10,14 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
             both of those key's type should be RSA key type (not string or byte)
     : return When fail a dict {"result": False, "message": Corresponding error message}
     """
-    # TODO: 1. Check username length
-    # TODO: 2. Check password length and other info
-    # TODO: 3. Check this user name is already exist or not
-        # TODO: 3.1 return {"result": False, "message": "User name already taken"}
+    if len(username) != 10:
+        return {"result": False, "message": "The length of username must be 10"}
+    if len(password) < 8:
+        return {"result": False, "message": "The length of password mast be greater or equal to 8"}
+    username_check = get_kv(username)
+    if username_check != "\n" or username_check != "" or username_check != " ":
+        return {"result": False, "message": "Username already taken, please try another one"}
+
     # TODO: 4. Create RSA public and private key
         # TODO: 4.1 Write these two keys in /keys/public_key.pem and /keys/private_key.pem
     # TODO: 5. Add avatar into IPFS

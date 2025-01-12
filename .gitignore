@@ -14,3 +14,4 @@ __pycache__
 backend/test.jpeg
 backend/profile_pictures/*
 backend/temp/*
+backend/log.txt
