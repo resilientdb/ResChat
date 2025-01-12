@@ -3,7 +3,7 @@ This file contains all user operations such like create user, load user etc.
 """
 from RSDB_kv_service import get_kv, set_kv
 from crypto_service import *
-
+from helper import write_log
 def create_user(username: str, password: str, avatar_location: str) -> {}:
     """
     This function create a user
@@ -11,28 +11,43 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
             both of those key's type should be RSA key type (not string or byte)
     : return When fail a dict {"result": False, "message": Corresponding error message}
     """
-    # Check username format
-    if len(username) != 10:
-        return {"result": False, "message": "The length of username must be 10"}
-    # Check password format
-    if len(password) < 8:
-        return {"result": False, "message": "The length of password mast be greater or equal to 8"}
-    # Check if username is already in use
-    username_check = get_kv(username)
-    if username_check != "\n" or username_check != "" or username_check != " ":
-        return {"result": False, "message": "Username already taken, please try another one"}
-    # Create RSA key pair
-    public_key, private_key = generate_rsa_keys(password)
-    write_keys_in_disk(public_key, private_key)
+    write_log("Creating User")
+    try:
+        # Check username format
+        if len(username) != 10:
+            raise Exception("The length of username must be 10")
 
+        # Check password format
+        if len(password) < 8:
+            raise Exception("The length of password mast be greater or equal to 8")
 
-    # TODO: 4. Create RSA public and private key
-        # TODO: 4.1 Write these two keys in /keys/public_key.pem and /keys/private_key.pem
-    # TODO: 5. Add avatar into IPFS
-    # TODO: 6. Create corresponding key value pair in RSDB
-        # TODO: 6.1 create {USERNAME: PUBLIC KEY} key value pair
-        # TODO: 6.2 crete {USERNAME + " FRIEND": {}} key value pair
-        # TODO: 6.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
+        # Check if avatar file exists
+        if not os.path.exists(avatar_location):
+            raise Exception(f"{avatar_location} doesn't exist")
+
+        # Check if username is already in use
+        username_check = get_kv(username)
+        if username_check != "\n" or username_check != "" or username_check != " ":
+            raise Exception("Username already taken, please try another one")
+
+        # Check if avatar is jpeg or jpg file
+        if (not os.path.basename(avatar_location).endswith(".jpg")) or (not os.path.basename(avatar_location).endswith(".jpeg")):
+            raise Exception("Avatar must with extension .jpg or .jpeg")
+
+        # Create RSA key pair
+        public_key, private_key = generate_rsa_keys(password)
+        write_keys_in_disk(public_key, private_key)
+        private_key = load_rsa_private_key(private_key, password)
+
+        # TODO: 6. Create corresponding key value pair in RSDB
+            # TODO: 6.1 create {USERNAME: PUBLIC KEY} key value pair
+            # TODO: 6.2 crete {USERNAME + " FRIEND": {}} key value pair
+            # TODO: 6.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
+
+        return {"result": True, "message": [public_key, private_key]}
+    except Exception as e:
+        write_log(e)
+        return {"result": False, "message": str(e)}
 
 
 def load_user(username: str, password: str) -> {}:
@@ -49,4 +64,8 @@ def load_user(username: str, password: str) -> {}:
     # TODO: 4. Check if RSA public key and private key matches (call verify_key_pair() in crypto_service.py)
 
 
-create_user("1234567890", "1234567879", "aaa")
+
+def update_avatar():
+    # TODO
+
+create_user("1", "1", "aaa")
