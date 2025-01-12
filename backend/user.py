@@ -2,6 +2,7 @@
 This file contains all user operations such like create user, load user etc.
 """
 from RSDB_kv_service import get_kv, set_kv
+from crypto_service import *
 
 def create_user(username: str, password: str, avatar_location: str) -> {}:
     """
@@ -10,13 +11,20 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
             both of those key's type should be RSA key type (not string or byte)
     : return When fail a dict {"result": False, "message": Corresponding error message}
     """
+    # Check username format
     if len(username) != 10:
         return {"result": False, "message": "The length of username must be 10"}
+    # Check password format
     if len(password) < 8:
         return {"result": False, "message": "The length of password mast be greater or equal to 8"}
+    # Check if username is already in use
     username_check = get_kv(username)
     if username_check != "\n" or username_check != "" or username_check != " ":
         return {"result": False, "message": "Username already taken, please try another one"}
+    # Create RSA key pair
+    public_key, private_key = generate_rsa_keys(password)
+    write_keys_in_disk(public_key, private_key)
+
 
     # TODO: 4. Create RSA public and private key
         # TODO: 4.1 Write these two keys in /keys/public_key.pem and /keys/private_key.pem
@@ -39,3 +47,6 @@ def load_user(username: str, password: str) -> {}:
     # TODO: 2. Check if loaded RSA public key matches RSA public key on RSDB
     # TODO: 3. Check if password can unlock RSA private key
     # TODO: 4. Check if RSA public key and private key matches (call verify_key_pair() in crypto_service.py)
+
+
+create_user("1234567890", "1234567879", "aaa")

@@ -1,6 +1,8 @@
 from datetime import datetime
 import inspect
 from fileinput import filename
+import os
+from textwrap import indent
 
 
 def combine_string_in_ascii(str1: str, str2: str) -> str:
@@ -15,11 +17,22 @@ def combine_string_in_ascii(str1: str, str2: str) -> str:
 
 
 def write_log(message: str):
+    time = datetime.now()
+    caller_stack = inspect.stack()
+    log_list = []
+    for caller in reversed(caller_stack):
+        log_list.append(f"{os.path.basename(caller.filename)} - {caller.function} - line {caller.lineno}")
+    log_message = (
+        f"[{str(time)}]\t"
+        f"{log_list[0]}"
+    )
+    line_indent = "\t\t\t\t\t\t\t\t"
+    for log in log_list[1:len(log_list)-1]:
+        log_message += f"\n{line_indent}└──>{log}"
+        line_indent += "\t"
+    log_message += f"\t\tMessage: {message}\n\n"
     with open("log.txt", "a") as log:
-        caller_file = inspect.stack()[1].filename
-        caller_function = inspect.stack()[1].function
-        caller_line = inspect.stack()[1].lineno
-        log_message = f"[{str(datetime.now())}]\t\tFile: {caller_file}\t\tFunction: {caller_function}\t\tLine: {caller_line}\t\tMessage: {message}\n"
         log.write(log_message)
         log.close()
+    print(log_list)
     return
