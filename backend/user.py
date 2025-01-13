@@ -1,6 +1,8 @@
 """
 This file contains all user operations such like create user, load user etc.
 """
+import json
+from ipfs import *
 from RSDB_kv_service import get_kv, set_kv
 from crypto_service import *
 from helper import write_log
@@ -21,28 +23,38 @@ def create_user(username: str, password: str, avatar_location: str) -> {}:
         if len(password) < 8:
             raise Exception("The length of password mast be greater or equal to 8")
 
+        # Check if there are keys in keys folder
+        if os.path.exists("keys/private_key.pem") or os.path.exists("keys/public_key.pem"):
+            raise Exception("There are already RSA key pair under key/ folder, please login")
+
         # Check if avatar file exists
         if not os.path.exists(avatar_location):
             raise Exception(f"{avatar_location} doesn't exist")
 
         # Check if username is already in use
         username_check = get_kv(username)
-        if username_check != "\n" or username_check != "" or username_check != " ":
+        if username_check != "\n" and username_check != "" and username_check != " ":
             raise Exception("Username already taken, please try another one")
 
         # Check if avatar is jpeg or jpg file
-        if (not os.path.basename(avatar_location).endswith(".jpg")) or (not os.path.basename(avatar_location).endswith(".jpeg")):
+        if (not os.path.basename(avatar_location).endswith(".jpg")) and (not os.path.basename(avatar_location).endswith(".jpeg")):
             raise Exception("Avatar must with extension .jpg or .jpeg")
 
         # Create RSA key pair
         public_key, private_key = generate_rsa_keys(password)
         write_keys_in_disk(public_key, private_key)
         private_key = load_rsa_private_key(private_key, password)
+        public_key_string = public_key_to_string(public_key)
 
-        # TODO: 6. Create corresponding key value pair in RSDB
-            # TODO: 6.1 create {USERNAME: PUBLIC KEY} key value pair
-            # TODO: 6.2 crete {USERNAME + " FRIEND": {}} key value pair
-            # TODO: 6.3 create {USERNAME + " AVATAR": AVATAR CID} key value pair
+        # Upload avatar into IPFS cluster
+        avatar_cid = add_file_to_cluster(avatar_location)
+        if avatar_cid is None:
+            raise Exception("Fail to upload")
+
+        # Create corresponding key pair in RSDB
+        set_kv(username, public_key_string)
+        set_kv(username + " FRIEND", json.dumps({}))
+        set_kv(username + " AVATAR", avatar_cid)
 
         return {"result": True, "message": [public_key, private_key]}
     except Exception as e:
@@ -67,5 +79,5 @@ def load_user(username: str, password: str) -> {}:
 
 def update_avatar():
     # TODO
+    return
 
-create_user("1", "1", "aaa")

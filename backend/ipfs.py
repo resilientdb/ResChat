@@ -1,8 +1,10 @@
 """
 I think we can copy from IPFS part from ResShare
 """
-import requests
+import os
 
+import requests
+from helper import write_log
 ipfs_cluster_api_url = None
 ipfs_gateway_url = None
 
@@ -31,14 +33,14 @@ def add_file_to_cluster(file_path):
     url = ipfs_cluster_api_url + "add"
     files = {'file': open(file_path, 'rb')}
     response = requests.post(url, files=files)
-
+    write_log(f"Uploading {os.path.basename(file_path)} to IPFS")
     if response.status_code == 200:
         cid = response.json()['cid']['/']
-        print(f"File added successfully with CID: {cid}")
+        write_log(f"{os.path.basename(file_path)} Uploaded successfully")
         return cid
     else:
-        print("Failed to add file to IPFS Cluster.")
-        print(response.text)
+        write_log(f"fail to upload {os.path.basename(file_path)}, with {response.text} error message from IPFS")
+        return None
 
 
 def get_file_status(cid):
