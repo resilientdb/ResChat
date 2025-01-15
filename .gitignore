@@ -15,3 +15,8 @@ backend/test.jpeg
 backend/profile_pictures/*
 backend/temp/*
 backend/log.txt
+frontend/node_modules
+bazel-*
+MODULE.bazel
+MODULE.bazel.lock
+private_key.pem

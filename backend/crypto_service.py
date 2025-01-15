@@ -57,12 +57,14 @@ def generate_rsa_keys(password: str) -> list:
 def write_keys_in_disk(public_key: Crypto.PublicKey.RSA.RsaKey, private_key: bytes):
     try:
         write_log("Writing RSA public key into disk")
+        os.makedirs("keys", exist_ok=True)
         public_key = public_key_to_string(public_key)
         with open(f"keys/public_key.pem", "wb") as pub_key_f:
             pub_key_f.write(public_key.encode('utf-8'))
             pub_key_f.close()
 
         write_log("Writing RSA private key into disk")
+        os.makedirs("keys", exist_ok=True)
         with open("keys/private_key.pem", "wb") as pri_key_f:
             pri_key_f.write(private_key)
             pri_key_f.close()
@@ -134,15 +136,37 @@ def load_public_key_from_disk() -> Crypto.PublicKey.RSA.RsaKey:
     Load RSA public key from disk(/keys/public_key.pem)
     : return RSA key type object (Not a string or bytes)
     """
-    # TODO: Finish this
+    write_log("Loading RSA public key from disk")
+    try:
+        with open("keys/public_key.pem", "rb") as pub_key_f:
+            public_key_string = pub_key_f.read().decode('utf-8')
+            public_key = string_to_public_key(public_key_string)
+            write_log("RSA public key successfully loaded")
+            return public_key
+    except FileNotFoundError:
+        write_log("Public key file not found")
+    except Exception as e:
+        write_log(e)
+    return None
 
 
 def load_private_key_from_disk(password: str) -> Crypto.PublicKey.RSA.RsaKey:
     """
-    Load RSA private from disk(/keys/private_key.pem)
+    Load RSA private key from disk(/keys/private_key.pem)
     : return RSA key type object (Not a string or bytes)
     """
-    # TODO: Finish this
+    write_log("Loading RSA private key from disk")
+    try:
+        with open("keys/private_key.pem", "rb") as pri_key_f:
+            private_key_bytes = pri_key_f.read()
+            private_key = load_rsa_private_key(private_key_bytes, password)
+            write_log("RSA private key successfully loaded")
+            return private_key
+    except FileNotFoundError:
+        write_log("Private key file not found")
+    except Exception as e:
+        write_log(e)
+    return None
 
 
 def verify_key_pair(public_key: Crypto.PublicKey.RSA.RsaKey, private_key: Crypto.PublicKey.RSA.RsaKey) -> bool:
