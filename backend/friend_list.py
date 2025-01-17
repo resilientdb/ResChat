@@ -18,13 +18,13 @@ Friend list is a JSON/Python dict object stores all friend information
 }
 """
 
-def load_my_friend_list(user_name: str) -> {}:
+def load_my_friend_list(username: str) -> {}:
     """
     Load friend list from RSDB
     : return a python dict friend list
 
     """
-    friend_list_str = get_kv(user_name + " FRIEND")
+    friend_list_str = get_kv(username + " FRIEND")
     try:
         return json.loads(friend_list_str)
     except:
@@ -72,3 +72,7 @@ def add_friend(username: str, friend_list: {}, nickname: str) -> {}:
         friend_list[username] = {"nick_name": nickname, "public_key": friend_public_key, "avatar_cid": friend_avatar_cid}
         # TODO: Sort these two username is ASCII order and create kv in RSDB (a123b456 PAGE_NUM, 1).
         #       But if there is already an exist page number, keep that one
+
+
+def change_nickname(username: str, friend_list: {}, new_nickname: str) -> {}:
+    # TODO

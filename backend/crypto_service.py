@@ -154,7 +154,7 @@ def load_public_key_from_disk() -> Crypto.PublicKey.RSA.RsaKey:
 def load_private_key_from_disk(password: str) -> {}:
     """
     Load RSA private key from disk(/keys/private_key.pem)
-    : return RSA key type object (Not a string or bytes)
+    : return {"result": True/False, "message": RSA private key(RSA key type object)/Error message}
     """
     write_log("Loading RSA private key from disk")
     try:
