@@ -13,6 +13,7 @@ my_private_key: Crypto.PublicKey.RSA.RsaKey
 my_friend_list: dict
 my_password: str
 my_public_key_string: str
+
 """Following variables will be initialized and reinitialized everytime user choose a friend to talk with"""
 current_chatting_friend_username: str
 current_chatting_friend_public_key: Crypto.PublicKey.RSA.RsaKey

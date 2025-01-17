@@ -2,6 +2,8 @@
 This file contains all user operations such like create user, load user etc.
 """
 import json
+from logging import exception
+
 from ipfs import *
 from RSDB_kv_service import get_kv, set_kv
 from crypto_service import *
@@ -69,15 +71,33 @@ def load_user(username: str, password: str) -> {}:
         both of those key's type should be RSA key type (not string or byte)
     : return When fail a dict {"result": False, "message": Corresponding error message}
     """
+    try:
+        # Check if both RSA public key and private key exists
+        if not os.path.exists("keys/public_key.pem") or not os.path.exists("keys/private_key.pem"):
+            raise exception("RSA public key or/and RSA private key not found")
 
-    # TODO: 1. Load RSA private and public key from disk (/keys/*)
-    # TODO: 2. Check if loaded RSA public key matches RSA public key on RSDB
-    # TODO: 3. Check if password can unlock RSA private key
-    # TODO: 4. Check if RSA public key and private key matches (call verify_key_pair() in crypto_service.py)
+        # Load public key from disk
+        rsa_public_key = load_public_key_from_disk()
+        if rsa_public_key != get_kv(username):
+            raise exception(f"User {username} doesn't belong to this RSA public key")
+
+        # Check if password can unlock RSA private key
+        res = load_private_key_from_disk(password)
+        if not res["result"]:
+            raise exception(res["message"])
+        rsa_private_key = res["message"]
+
+        # Check RSA key pair matched
+        if not verify_key_pair(rsa_public_key, rsa_private_key):
+            raise exception("RSA key pair doesn't match")
+
+        return {"result": True, "message": [rsa_public_key, rsa_private_key]}
+
+    except Exception as e:
+        write_log(str(e))
+        return {"result": False, "message": str(e)}
 
 
 
-def update_avatar():
-    # TODO
-    return
+
 

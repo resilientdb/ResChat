@@ -23,15 +23,16 @@ def string_to_public_key(public_key_string: str) -> Crypto.PublicKey.RSA.RsaKey:
     return RSA.importKey(public_key_string.encode('utf-8'))
 
 
-def load_rsa_private_key(private_key: bytes, password: str) -> Crypto.PublicKey.RSA.RsaKey:
+def load_rsa_private_key(private_key: bytes, password: str) -> {}:
     """Convert RSA private key from bytes to Crypto.PublicKey.RSA.RsaKey"""
     write_log("Loading RSA private key")
     try:
         key = RSA.import_key(private_key, passphrase=password)
         write_log("RSA key successfully loaded")
-        return key
+        return {"result": True, "message": key}
     except Exception as e:
         write_log(e)
+        return {"result": False, "message": str(e)}
 
 
 
@@ -150,7 +151,7 @@ def load_public_key_from_disk() -> Crypto.PublicKey.RSA.RsaKey:
     return None
 
 
-def load_private_key_from_disk(password: str) -> Crypto.PublicKey.RSA.RsaKey:
+def load_private_key_from_disk(password: str) -> {}:
     """
     Load RSA private key from disk(/keys/private_key.pem)
     : return RSA key type object (Not a string or bytes)
@@ -161,12 +162,13 @@ def load_private_key_from_disk(password: str) -> Crypto.PublicKey.RSA.RsaKey:
             private_key_bytes = pri_key_f.read()
             private_key = load_rsa_private_key(private_key_bytes, password)
             write_log("RSA private key successfully loaded")
-            return private_key
+            return {"result": True, "message": private_key}
     except FileNotFoundError:
         write_log("Private key file not found")
+        return {"result": False, "message": "Private key file not found"}
     except Exception as e:
         write_log(e)
-    return None
+        return {"result": False, "message": str(e)}
 
 
 def verify_key_pair(public_key: Crypto.PublicKey.RSA.RsaKey, private_key: Crypto.PublicKey.RSA.RsaKey) -> bool:
