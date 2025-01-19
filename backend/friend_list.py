@@ -165,3 +165,59 @@ def change_nickname(username: str, friend_list: Dict[str, Dict], new_nickname: s
             "result": False,
             "message": f"Failed to update nickname: {str(e)}"
         }
+def test_friend_list_functions():
+    my_username = "user1"
+    friend_username = "friend1"
+    set_kv(friend_username, "public_key")
+   
+    set_kv(my_username + " FRIEND", json.dumps({})) 
+
+    # Test loading friend list
+    print("=== Test: Loading Friend List ===")
+    friend_list = load_my_friend_list(my_username)
+    print("Friend List (Should be empty):", friend_list)
+
+    # Test adding a friend
+    print("\n=== Test: Adding a Friend ===")
+    result = add_friend(friend_username, friend_list, "Best Friend", my_username)
+    print("Add Friend Result:", result)
+    print("Friend List After Adding Friend:", result["message"])
+
+    # Test updating RSDB with new friend list
+    print("\n=== Test: Updating RSDB Friend List ===")
+    update_rsdb_friend_list(friend_list, my_username)
+    print("RSDB Friend List (From RSDB):", json.loads(get_kv(my_username + " FRIEND")))
+
+    # Test updating avatar list
+    print("\n=== Test: Updating Avatar List ===")
+    set_kv(friend_username + " AVATAR", "new_avatar_cid")
+    updated_friend_list = update_avatar_list(friend_list)
+    print("Updated Friend List with Avatars:", updated_friend_list)
+
+    # Test changing nickname
+    print("\n=== Test: Changing Nickname ===")
+    result = change_nickname(friend_username, friend_list, "Buddy", my_username)
+    print("Change Nickname Result:", result)
+    print("Friend List After Changing Nickname:", result["message"])
+
+    # Test updating avatar
+    print("\n=== Test: Updating Avatar ===")
+    avatar_result = update_avatar(friend_username, "updated_avatar_cid")
+    print("Update Avatar Result:", avatar_result)
+    print("Updated Avatar in RSDB (From RSDB):", get_kv(friend_username + " AVATAR"))
+
+    print("\n === Test: Getting Page Number ===")
+    sorted_names = sorted([my_username, friend_username])
+
+    friendship_key = f"{sorted_names[0]} {sorted_names[1]}"
+    print(get_kv(friendship_key + " PAGE_NUM"))
+
+    # Test deleting a friend
+    print("\n=== Test: Deleting a Friend ===")
+    delete_result = delete_friend(friend_username, friend_list, my_username)
+    print("Delete Friend Result:", delete_result)
+    print("Friend List After Deleting Friend:", delete_result["message"])
+
+if __name__ == "__main__":
+        print("=== Running Friend List Functions Test ===")
+        test_friend_list_functions()
