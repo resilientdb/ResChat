@@ -3,6 +3,8 @@ import json
 from RSDB_kv_service import get_kv, set_kv
 from typing import Dict
 
+from backend.helper import combine_string_in_ascii
+
 """
 Friend list is a JSON/Python dict object stores all friend information
 {
@@ -71,9 +73,7 @@ def add_friend(username: str, friend_list: {}, nickname: str, my_username: str) 
         if friend_avatar_cid == "\n" or friend_avatar_cid == " " or friend_avatar_cid == "":
             friend_avatar_cid = ""
         friend_list[username] = {"nick_name": nickname, "public_key": friend_public_key, "avatar_cid": friend_avatar_cid}
-        sorted_names = sorted([my_username, username])
-
-        friendship_key = f"{sorted_names[0]} {sorted_names[1]}"
+        friendship_key = combine_string_in_ascii(username, my_username)
         existing_page_num = get_kv(friendship_key + " PAGE_NUM")
         if existing_page_num == "\n" or existing_page_num == "" or existing_page_num == " ":
             set_kv(friendship_key + " PAGE_NUM", "1")
