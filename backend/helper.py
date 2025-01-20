@@ -50,4 +50,3 @@ def clear_cache():
         os.remove(file_path)
 
     return
-clear_cache()
