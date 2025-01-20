@@ -36,3 +36,18 @@ def write_log(message: str or Exception):
         log.write(log_message)
         log.close()
     return
+
+
+def clear_cache():
+    temp_path = "temp/"
+    if not os.path.exists(temp_path):
+        print(f"文件夹 {temp_path} 不存在。")
+        return
+
+    # 遍历文件夹中的所有文件
+    for filename in os.listdir(temp_path):
+        file_path = os.path.join(temp_path, filename)
+        os.remove(file_path)
+
+    return
+clear_cache()

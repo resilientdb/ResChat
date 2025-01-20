@@ -76,7 +76,7 @@ def encapsulated_change_nickname(target_username: str, new_nickname: str) -> Non
 
 def encapsulated_delete_friend(target_username: str):
     # TODO
-
+    return {}
 
 def encapsulated_add_friend(target_username: str, nickname: str) -> {}:
     global my_friend_list, my_username
@@ -90,6 +90,7 @@ def encapsulated_add_friend(target_username: str, nickname: str) -> {}:
     my_friend_list = add_friend_result["message"]
     update_rsdb_friend_list(my_friend_list, my_username)
     return {"result": True, "message": f"{target_username} has added into your friend list"}
+
 
 
 def send_text_message(plain_text: str):

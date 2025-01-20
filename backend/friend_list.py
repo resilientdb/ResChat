@@ -80,8 +80,6 @@ def add_friend(username: str, friend_list: {}, nickname: str, my_username: str) 
         update_rsdb_friend_list(friend_list, my_username)
         return {"result": True, "message": friend_list}
 
-        # TODO: Sort these two username is ASCII order and create kv in RSDB (a123b456 PAGE_NUM, 1).
-        #       But if there is already an exist page number, keep that one
 
 def update_avatar(username: str, avatar_cid: str) -> Dict[str, str]:
     """
@@ -102,7 +100,7 @@ def update_avatar(username: str, avatar_cid: str) -> Dict[str, str]:
     except Exception as e:
         return {"result": False, "message": f"Failed to update avatar: {str(e)}"}
 
-def delete_friend(target_username: str, friend_list: Dict[str, Dict], my_username: str) -> Dict[str, Dict]:
+def delete_friend(target_username: str, friend_list: Dict[str, Dict], my_username: str) -> {}:
     """
     Delete a friend from the friend list
     :param target_username: Username of the friend to delete
@@ -128,7 +126,7 @@ def delete_friend(target_username: str, friend_list: Dict[str, Dict], my_usernam
             "message": f"Failed to delete friend: {str(e)}"
         }
 
-def change_nickname(username: str, friend_list: Dict[str, Dict], new_nickname: str, my_username: str) -> Dict[str, Dict]:
+def change_nickname(username: str, friend_list: Dict[str, Dict], new_nickname: str, my_username: str) -> {}:
     """
     Change the nickname of a friend in the friend list and update RSDB
     :param username: Username of the friend whose nickname needs to be changed
@@ -140,7 +138,7 @@ def change_nickname(username: str, friend_list: Dict[str, Dict], new_nickname: s
     if username not in friend_list:
         return {
             "result": False,
-            "message": "Friend not found in friend list"
+            "message": "Friend not found in friend list",
         }
     
     if not new_nickname or new_nickname.isspace():
